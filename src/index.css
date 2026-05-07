@@ -9,14 +9,18 @@ html, body {
 }
 
 /* Reduce expensive blur/backdrop-filter cost on small screens.
-   Desktop keeps the original strong blur via the @media floor. */
+   Desktop keeps the original strong blur via the @media floor.
+   Selectors use exact class names — substring matching ([class*=...])
+   would also catch `md:backdrop-blur-*` whose Tailwind rule is itself
+   guarded by min-width:768px and would leak the reduced blur down to
+   mobile. */
 @media (max-width: 767px) {
   .glass-card { backdrop-filter: blur(10px) saturate(120%); }
-  [class*="backdrop-blur-xl"] { backdrop-filter: blur(8px); }
-  [class*="backdrop-blur-2xl"] { backdrop-filter: blur(10px); }
-  [class*="backdrop-blur-3xl"] { backdrop-filter: blur(12px); }
-  [class*="blur-3xl"] { filter: blur(20px); }
-  [class*="blur-2xl"] { filter: blur(14px); }
+  .backdrop-blur-xl { backdrop-filter: blur(8px); }
+  .backdrop-blur-2xl { backdrop-filter: blur(10px); }
+  .backdrop-blur-3xl { backdrop-filter: blur(12px); }
+  .blur-3xl { filter: blur(20px); }
+  .blur-2xl { filter: blur(14px); }
 }
 
 /* Respect users who request reduced motion: pause the marquee

@@ -61,7 +61,7 @@ export function Testimonials() {
             <div
               role="region"
               aria-label="Scrolling Testimonials"
-              className="flex justify-start gap-6 max-h-[440px] sm:max-h-[640px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
+              className="flex justify-center sm:justify-start gap-6 max-h-[440px] sm:max-h-[640px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
             >
               <TestimonialsColumn testimonials={col1} duration={26} />
               <TestimonialsColumn
