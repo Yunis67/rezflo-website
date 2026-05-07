@@ -43,10 +43,10 @@ export function AnthonyVoiceCard() {
       transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="relative mx-auto w-full max-w-[420px]"
     >
-      {/* Outer halo */}
+      {/* Outer halo — desktop only; on mobile the heavy blur dominates the hero */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-[36px] opacity-80 blur-3xl"
+        className="pointer-events-none absolute -inset-6 rounded-[36px] opacity-80 blur-3xl hidden md:block"
         style={{
           background:
             'radial-gradient(60% 60% at 50% 30%, rgba(124,58,237,0.45), transparent 70%)',

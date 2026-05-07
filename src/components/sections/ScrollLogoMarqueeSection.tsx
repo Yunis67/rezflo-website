@@ -88,8 +88,8 @@ export function ScrollLogoMarqueeSection() {
             interval={2500}
             className="bg-gradient-to-r from-violet-300 via-violet-200 to-fuchsia-200 bg-clip-text text-transparent"
           />
-          <span className="block bg-gradient-to-r from-violet-300 via-violet-200 to-fuchsia-200 bg-clip-text text-transparent">
-            stack.
+          <span className="bg-gradient-to-r from-violet-300 via-violet-200 to-fuchsia-200 bg-clip-text text-transparent sm:block">
+            {' '}stack.
           </span>
         </h2>
       </div>
@@ -138,7 +138,7 @@ function Row({ cards, x, offsetClass = '' }: RowProps) {
 function Card({ card }: { card: LogoCard }) {
   return (
     <div
-      className="relative flex h-[132px] w-[165px] shrink-0 items-center justify-center overflow-hidden rounded-[22px] bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm sm:h-[164px] sm:w-[204px] md:h-[208px] md:w-[258px] lg:h-[220px] lg:w-[275px]"
+      className="relative flex h-[100px] w-[125px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm sm:h-[164px] sm:w-[204px] md:h-[208px] md:w-[258px] lg:h-[220px] lg:w-[275px]"
       style={{
         boxShadow:
           '0 24px 60px -28px rgba(124,58,237,0.55), 0 8px 22px -10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)',

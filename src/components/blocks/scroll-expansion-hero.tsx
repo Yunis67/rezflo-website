@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react'
+import { useIsMobile } from '../../lib/useIsMobile'
 
 /**
  * ScrollExpandMedia — clean scroll-scrubbed sticky media expander.
@@ -49,6 +50,7 @@ export default function ScrollExpandMedia({
   const sectionRef = useRef<HTMLDivElement | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const frameRef = useRef<HTMLDivElement | null>(null)
+  const isMobile = useIsMobile()
   const [isMuted, setIsMuted] = useState(true)
   const [isPaused, setIsPaused] = useState(false)
   // Default to 16/9 until the real video metadata loads — the frame's
@@ -56,12 +58,15 @@ export default function ScrollExpandMedia({
   const [videoAspect, setVideoAspect] = useState(16 / 9)
 
   // Reset to top on every reload so the section always starts minimized.
+  // Skip on mobile — the mobile variant doesn't depend on starting at 0
+  // and forcing scrollTo(0,0) on every load is jarring.
   useEffect(() => {
+    if (isMobile) return
     if ('scrollRestoration' in window.history) {
       window.history.scrollRestoration = 'manual'
     }
     window.scrollTo(0, 0)
-  }, [])
+  }, [isMobile])
 
   // Pure scroll-scrubbed progress through this section.
   const { scrollYProgress } = useScroll({
@@ -127,6 +132,62 @@ export default function ScrollExpandMedia({
     if (!card) return
     card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)'
     card.style.setProperty('--holo-opacity', '0')
+  }
+
+  // Mobile: simple, normal-flow video block. No sticky, no scroll
+  // scrubbing, no holographic tilt, no 180vh spacer. Autoplays muted
+  // and inline so iOS Safari is happy. Keeps the title + subtitle
+  // above the video without any opacity/transform animation.
+  if (isMobile) {
+    return (
+      <div className="relative w-full overflow-hidden">
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0"
+          style={{
+            background:
+              'radial-gradient(ellipse 90% 50% at 50% 30%, rgba(124,58,237,0.32) 0%, rgba(76,29,149,0.18) 35%, transparent 70%), linear-gradient(180deg, #1A0F2E 0%, #140A2C 30%, #0E0720 65%, #08041A 100%)',
+          }}
+        />
+        <div className="relative z-10 px-5 pt-12 pb-10">
+          <div className="text-center">
+            <h2 className="shimmer-title font-display mx-auto max-w-md text-balance text-[1.7rem] font-semibold leading-[1.12] tracking-[-0.02em]">
+              {title}
+            </h2>
+            {subtitle && (
+              <p className="mx-auto mt-4 max-w-sm text-balance text-sm leading-relaxed text-white/85">
+                {subtitle}
+              </p>
+            )}
+          </div>
+          <div
+            className="relative mx-auto mt-8 overflow-hidden rounded-2xl ring-1 ring-violet-400/20"
+            style={{
+              aspectRatio: '16 / 9',
+              boxShadow:
+                '0 20px 60px -20px rgba(124,58,237,0.5), 0 30px 80px -30px rgba(0,0,0,0.7)',
+            }}
+          >
+            <video
+              src={mediaSrc}
+              poster={posterSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
+              className="h-full w-full bg-black object-cover"
+            />
+          </div>
+        </div>
+        {children && (
+          <div className="relative z-10 px-5 pb-12">{children}</div>
+        )}
+      </div>
+    )
   }
 
   return (

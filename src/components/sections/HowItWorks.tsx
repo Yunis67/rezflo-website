@@ -374,8 +374,11 @@ function ActiveCard({ step, active }: { step: FlowStep; active: boolean }) {
           </div>
         </div>
 
-        {/* === Right: image — fills the fixed grid cell === */}
-        <div className="relative order-1 h-full overflow-hidden md:order-2">
+        {/* === Right: image — fills the fixed grid cell ===
+            Mobile note: the grid is single-column, image row is auto-sized
+            so we need an explicit height; the absolute-positioned <img>
+            otherwise collapses to ~0px and looks like a thin strip. */}
+        <div className="relative order-1 h-44 sm:h-56 overflow-hidden md:order-2 md:h-full">
           <img
             src={step.image}
             alt=""

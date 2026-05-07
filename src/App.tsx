@@ -19,7 +19,10 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-black text-white antialiased">
       <Nav />
-      <main className="relative">
+      {/* Bottom padding reserves space for the floating "Talk to Anthony"
+          CTA so it never covers section content on mobile. Desktop has
+          plenty of negative space already, so the reservation is small. */}
+      <main className="relative pb-24 md:pb-8">
         <Hero />
 
         {/* Scroll-driven logo marquee — light section directly under hero. */}
