@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { Container } from '../ui/Container'
@@ -21,6 +22,36 @@ import { AnthonyVoiceCard } from '../ui/AnthonyVoiceCard'
  *   Line 2 — "We'll Handle the Calls" (animated shiny gradient)
  */
 export function Hero() {
+  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
+
+  // iOS Safari sometimes ignores autoPlay even with muted+playsInline,
+  // showing a tap-to-play overlay. Force it on mount and on the first
+  // user interaction. Without this, mobile users see a play-button
+  // ghost over the hero on a cold load.
+  useEffect(() => {
+    const v = heroVideoRef.current
+    if (!v) return
+    v.muted = true
+    v.setAttribute('webkit-playsinline', 'true')
+    const tryPlay = () => {
+      v.play().catch(() => {
+        /* will retry on first user gesture */
+      })
+    }
+    tryPlay()
+    const onFirstTouch = () => {
+      tryPlay()
+      window.removeEventListener('touchstart', onFirstTouch)
+      window.removeEventListener('click', onFirstTouch)
+    }
+    window.addEventListener('touchstart', onFirstTouch, { once: true, passive: true })
+    window.addEventListener('click', onFirstTouch, { once: true })
+    return () => {
+      window.removeEventListener('touchstart', onFirstTouch)
+      window.removeEventListener('click', onFirstTouch)
+    }
+  }, [])
+
   return (
     <section
       id="top"
@@ -28,11 +59,15 @@ export function Hero() {
     >
       {/* Looping video background */}
       <video
+        ref={heroVideoRef}
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
+        controls={false}
+        disablePictureInPicture
+        disableRemotePlayback
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
         aria-hidden
       >

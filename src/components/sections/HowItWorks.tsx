@@ -186,7 +186,7 @@ function Carousel({
 
   return (
     <div
-      className="relative mx-auto h-[420px] w-full max-w-6xl select-none sm:h-[520px] md:h-[460px]"
+      className="relative mx-auto h-[500px] w-full max-w-6xl select-none sm:h-[540px] md:h-[460px]"
       role="region"
       aria-label="How RezFlo works — animated walkthrough"
     >
@@ -195,9 +195,9 @@ function Carousel({
         type="button"
         onClick={() => setActive((active - 1 + total) % total)}
         aria-label="Previous step"
-        className="absolute left-0 top-0 z-30 flex h-full w-[18%] cursor-pointer items-center justify-start pl-4 text-white/0 transition-colors hover:text-white/40"
+        className="absolute left-0 top-0 z-30 flex h-full w-[14%] cursor-pointer items-center justify-start pl-2 text-white/70 transition-colors hover:text-white md:w-[18%] md:pl-4 md:text-white/0 md:hover:text-white/40"
       >
-        <span className="rounded-full border border-white/10 bg-black/30 p-2 ">
+        <span className="rounded-full border border-white/15 bg-black/55 p-2 backdrop-blur-sm md:bg-black/30">
           <ChevronIcon dir="left" />
         </span>
       </button>
@@ -205,9 +205,9 @@ function Carousel({
         type="button"
         onClick={() => setActive((active + 1) % total)}
         aria-label="Next step"
-        className="absolute right-0 top-0 z-30 flex h-full w-[18%] cursor-pointer items-center justify-end pr-4 text-white/0 transition-colors hover:text-white/40"
+        className="absolute right-0 top-0 z-30 flex h-full w-[14%] cursor-pointer items-center justify-end pr-2 text-white/70 transition-colors hover:text-white md:w-[18%] md:pr-4 md:text-white/0 md:hover:text-white/40"
       >
-        <span className="rounded-full border border-white/10 bg-black/30 p-2 ">
+        <span className="rounded-full border border-white/15 bg-black/55 p-2 backdrop-blur-sm md:bg-black/30">
           <ChevronIcon dir="right" />
         </span>
       </button>

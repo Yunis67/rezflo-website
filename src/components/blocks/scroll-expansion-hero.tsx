@@ -134,10 +134,10 @@ export default function ScrollExpandMedia({
     card.style.setProperty('--holo-opacity', '0')
   }
 
-  // Mobile: simple, normal-flow video block. No sticky, no scroll
-  // scrubbing, no holographic tilt, no 180vh spacer. Autoplays muted
-  // and inline so iOS Safari is happy. Keeps the title + subtitle
-  // above the video without any opacity/transform animation.
+  // Mobile: simple, normal-flow video block with on-screen play/pause
+  // and mute/unmute controls. No sticky, no scroll scrubbing, no
+  // holographic tilt, no 180vh spacer. Autoplays muted+inline so iOS
+  // Safari is happy.
   if (isMobile) {
     return (
       <div className="relative w-full overflow-hidden">
@@ -169,18 +169,37 @@ export default function ScrollExpandMedia({
             }}
           >
             <video
+              ref={videoRef}
               src={mediaSrc}
               poster={posterSrc}
               autoPlay
-              muted
+              muted={isMuted}
               loop
               playsInline
               preload="metadata"
               controls={false}
               disablePictureInPicture
               disableRemotePlayback
-              className="h-full w-full bg-black object-cover"
+              onPlay={() => setIsPaused(false)}
+              onPause={() => setIsPaused(true)}
+              className="absolute inset-0 h-full w-full bg-black object-cover"
             />
+            <button
+              type="button"
+              onClick={togglePlay}
+              aria-label={isPaused ? 'Play video' : 'Pause video'}
+              className="absolute bottom-3 left-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/65 text-white ring-1 ring-white/20 backdrop-blur-md active:scale-95"
+            >
+              {isPaused ? <Play size={18} className="ml-0.5" /> : <Pause size={18} />}
+            </button>
+            <button
+              type="button"
+              onClick={toggleMute}
+              aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+              className="absolute bottom-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-black/65 text-white ring-1 ring-white/20 backdrop-blur-md active:scale-95"
+            >
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
           </div>
         </div>
         {children && (

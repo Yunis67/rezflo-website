@@ -53,15 +53,18 @@ export function AnthonyVoiceCard() {
         }}
       />
 
-      {/* Glass card — holographic tilt + cursor-tracking glow */}
+      {/* Glass card — holographic tilt + cursor-tracking glow.
+          Mobile drops the backdrop-blur and uses a more opaque solid
+          background so the hero video doesn't smear through and create
+          the "fake play button" appearance. Desktop keeps the glass. */}
       <div
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative overflow-hidden rounded-[28px] border border-white/[0.10] px-7 pt-6 pb-8 backdrop-blur-2xl transition-transform duration-150 ease-out will-change-transform"
+        className="relative overflow-hidden rounded-[28px] border border-white/[0.10] px-7 pt-6 pb-8 transition-transform duration-150 ease-out will-change-transform md:backdrop-blur-2xl"
         style={{
           background:
-            'linear-gradient(180deg, rgba(30,16,60,0.55) 0%, rgba(12,8,28,0.78) 100%)',
+            'linear-gradient(180deg, rgba(20,10,42,0.96) 0%, rgba(8,4,22,0.98) 100%)',
           boxShadow:
             '0 30px 80px -30px rgba(124,58,237,0.55), 0 0 0 1px rgba(167,139,250,0.18) inset',
           transformStyle: 'preserve-3d',
