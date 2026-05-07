@@ -13,6 +13,7 @@ const links = [
   { label: 'Results', href: '#stories' },
   { label: 'ROI Calculator', href: '#roi' },
   { label: 'Pricing', href: '#pricing' },
+  { label: 'FAQ', href: '#faq' },
 ]
 
 /**
