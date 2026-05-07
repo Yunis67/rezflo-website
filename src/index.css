@@ -1,0 +1,448 @@
+@import "tailwindcss";
+
+/* Marquee keyframes + explicit utility classes. We define the
+   animation classes directly (rather than via Tailwind's @theme
+   inline auto-generation) so they're guaranteed to render. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-100% - var(--gap, 1rem))); }
+}
+@keyframes marquee-vertical {
+  from { transform: translateY(0); }
+  to   { transform: translateY(calc(-100% - var(--gap, 1rem))); }
+}
+.animate-marquee {
+  animation: marquee var(--duration, 40s) linear infinite;
+  will-change: transform;
+}
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+/* Static premium title for the scroll-expand video showcase. Solid
+   bright white with a soft violet glow — no sliding/sweeping. */
+.shimmer-title {
+  color: #ffffff;
+}
+
+/* ROI calculator range sliders — track + thumb tint via the
+   --slider-color CSS var so each tab can theme its sliders. */
+.roi-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  outline: none;
+  background: linear-gradient(
+    to right,
+    var(--slider-color, #7c3aed) 0%,
+    var(--slider-color, #7c3aed) var(--slider-pct, 50%),
+    rgba(255, 255, 255, 0.10) var(--slider-pct, 50%),
+    rgba(255, 255, 255, 0.10) 100%
+  );
+  cursor: pointer;
+}
+.roi-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--slider-color, #c4b5fd);
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.35),
+    0 6px 14px rgba(0, 0, 0, 0.45);
+  cursor: grab;
+  transition: transform 120ms ease;
+}
+.roi-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.08);
+}
+.roi-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--slider-color, #c4b5fd);
+  box-shadow:
+    0 0 0 4px rgba(0, 0, 0, 0.35),
+    0 6px 14px rgba(0, 0, 0, 0.45);
+  cursor: grab;
+}
+.roi-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: transparent;
+}
+/* Hide the default number-input spinners for a cleaner look. */
+.roi-slider + * input[type='number']::-webkit-outer-spin-button,
+.roi-slider + * input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+@theme {
+  /* ============================================================
+     RezFlo — Premium dark-violet design system
+     ============================================================
+     Cinematic dark theme with white sans-serif typography.
+     Display: Plus Jakarta Sans (replaces Fraunces — no serif cutoff).
+     Body:    Inter.
+     Card descriptions: Open Sans (per ExpandingCards spec).
+     Card titles: "Stack Sans Headline" → mapped to Plus Jakarta Sans
+     since Stack Sans Headline isn't on Google Fonts. PJS has the same
+     modern geometric humanist feel. */
+
+  /* Ink scale — backgrounds */
+  --color-ink-950: #000000;       /* pure black per shader spec */
+  --color-ink-900: #050116;       /* near-black with a violet shadow */
+  --color-ink-850: #0a0420;       /* section bg, slightly lifted */
+  --color-ink-800: #12001f;       /* card bg base */
+  --color-ink-700: #1c0935;       /* card hover */
+  --color-ink-600: #2e1065;       /* hairline */
+
+  /* Violet scale — accent */
+  --color-violet-50:  #f4f1ff;
+  --color-violet-100: #e9e2ff;
+  --color-violet-200: #d4c5ff;
+  --color-violet-300: #c084fc;
+  --color-violet-400: #a855f7;    /* primary highlight */
+  --color-violet-500: #8b5cf6;    /* mid */
+  --color-violet-600: #7c3aed;    /* CTA primary */
+  --color-violet-700: #6d28d9;
+  --color-violet-800: #5b21b6;
+  --color-violet-900: #4c1d95;
+
+  /* Text scale (for use on dark) */
+  --color-mist-50:  #ffffff;
+  --color-mist-100: #f5f3ff;
+  --color-mist-200: #ddd6fe;
+  --color-mist-300: #c4b5fd;
+  --color-mist-400: #a8a1c4;
+  --color-mist-500: #837c9c;
+  --color-mist-600: #5d567a;
+  --color-mist-700: #3e3856;
+
+  /* Border tokens */
+  --color-line:        rgba(168, 85, 247, 0.14);
+  --color-line-strong: rgba(168, 85, 247, 0.28);
+  --color-line-glow:   rgba(168, 85, 247, 0.55);
+
+  /* Radii */
+  --radius-card: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-card:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 30px 60px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(168, 85, 247, 0.06);
+  --shadow-card-hover:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 40px 80px -20px rgba(0, 0, 0, 0.6),
+    0 0 60px -10px rgba(124, 58, 237, 0.4),
+    0 0 0 1px rgba(168, 85, 247, 0.18);
+  --shadow-glow-violet:
+    0 10px 40px -8px rgba(124, 58, 237, 0.55),
+    0 0 80px -10px rgba(168, 85, 247, 0.35);
+
+  /* Fonts */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-stack-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  --font-open-sans: "Open Sans", system-ui, sans-serif;
+}
+
+/* ===== Base ============================================================ */
+:root {
+  font-family: var(--font-sans);
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  background: #000000;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #000000;
+  color: var(--color-mist-200);
+  overscroll-behavior: none;
+}
+
+* { box-sizing: border-box; }
+button { font-family: inherit; cursor: pointer; }
+
+::selection {
+  background: rgba(168, 85, 247, 0.35);
+  color: var(--color-mist-50);
+}
+
+/* Scrollbar — subtle violet on dark */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-700);
+  border: 3px solid #000;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-violet-700); }
+
+/* ===== Font utilities ================================================== */
+
+/* Display font — used on section h2 titles. Sans-serif, modern, no cutoff. */
+.font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01" 0, "ss02" 0;
+}
+
+/* Card titles — modern geometric sans. */
+.font-stack-sans {
+  font-family: var(--font-stack-sans);
+  letter-spacing: -0.012em;
+}
+
+/* Card descriptions — friendly readable sans. */
+.font-open-sans {
+  font-family: var(--font-open-sans);
+}
+
+/* ===== Custom utilities ================================================ */
+
+/* Section divider — gradient hairline that fades */
+@utility divider-violet {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(168, 85, 247, 0.25) 50%,
+    transparent 100%
+  );
+}
+
+/* Gradient border glow — applied to wrapping elements */
+.glow-border {
+  position: relative;
+  isolation: isolate;
+}
+.glow-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.55) 0%,
+    rgba(168, 85, 247, 0.08) 30%,
+    rgba(168, 85, 247, 0.08) 70%,
+    rgba(168, 85, 247, 0.55) 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.4s ease;
+}
+.glow-border:hover::before {
+  background: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.85) 0%,
+    rgba(168, 85, 247, 0.2) 30%,
+    rgba(168, 85, 247, 0.2) 70%,
+    rgba(168, 85, 247, 0.85) 100%
+  );
+}
+
+/* Premium glass card surface */
+.glass-card {
+  position: relative;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(46, 16, 101, 0.45) 0%,
+      rgba(18, 0, 31, 0.7) 100%
+    );
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Animated shine for hero gradient phrase */
+@keyframes shineSweep {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shine-text {
+  background: linear-gradient(
+    100deg,
+    var(--color-violet-500) 0%,
+    var(--color-mist-50) 35%,
+    var(--color-violet-300) 50%,
+    var(--color-mist-50) 65%,
+    var(--color-violet-500) 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: shineSweep 3s linear infinite;
+}
+
+/* Static gradient for highlighted phrase (no animation) */
+.gradient-text {
+  background: linear-gradient(
+    180deg,
+    var(--color-violet-200) 0%,
+    var(--color-violet-400) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Section label pill — dark glass version */
+.section-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    rgba(168, 85, 247, 0.14) 0%,
+    rgba(168, 85, 247, 0.06) 100%
+  );
+  color: var(--color-violet-200);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-family: var(--font-sans);
+}
+
+/* CTA aura — soft violet halo behind primary buttons */
+.cta-aura {
+  position: relative;
+}
+.cta-aura::after {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(
+    closest-side,
+    rgba(124, 58, 237, 0.55),
+    transparent 70%
+  );
+  filter: blur(24px);
+  z-index: -1;
+  opacity: 0.65;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.cta-aura:hover::after { opacity: 0.95; }
+
+/* SVG noise for grain overlay */
+@utility bg-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Spotlight glow — radial behind feature icons */
+.spotlight-glow {
+  position: relative;
+}
+.spotlight-glow::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+    closest-side,
+    rgba(168, 85, 247, 0.35),
+    transparent 70%
+  );
+  filter: blur(20px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Hover-lift utility */
+.hover-lift {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.hover-lift:hover { transform: translateY(-1px); }
+
+/* Reveal animation utility */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+.reveal { animation: fadeInUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Slow ambient pulse for badge dots */
+@keyframes pulseAmber {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+.pulse-dot { animation: pulseAmber 2.4s ease-in-out infinite; }
+
+/* Drifting aurora for backdrops */
+@keyframes auroraDrift {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50%  { transform: translate3d(2%, -2%, 0) rotate(2deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+.aurora-drift {
+  animation: auroraDrift 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ============================================================
+   ElevenLabs ConvAI widget — global mount.
+   The widget is rendered once inside #anthony-agent-host. While
+   data-open="false" we hide its default floating launcher so our
+   custom "Talk to Anthony" CTAs are the only visible affordance.
+   When data-open="true" we reveal it so the conversation panel
+   shows up normally.
+   ============================================================ */
+#anthony-agent-host[data-open="false"] {
+  position: fixed;
+  inset: auto auto 0 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+#anthony-agent-host[data-open="true"] {
+  position: static;
+  pointer-events: auto;
+  opacity: 1;
+}
+#anthony-agent-host[data-open="true"] elevenlabs-convai {
+  position: fixed;
+  z-index: 70;
+}

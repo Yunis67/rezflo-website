@@ -1,0 +1,46 @@
+import { Nav } from './components/Nav'
+import { Footer } from './components/Footer'
+import { AnthonyFloatingButton } from './components/ui/AnthonyFloatingButton'
+import { AnthonyAgentMount } from './components/ui/AnthonyAgentMount'
+import { RezFloShaderBackground } from './components/ui/rezflo-shader-background'
+import { ScrollLogoMarqueeSection } from './components/sections/ScrollLogoMarqueeSection'
+import { Hero } from './components/sections/Hero'
+import { ProblemStats } from './components/sections/ProblemStats'
+import { HowItWorks } from './components/sections/HowItWorks'
+import { Features } from './components/sections/Features'
+import { ScrollExpandShowcase } from './components/sections/ScrollExpandShowcase'
+import { Testimonials } from './components/sections/Testimonials'
+import { Pricing } from './components/sections/Pricing'
+import { ROICalculator } from './components/sections/ROICalculator'
+import { FAQ } from './components/sections/FAQ'
+import { FinalCTA } from './components/sections/FinalCTA'
+
+export default function App() {
+  return (
+    <div className="relative min-h-screen bg-black text-white antialiased">
+      <Nav />
+      <main className="relative">
+        <Hero />
+
+        {/* Scroll-driven logo marquee — light section directly under hero. */}
+        <ScrollLogoMarqueeSection />
+
+        {/* Non-hero sections share the animated mesh-gradient bg. */}
+        <RezFloShaderBackground>
+          <ProblemStats />
+          <HowItWorks />
+          <Features />
+          <ScrollExpandShowcase />
+          <Testimonials />
+          <ROICalculator />
+          <Pricing />
+          <FAQ />
+          <FinalCTA />
+        </RezFloShaderBackground>
+      </main>
+      <Footer />
+      <AnthonyFloatingButton />
+      <AnthonyAgentMount />
+    </div>
+  )
+}
