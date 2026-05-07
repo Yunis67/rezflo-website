@@ -52,20 +52,17 @@ export function Nav() {
   return (
     <header
       className={cn(
-        // Transition specific properties only — omitting border-radius
-        // so the pill→square switch when opening the mobile menu is
-        // instant. Without this, tween animation makes the header look
-        // like a circle inflating into a square.
+        // Smooth scroll-driven transition (pill ↔ flat) — but when the
+        // mobile menu opens or closes, transition-none makes the
+        // pill→square switch instant. Otherwise the tween across
+        // border-radius / width / position reads as a "circle morphing
+        // into a square."
         'fixed inset-x-0 z-50 mx-auto duration-500 ease-out',
-        'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter]',
         open
-          ? // Mobile menu open: full-width opaque panel
-            'top-0 max-w-none rounded-none border-b border-white/10 bg-black/90 backdrop-blur-xl'
+          ? 'transition-none top-0 max-w-none rounded-none border-b border-white/10 bg-black/90 backdrop-blur-xl'
           : scrolled
-          ? // Compact + floating + glass pill (closed state)
-            'top-3 max-w-5xl rounded-full border border-white/10 bg-black/55 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl'
-          : // Full width, flat (top of page)
-            'top-0 max-w-none rounded-none border-b border-transparent bg-transparent backdrop-blur-0',
+          ? 'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter] top-3 max-w-5xl rounded-full border border-white/10 bg-black/55 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl'
+          : 'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter] top-0 max-w-none rounded-none border-b border-transparent bg-transparent backdrop-blur-0',
       )}
     >
       <Container className={cn('transition-all', scrolled ? 'lg:!px-4' : '')}>

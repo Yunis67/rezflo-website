@@ -3,9 +3,16 @@
 /* Mobile safety: prevent horizontal page scroll. Some absolutely-
    positioned decoration layers extend beyond viewport on small
    screens; clipping at the html/body level keeps the page scrollable
-   only on the y-axis without altering desktop layout. */
+   only on the y-axis without altering desktop layout.
+   Use `overflow-x: clip` (NOT `hidden`) — `hidden` establishes a
+   scroll container which kills `position: sticky` for descendants
+   (notably the desktop ScrollExpandMedia video, which then unpins
+   and leaves a giant empty 180vh section under it). `clip` clips
+   geometry without creating a scroll container. Fallback to hidden
+   for browsers that don't support clip. */
 html, body {
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Reduce expensive blur/backdrop-filter cost on small screens.
