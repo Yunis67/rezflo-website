@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { cn } from '../../lib/utils'
+import { useIsMobile } from '../../lib/useIsMobile'
 
 export type SpotlightGlow = 'blue' | 'purple' | 'green' | 'red' | 'orange'
 
@@ -53,13 +54,17 @@ export function SpotlightCard({
   ariaLabel,
 }: SpotlightCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
-    const onMove = (e: PointerEvent) => {
+    if (isMobile) return
+    let raf: number | null = null
+    let lastEvent: PointerEvent | null = null
+    const apply = () => {
+      raf = null
+      const e = lastEvent
       const node = cardRef.current
-      if (!node) return
-      // Track in viewport coords so the gradient is consistent
-      // even when the card is anywhere on the page.
+      if (!e || !node) return
       const rect = node.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
@@ -68,9 +73,16 @@ export function SpotlightCard({
       node.style.setProperty('--xp', (e.clientX / window.innerWidth).toFixed(3))
       node.style.setProperty('--yp', (e.clientY / window.innerHeight).toFixed(3))
     }
-    document.addEventListener('pointermove', onMove)
-    return () => document.removeEventListener('pointermove', onMove)
-  }, [])
+    const onMove = (e: PointerEvent) => {
+      lastEvent = e
+      if (raf == null) raf = requestAnimationFrame(apply)
+    }
+    document.addEventListener('pointermove', onMove, { passive: true })
+    return () => {
+      document.removeEventListener('pointermove', onMove)
+      if (raf != null) cancelAnimationFrame(raf)
+    }
+  }, [isMobile])
 
   const { base, spread } = COLOR_MAP[glowColor]
 

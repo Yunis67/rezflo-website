@@ -1,5 +1,33 @@
 @import "tailwindcss";
 
+/* Mobile safety: prevent horizontal page scroll. Some absolutely-
+   positioned decoration layers extend beyond viewport on small
+   screens; clipping at the html/body level keeps the page scrollable
+   only on the y-axis without altering desktop layout. */
+html, body {
+  overflow-x: hidden;
+}
+
+/* Reduce expensive blur/backdrop-filter cost on small screens.
+   Desktop keeps the original strong blur via the @media floor. */
+@media (max-width: 767px) {
+  .glass-card { backdrop-filter: blur(10px) saturate(120%); }
+  [class*="backdrop-blur-xl"] { backdrop-filter: blur(8px); }
+  [class*="backdrop-blur-2xl"] { backdrop-filter: blur(10px); }
+  [class*="backdrop-blur-3xl"] { backdrop-filter: blur(12px); }
+  [class*="blur-3xl"] { filter: blur(20px); }
+  [class*="blur-2xl"] { filter: blur(14px); }
+}
+
+/* Respect users who request reduced motion: pause the marquee
+   loops and any continuous transforms. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-vertical {
+    animation-play-state: paused;
+  }
+}
+
 /* Marquee keyframes + explicit utility classes. We define the
    animation classes directly (rather than via Tailwind's @theme
    inline auto-generation) so they're guaranteed to render. */

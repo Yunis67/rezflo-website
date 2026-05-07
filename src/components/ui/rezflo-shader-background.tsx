@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { MeshGradient } from '@paper-design/shaders-react'
+import { useIsMobile } from '../../lib/useIsMobile'
 
 interface RezFloShaderBackgroundProps {
   children: ReactNode
@@ -35,6 +36,19 @@ export function RezFloShaderBackground({
   children,
   className = '',
 }: RezFloShaderBackgroundProps) {
+  const isMobile = useIsMobile()
+
+  if (isMobile) {
+    return (
+      <section className={`relative ${className}`} style={{
+        background:
+          'linear-gradient(180deg, #1A0F2E 0%, #170A2E 25%, #2E1065 55%, #1A0F2E 85%, #050208 100%)',
+      }}>
+        <div className="relative z-10">{children}</div>
+      </section>
+    )
+  }
+
   return (
     <section className={`relative bg-black ${className}`}>
       {/* Layer 1 — slow deep-violet base. Brightest stop is mid

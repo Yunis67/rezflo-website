@@ -186,7 +186,7 @@ function Carousel({
 
   return (
     <div
-      className="relative mx-auto h-[560px] w-full max-w-6xl select-none md:h-[460px]"
+      className="relative mx-auto h-[420px] w-full max-w-6xl select-none sm:h-[520px] md:h-[460px]"
       role="region"
       aria-label="How RezFlo works — animated walkthrough"
     >

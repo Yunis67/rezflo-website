@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { createNoise2D } from 'simplex-noise'
+import { useIsMobile } from '../lib/useIsMobile'
 
 interface Point {
   x: number
@@ -38,6 +39,7 @@ export function Waves({
   opacity = 1,
   showPointer = false,
 }: WavesProps) {
+  const isMobile = useIsMobile()
   const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const mouseRef = useRef({
@@ -51,6 +53,7 @@ export function Waves({
   const boundingRef = useRef<DOMRect | null>(null)
 
   useEffect(() => {
+    if (isMobile) return
     if (!containerRef.current || !svgRef.current) return
     noiseRef.current = createNoise2D()
 
@@ -214,7 +217,9 @@ export function Waves({
       window.removeEventListener('mousemove', onMouseMove)
       containerRef.current?.removeEventListener('touchmove', onTouchMove)
     }
-  }, [strokeColor, opacity, gap])
+  }, [strokeColor, opacity, gap, isMobile])
+
+  if (isMobile) return null
 
   return (
     <div

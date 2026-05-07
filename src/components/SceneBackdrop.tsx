@@ -37,9 +37,9 @@ export function SceneBackdrop() {
         }}
       />
 
-      {/* Layer 3a: drifting upper-right aurora */}
+      {/* Layer 3a: drifting upper-right aurora — desktop only */}
       <div
-        className="aurora-drift absolute -top-[20%] -right-[10%] h-[80vh] w-[70vw] rounded-full"
+        className="aurora-drift absolute -top-[20%] -right-[10%] h-[80vh] w-[70vw] rounded-full hidden md:block"
         style={{
           background:
             'radial-gradient(closest-side, rgba(139, 92, 246, 0.32), transparent 70%)',
@@ -47,14 +47,23 @@ export function SceneBackdrop() {
         }}
       />
 
-      {/* Layer 3b: drifting lower-left aurora */}
+      {/* Layer 3b: drifting lower-left aurora — desktop only */}
       <div
-        className="aurora-drift absolute -bottom-[15%] -left-[15%] h-[70vh] w-[70vw] rounded-full"
+        className="aurora-drift absolute -bottom-[15%] -left-[15%] h-[70vh] w-[70vw] rounded-full hidden md:block"
         style={{
           background:
             'radial-gradient(closest-side, rgba(91, 33, 182, 0.28), transparent 70%)',
           filter: 'blur(50px)',
           animationDelay: '-9s',
+        }}
+      />
+
+      {/* Mobile-only static violet wash so the backdrop doesn't go pure black */}
+      <div
+        className="absolute inset-0 md:hidden"
+        style={{
+          background:
+            'radial-gradient(ellipse 90% 60% at 70% 25%, rgba(124, 58, 237, 0.18), transparent 65%), radial-gradient(ellipse 90% 60% at 20% 85%, rgba(91, 33, 182, 0.16), transparent 65%)',
         }}
       />
 
