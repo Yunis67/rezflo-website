@@ -381,8 +381,12 @@ function ActiveCard({ step, active }: { step: FlowStep; active: boolean }) {
         {/* === Right: image — fills the fixed grid cell ===
             Mobile note: the grid is single-column, image row is auto-sized
             so we need an explicit height; the absolute-positioned <img>
-            otherwise collapses to ~0px and looks like a thin strip. */}
-        <div className="relative order-1 h-44 sm:h-56 overflow-hidden md:order-2 md:h-full">
+            otherwise collapses to ~0px and looks like a thin strip.
+            Mobile also gets explicit rounded-t corners + a violet ring
+            so the top edges read as curved with the brand-color outline,
+            matching the rest of the card. Desktop has the image filling
+            the right grid cell flush, so no rounding/ring there. */}
+        <div className="relative order-1 h-44 sm:h-56 overflow-hidden rounded-t-[24px] ring-1 ring-violet-400/35 md:order-2 md:h-full md:rounded-none md:ring-0">
           <img
             src={step.image}
             alt=""
