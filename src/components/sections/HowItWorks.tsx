@@ -319,8 +319,12 @@ function ActiveCard({ step, active }: { step: FlowStep; active: boolean }) {
         onMouseLeave={handleMouseLeave}
         className="relative grid grid-cols-1 overflow-hidden rounded-[28px] border transition-transform duration-150 ease-out will-change-transform md:grid-cols-[1.05fr_1fr]"
         style={{
+          // Layered background: translucent gradient on top of an opaque
+          // fallback so the rounded-corner clip doesn't show the page bg
+          // through the card on mobile (where the card is the only opaque
+          // element in the section).
           background:
-            'linear-gradient(180deg, rgba(30,16,60,0.55) 0%, rgba(12,8,28,0.82) 100%)',
+            'linear-gradient(180deg, rgba(30,16,60,0.55) 0%, rgba(12,8,28,0.82) 100%), #0F0824',
           borderColor: active
             ? 'rgba(167,139,250,0.45)'
             : 'rgba(255,255,255,0.08)',

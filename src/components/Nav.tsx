@@ -52,7 +52,12 @@ export function Nav() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 z-50 mx-auto transition-all duration-500 ease-out',
+        // Transition specific properties only — omitting border-radius
+        // so the pill→square switch when opening the mobile menu is
+        // instant. Without this, tween animation makes the header look
+        // like a circle inflating into a square.
+        'fixed inset-x-0 z-50 mx-auto duration-500 ease-out',
+        'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter]',
         open
           ? // Mobile menu open: full-width opaque panel
             'top-0 max-w-none rounded-none border-b border-white/10 bg-black/90 backdrop-blur-xl'
