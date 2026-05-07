@@ -53,10 +53,13 @@ export function Nav() {
     <header
       className={cn(
         'fixed inset-x-0 z-50 mx-auto transition-all duration-500 ease-out',
-        scrolled
-          ? // Compact + floating + glass
+        open
+          ? // Mobile menu open: full-width opaque panel
+            'top-0 max-w-none rounded-none border-b border-white/10 bg-black/90 backdrop-blur-xl'
+          : scrolled
+          ? // Compact + floating + glass pill (closed state)
             'top-3 max-w-5xl rounded-full border border-white/10 bg-black/55 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl'
-          : // Full width, flat
+          : // Full width, flat (top of page)
             'top-0 max-w-none rounded-none border-b border-transparent bg-transparent backdrop-blur-0',
       )}
     >
