@@ -68,36 +68,6 @@ export default function ScrollExpandMedia({
     window.scrollTo(0, 0)
   }, [isMobile])
 
-  // Start the video the moment the section scrolls into view. Browsers
-  // increasingly block native autoplay even with muted+playsInline set
-  // (autoplay-policy disabled, low-power mode, etc.), which leaves the
-  // <video> paused on a black frame until the user manually interacts.
-  // IntersectionObserver fires .play() as soon as ANY part of the
-  // section enters the viewport so the video is already running by
-  // the time the user scrolls fully into it.
-  useEffect(() => {
-    const section = sectionRef.current
-    const v = videoRef.current
-    if (!section || !v) return
-    v.muted = true
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            v.play().catch(() => {
-              /* If a browser still refuses, the user's first
-                 click/scroll on the page will satisfy the gesture
-                 requirement and subsequent .play() calls succeed. */
-            })
-          }
-        }
-      },
-      { rootMargin: '0px 0px 50% 0px', threshold: 0 },
-    )
-    io.observe(section)
-    return () => io.disconnect()
-  }, [])
-
   // Pure scroll-scrubbed progress through this section.
   const { scrollYProgress } = useScroll({
     target: sectionRef,
