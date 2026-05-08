@@ -23,6 +23,13 @@ import { ExpandingCards, type CardItem } from '../ui/ExpandingCards'
  *   6. Spam & Solicitor Filter
  *   7. Call Summaries Captured  (image kept from previous revision)
  */
+// Object-position values used across the photo cards. Tiny nudges
+// (42% / 58%) keep crops feeling intentional without flipping the
+// composition. Call Summaries uses 'left' so the dashboard mockup's
+// brand header stays in frame.
+const NUDGE_LEFT = '42% center'
+const NUDGE_RIGHT = '58% center'
+
 const rezfloFeatures: CardItem[] = [
   {
     id: 'phone-orders-pos-injection',
@@ -32,6 +39,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/phone-orders-pos.png',
     icon: <PhoneCall size={20} />,
     linkHref: '#',
+    imgPosition: NUDGE_LEFT,
   },
   {
     id: 'reservations-changes',
@@ -41,6 +49,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/reservations-changes.png',
     icon: <CalendarCheck size={20} />,
     linkHref: '#',
+    imgPosition: NUDGE_LEFT,
   },
   {
     id: 'multilingual-calls',
@@ -49,6 +58,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/multilingual-calls.png',
     icon: <Languages size={20} />,
     linkHref: '#',
+    imgPosition: NUDGE_RIGHT,
   },
   {
     id: 'menu-faq-answers',
@@ -58,6 +68,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/menu-faq-answers.png',
     icon: <CircleHelp size={20} />,
     linkHref: '#',
+    imgPosition: NUDGE_LEFT,
   },
   {
     id: 'after-hours-coverage',
@@ -67,6 +78,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/after-hours-coverage.png',
     icon: <Moon size={20} />,
     linkHref: '#',
+    imgPosition: NUDGE_LEFT,
   },
   {
     id: 'spam-solicitor-filter',
@@ -76,6 +88,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/spam-filter.png',
     icon: <ShieldCheck size={20} />,
     linkHref: '#',
+    imgPosition: NUDGE_LEFT,
   },
   {
     id: 'call-summaries-captured',
