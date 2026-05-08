@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Container } from '../ui/Container'
 import { SectionLabel } from '../ui/SectionLabel'
 import { testimonials } from '../../data/testimonials'
+import { useIsMobile } from '../../lib/useIsMobile'
 import {
   TestimonialsColumn,
   type MarqueeTestimonial,
@@ -81,22 +82,35 @@ export function Testimonials() {
 
 function DemoVideoCard() {
   const [playing, setPlaying] = useState(false)
+  const isMobile = useIsMobile()
 
+  // On mobile, the wrapper's backdrop-blur and the halo's blur-3xl
+  // force the GPU to re-rasterize those layers on every video frame —
+  // which is what causes the stutter and "doesn't always play" symptoms.
+  // We swap to a solid violet card + a tiny non-blurred glow ring on
+  // mobile, and isolate the video's paint so its frame updates don't
+  // bleed into surrounding layers. Desktop is unchanged.
   return (
     <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none lg:sticky lg:top-28">
+      {!isMobile && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-6 rounded-[36px] opacity-70 blur-3xl"
+          style={{
+            background:
+              'radial-gradient(60% 50% at 50% 30%, rgba(124,58,237,0.45), transparent 70%)',
+          }}
+        />
+      )}
       <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-[36px] opacity-70 blur-3xl"
+        className={
+          'relative overflow-hidden rounded-[28px] border border-white/[0.08] p-3 ' +
+          (isMobile ? '' : 'backdrop-blur-xl')
+        }
         style={{
-          background:
-            'radial-gradient(60% 50% at 50% 30%, rgba(124,58,237,0.45), transparent 70%)',
-        }}
-      />
-      <div
-        className="relative overflow-hidden rounded-[28px] border border-white/[0.08] p-3 backdrop-blur-xl"
-        style={{
-          background:
-            'linear-gradient(180deg, rgba(30,16,60,0.78) 0%, rgba(12,8,28,0.92) 100%)',
+          background: isMobile
+            ? 'linear-gradient(180deg, #1f1240 0%, #0c081c 100%)'
+            : 'linear-gradient(180deg, rgba(30,16,60,0.78) 0%, rgba(12,8,28,0.92) 100%)',
           boxShadow:
             '0 30px 80px -30px rgba(124,58,237,0.55), 0 0 0 1px rgba(167,139,250,0.18) inset',
         }}
@@ -112,7 +126,7 @@ function DemoVideoCard() {
 
         <div
           className="relative overflow-hidden rounded-[20px] border border-white/[0.06]"
-          style={{ aspectRatio: '9 / 16' }}
+          style={{ aspectRatio: '9 / 16', contain: 'paint' }}
         >
           {playing ? (
             <video
@@ -121,7 +135,10 @@ function DemoVideoCard() {
               controls
               autoPlay
               playsInline
-              preload="metadata"
+              preload="auto"
+              disablePictureInPicture
+              disableRemotePlayback
+              style={{ transform: 'translateZ(0)' }}
             />
           ) : (
             <DemoThumbnail onPlay={() => setPlaying(true)} />
