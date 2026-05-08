@@ -10,6 +10,10 @@ export interface CardItem {
   imgSrc: string
   icon: ReactNode
   linkHref?: string
+  /** Per-card object-position override. Default 'center'. Use 'left'
+   *  for images whose subject sits on the left edge of the source
+   *  (e.g. UI mockups with their header in the left margin). */
+  imgPosition?: 'center' | 'left' | 'right'
 }
 
 interface ExpandingCardsProps {
@@ -140,10 +144,15 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
         decoding="async"
         loading="eager"
         className={cn(
-          'absolute inset-0 h-full w-full select-none object-cover object-left transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]',
+          'absolute inset-0 h-full w-full select-none object-cover transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]',
+          item.imgPosition === 'left'
+            ? 'object-left'
+            : item.imgPosition === 'right'
+            ? 'object-right'
+            : 'object-center',
           active
             ? 'scale-100 brightness-105 contrast-[1.08] saturate-[1.18]'
-            : 'scale-110 blur-[6px] brightness-[0.3] saturate-[0.85]',
+            : 'scale-110 blur-[6px] brightness-[0.4] saturate-[0.85]',
         )}
         style={{
           imageRendering: 'auto',

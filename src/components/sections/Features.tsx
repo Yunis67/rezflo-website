@@ -85,6 +85,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/a6f34786-a750-498c-8f4b-b423fad18f9a.png',
     icon: <ClipboardList size={20} />,
     linkHref: '#',
+    imgPosition: 'left',
   },
 ]
 
