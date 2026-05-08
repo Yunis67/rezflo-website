@@ -131,7 +131,7 @@ function DemoVideoCard() {
           {playing ? (
             <video
               className="absolute inset-0 h-full w-full object-cover"
-              src="https://pub-18bcf9c15a904bdea03e89f192ed5bfc.r2.dev/qamaria-demo.mp4"
+              src="/videos/qamaria-demo.mp4"
               controls
               autoPlay
               playsInline
