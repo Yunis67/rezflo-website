@@ -39,7 +39,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/phone-orders-pos.png',
     icon: <PhoneCall size={20} />,
     linkHref: '#',
-    imgPosition: NUDGE_LEFT,
+    imgPosition: NUDGE_RIGHT,
   },
   {
     id: 'reservations-changes',
@@ -49,7 +49,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/reservations-changes.png',
     icon: <CalendarCheck size={20} />,
     linkHref: '#',
-    imgPosition: NUDGE_LEFT,
+    imgPosition: NUDGE_RIGHT,
   },
   {
     id: 'multilingual-calls',
@@ -58,7 +58,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/multilingual-calls.png',
     icon: <Languages size={20} />,
     linkHref: '#',
-    imgPosition: NUDGE_RIGHT,
+    imgPosition: NUDGE_LEFT,
   },
   {
     id: 'menu-faq-answers',
@@ -68,7 +68,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/menu-faq-answers.png',
     icon: <CircleHelp size={20} />,
     linkHref: '#',
-    imgPosition: NUDGE_LEFT,
+    imgPosition: NUDGE_RIGHT,
   },
   {
     id: 'after-hours-coverage',
@@ -78,7 +78,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/after-hours-coverage.png',
     icon: <Moon size={20} />,
     linkHref: '#',
-    imgPosition: NUDGE_LEFT,
+    imgPosition: NUDGE_RIGHT,
   },
   {
     id: 'spam-solicitor-filter',
@@ -88,7 +88,7 @@ const rezfloFeatures: CardItem[] = [
     imgSrc: '/images/spam-filter.png',
     icon: <ShieldCheck size={20} />,
     linkHref: '#',
-    imgPosition: NUDGE_LEFT,
+    imgPosition: NUDGE_RIGHT,
   },
   {
     id: 'call-summaries-captured',
