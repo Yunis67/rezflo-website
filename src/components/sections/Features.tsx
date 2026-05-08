@@ -27,8 +27,8 @@ import { ExpandingCards, type CardItem } from '../ui/ExpandingCards'
 // (42% / 58%) keep crops feeling intentional without flipping the
 // composition. Call Summaries uses 'left' so the dashboard mockup's
 // brand header stays in frame.
-const NUDGE_LEFT = '42% center'
-const NUDGE_RIGHT = '58% center'
+const NUDGE_LEFT = '35% center'
+const NUDGE_RIGHT = '65% center'
 
 const rezfloFeatures: CardItem[] = [
   {
