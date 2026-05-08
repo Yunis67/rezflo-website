@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Container } from '../ui/Container'
 import { SectionLabel } from '../ui/SectionLabel'
@@ -29,6 +29,20 @@ const col1 = [items[0], items[2], items[4], items[1]]
 const col2 = [items[3], items[5], items[0], items[2]]
 
 export function Testimonials() {
+  const isMobile = useIsMobile()
+  // Pause the marquee while the demo video is playing on mobile.
+  // The marquee cards use backdrop-filter (glass-card) and run a
+  // continuous transform animation; combined with H.264 decode that
+  // saturates the mobile GPU and makes playback stutter.
+  const [videoPlaying, setVideoPlaying] = useState(false)
+  const pauseMarquee = isMobile && videoPlaying
+
+  // The fade-out mask on the marquee container is decorative but
+  // forces an offscreen compositing pass. Drop it on mobile.
+  const marqueeMask = isMobile
+    ? ''
+    : '[mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]'
+
   return (
     <section
       id="stories"
@@ -62,17 +76,18 @@ export function Testimonials() {
             <div
               role="region"
               aria-label="Scrolling Testimonials"
-              className="flex justify-center sm:justify-start gap-6 max-h-[440px] sm:max-h-[640px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
+              className={`flex justify-center sm:justify-start gap-6 max-h-[440px] sm:max-h-[640px] overflow-hidden ${marqueeMask}`}
             >
-              <TestimonialsColumn testimonials={col1} duration={26} />
+              <TestimonialsColumn testimonials={col1} duration={26} paused={pauseMarquee} />
               <TestimonialsColumn
                 testimonials={col2}
                 className="hidden sm:block"
                 duration={32}
+                paused={pauseMarquee}
               />
             </div>
 
-            <DemoVideoCard />
+            <DemoVideoCard isMobile={isMobile} onPlayingChange={setVideoPlaying} />
           </div>
         </motion.div>
       </Container>
@@ -80,16 +95,27 @@ export function Testimonials() {
   )
 }
 
-function DemoVideoCard() {
-  const [playing, setPlaying] = useState(false)
-  const isMobile = useIsMobile()
+interface DemoVideoCardProps {
+  isMobile: boolean
+  onPlayingChange: (playing: boolean) => void
+}
+
+function DemoVideoCard({ isMobile, onPlayingChange }: DemoVideoCardProps) {
+  const [started, setStarted] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  const handleStart = () => {
+    setStarted(true)
+    onPlayingChange(true)
+  }
 
   // On mobile, the wrapper's backdrop-blur and the halo's blur-3xl
   // force the GPU to re-rasterize those layers on every video frame —
   // which is what causes the stutter and "doesn't always play" symptoms.
-  // We swap to a solid violet card + a tiny non-blurred glow ring on
-  // mobile, and isolate the video's paint so its frame updates don't
-  // bleed into surrounding layers. Desktop is unchanged.
+  // We swap to a solid violet card + drop the halo on mobile, and
+  // isolate the video's paint so its frame updates don't bleed into
+  // surrounding layers. Desktop is unchanged.
   return (
     <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none lg:sticky lg:top-28">
       {!isMobile && (
@@ -128,20 +154,74 @@ function DemoVideoCard() {
           className="relative overflow-hidden rounded-[20px] border border-white/[0.06]"
           style={{ aspectRatio: '9 / 16', contain: 'paint' }}
         >
-          {playing ? (
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src="/videos/qamaria-demo.mp4"
-              controls
-              autoPlay
-              playsInline
-              preload="auto"
-              disablePictureInPicture
-              disableRemotePlayback
-              style={{ transform: 'translateZ(0)' }}
-            />
+          {started ? (
+            isMobile ? (
+              // Mobile: no native controls (those redraw constantly on
+              // iOS Safari and interfere with the decoder). Single tap
+              // anywhere on the frame toggles play/pause.
+              <button
+                type="button"
+                onClick={() => {
+                  const v = videoRef.current
+                  if (!v) return
+                  if (v.paused) {
+                    v.play().catch(() => {})
+                  } else {
+                    v.pause()
+                  }
+                }}
+                aria-label={paused ? 'Play video' : 'Pause video'}
+                className="absolute inset-0 block w-full p-0 text-left focus:outline-none"
+              >
+                <video
+                  ref={videoRef}
+                  className="absolute inset-0 h-full w-full object-cover bg-black"
+                  src="/videos/qamaria-demo.mp4"
+                  autoPlay
+                  playsInline
+                  preload="auto"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  controls={false}
+                  onPlay={() => {
+                    setPaused(false)
+                    onPlayingChange(true)
+                  }}
+                  onPause={() => {
+                    setPaused(true)
+                    onPlayingChange(false)
+                  }}
+                  onEnded={() => onPlayingChange(false)}
+                  style={{ transform: 'translateZ(0)' }}
+                />
+                {paused && (
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white ring-1 ring-white/20"
+                  >
+                    <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-white" aria-hidden>
+                      <path d="M8 5.14v13.72a1 1 0 0 0 1.55.83l10.4-6.86a1 1 0 0 0 0-1.66L9.55 4.31A1 1 0 0 0 8 5.14Z" />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            ) : (
+              <video
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full object-cover"
+                src="/videos/qamaria-demo.mp4"
+                controls
+                autoPlay
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                disableRemotePlayback
+                onEnded={() => onPlayingChange(false)}
+                style={{ transform: 'translateZ(0)' }}
+              />
+            )
           ) : (
-            <DemoThumbnail onPlay={() => setPlaying(true)} />
+            <DemoThumbnail onPlay={handleStart} />
           )}
         </div>
       </div>
