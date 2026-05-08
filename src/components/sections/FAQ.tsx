@@ -18,7 +18,25 @@ export function FAQ() {
           </h2>
         </div>
 
-        <div className="glow-border glass-card mt-16 overflow-hidden rounded-3xl">
+        {/*
+          Note: deliberately NOT using .glass-card here. That utility
+          adds backdrop-filter: blur(20px) saturate(140%) AND a
+          translateY(-4px) hover transform — when a user clicks a
+          question the row's height-expand animation runs while the
+          parent's blur has to repaint every frame against the
+          shifting content beneath it. That was the source of the
+          glitchy/slow open/close. Solid layered background gives
+          the same premium look without the per-frame compositor cost.
+        */}
+        <div
+          className="glow-border mt-16 overflow-hidden rounded-3xl"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(46,16,101,0.45) 0%, rgba(18,0,31,0.7) 100%), #0F0824',
+            boxShadow:
+              '0 30px 80px -30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)',
+          }}
+        >
           <div className="divide-y divide-white/[0.06]">
             {faqs.map((f, i) => {
               const isOpen = openIndex === i
@@ -64,6 +82,11 @@ export function FAQ() {
                     style={{
                       gridTemplateRows: isOpen ? '1fr' : '0fr',
                       opacity: isOpen ? 1 : 0,
+                      // contain:layout isolates this row's reflow from
+                      // siblings — when one row's height animates the
+                      // browser doesn't have to recompute layout for
+                      // the entire FAQ list.
+                      contain: 'layout',
                     }}
                   >
                     <div className="overflow-hidden">
