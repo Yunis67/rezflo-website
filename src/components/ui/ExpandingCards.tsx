@@ -140,7 +140,7 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
         decoding="async"
         loading="eager"
         className={cn(
-          'absolute inset-0 h-full w-full select-none object-cover transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]',
+          'absolute inset-0 h-full w-full select-none object-cover object-left md:object-center transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]',
           active
             ? 'scale-100 brightness-105 contrast-[1.08] saturate-[1.18]'
             : 'scale-110 blur-[6px] brightness-[0.4] saturate-[0.85]',

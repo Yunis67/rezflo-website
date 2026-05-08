@@ -98,7 +98,7 @@ export function Features() {
       <Container>
         <div className="mx-auto max-w-3xl text-center">
           <SectionLabel>Features</SectionLabel>
-          <h2 className="font-display mt-7 text-[2.25rem] font-medium leading-[1.1] tracking-[-0.018em] text-white sm:text-[2.85rem] lg:text-[3.5rem]">
+          <h2 className="font-display mt-7 pb-2 text-[2.25rem] font-medium leading-[1.1] tracking-[-0.018em] text-white sm:text-[2.85rem] lg:text-[3.5rem]">
             A full-time employee that{' '}
             <span className="gradient-text italic">never sleeps.</span>
           </h2>
