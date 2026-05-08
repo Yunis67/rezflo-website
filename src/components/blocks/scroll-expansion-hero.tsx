@@ -68,38 +68,6 @@ export default function ScrollExpandMedia({
     window.scrollTo(0, 0)
   }, [isMobile])
 
-  // Force the video to start playing on mount and on the first user
-  // gesture. Without this, some browsers (Chrome with autoplay policy
-  // disabled, Safari with low-power mode, etc.) leave the <video>
-  // paused on a black frame even though autoPlay+muted is set, so the
-  // user sees an empty black rectangle until they manually scroll into
-  // the section and the browser decides to start it.
-  useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-    v.muted = true
-    const tryPlay = () => {
-      v.play().catch(() => {
-        /* will retry on first user gesture */
-      })
-    }
-    tryPlay()
-    const onFirstGesture = () => {
-      tryPlay()
-      window.removeEventListener('pointerdown', onFirstGesture)
-      window.removeEventListener('keydown', onFirstGesture)
-      window.removeEventListener('scroll', onFirstGesture)
-    }
-    window.addEventListener('pointerdown', onFirstGesture, { once: true, passive: true })
-    window.addEventListener('keydown', onFirstGesture, { once: true })
-    window.addEventListener('scroll', onFirstGesture, { once: true, passive: true })
-    return () => {
-      window.removeEventListener('pointerdown', onFirstGesture)
-      window.removeEventListener('keydown', onFirstGesture)
-      window.removeEventListener('scroll', onFirstGesture)
-    }
-  }, [])
-
   // Pure scroll-scrubbed progress through this section.
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -358,15 +326,7 @@ export default function ScrollExpandMedia({
                   setVideoAspect(v.videoWidth / v.videoHeight)
                 }
               }}
-              // Placeholder bg is the section's deep-violet gradient
-              // instead of solid black so the frame doesn't read as
-              // 'broken' during the few hundred ms before the first
-              // video frame paints on a cold load.
-              className="pointer-events-none h-full w-full object-cover object-top"
-              style={{
-                background:
-                  'linear-gradient(180deg, #1A0F2E 0%, #140A2C 30%, #0E0720 65%, #08041A 100%)',
-              }}
+              className="pointer-events-none h-full w-full bg-black object-cover object-top"
             />
 
             {/* Center play/pause icon. Persistent when paused, briefly
