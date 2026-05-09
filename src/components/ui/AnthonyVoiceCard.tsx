@@ -1,6 +1,7 @@
 import { useRef, type MouseEvent } from 'react'
 import { motion } from 'framer-motion'
 import { triggerAnthonyWidget } from './anthonyAgent'
+import { useIsMobile } from '../../lib/useIsMobile'
 
 /**
  * Premium custom hero voice-agent card. The raw ElevenLabs widget is
@@ -139,6 +140,46 @@ export function AnthonyVoiceCard() {
    in the hero card AND the floating button.
    ============================================================ */
 export function WarmOrb({ size = 88 }: { size?: number }) {
+  const isMobile = useIsMobile()
+
+  // Mobile: static violet orb. Three concurrent infinite animations
+  // (orbSpin conic-gradient + orbPulse halo + orbShimmer specular)
+  // were the largest single GPU/CPU cost in the visible part of the
+  // page on phones, contributing materially to overall lag. Keeps
+  // a glowing violet sphere with a fixed highlight so the brand
+  // identity stays intact — just not animated on phones.
+  if (isMobile) {
+    return (
+      <span
+        aria-hidden
+        className="relative inline-block"
+        style={{ width: size, height: size }}
+      >
+        <span
+          className="absolute inset-0 rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle at 30% 25%, #c4b5fd 0%, #7c3aed 35%, #4c1d95 70%, #1f0648 100%)',
+            boxShadow:
+              '0 0 24px 4px rgba(124,58,237,0.45), inset 0 -8px 18px rgba(20,4,55,0.55), inset 0 6px 14px rgba(255,255,255,0.18)',
+          }}
+        />
+        <span
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            top: '12%',
+            left: '20%',
+            width: '42%',
+            height: '30%',
+            background:
+              'radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.7), transparent 70%)',
+            filter: 'blur(2px)',
+          }}
+        />
+      </span>
+    )
+  }
+
   return (
     <span
       aria-hidden
