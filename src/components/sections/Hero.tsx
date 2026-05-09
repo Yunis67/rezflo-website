@@ -104,12 +104,20 @@ export function Hero() {
           description + the proof point — instead of one wall of text.
           Desktop (lg+): unchanged 2-column side-by-side layout.
         */}
+        {/*
+          On mobile/tablet (sub-lg) we keep the wrapping div for its
+          top-padding (preserves the headline's vertical position
+          below the nav) but hide both paragraphs — the user found
+          them congested at small widths. Desktop (lg+) still renders
+          the full two-column intro with the editorial divider rule
+          on the right paragraph.
+        */}
         <div className="grid grid-cols-1 gap-9 pt-28 md:pt-32 lg:grid-cols-2 lg:gap-10">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 md:text-base md:leading-relaxed"
+            className="hidden max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 lg:block lg:text-base lg:leading-relaxed"
           >
             RezFlo answers calls, takes orders, books reservations, filters spam,
             and captures every detail so your restaurant team can stay focused
@@ -119,7 +127,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.26 }}
-            className="relative max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 before:mb-5 before:block before:h-px before:w-10 before:bg-gradient-to-r before:from-violet-300/70 before:to-transparent md:text-base md:leading-relaxed lg:ml-auto lg:text-right lg:before:ml-auto lg:before:bg-gradient-to-l"
+            className="relative ml-auto hidden max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 before:mb-5 before:block before:h-px before:w-10 before:bg-gradient-to-l before:from-violet-300/70 before:to-transparent before:ml-auto lg:block lg:text-right lg:text-base lg:leading-relaxed"
           >
             0 missed calls. 24/7 restaurant coverage.
           </motion.p>
