@@ -52,6 +52,30 @@ export function Hero() {
     }
   }, [])
 
+  // Pause the hero video as soon as it scrolls out of view. Otherwise
+  // it keeps occupying the mobile hardware H.264 decoder forever, so
+  // when another video further down the page (e.g. the Qamaria demo)
+  // tries to play it has to fight for decoder time and stutters.
+  useEffect(() => {
+    const v = heroVideoRef.current
+    if (!v) return
+    if (typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            v.play().catch(() => {})
+          } else {
+            v.pause()
+          }
+        }
+      },
+      { threshold: 0.01 },
+    )
+    io.observe(v)
+    return () => io.disconnect()
+  }, [])
+
   return (
     <section
       id="top"

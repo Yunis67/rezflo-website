@@ -68,6 +68,33 @@ export default function ScrollExpandMedia({
     window.scrollTo(0, 0)
   }, [isMobile])
 
+  // Pause the video as soon as it scrolls out of view. Otherwise it
+  // keeps occupying the mobile hardware H.264 decoder forever, which
+  // makes any other video on the page (e.g. the Qamaria testimonial
+  // demo) stutter when it tries to play. When the user scrolls back
+  // to it, autoPlay restarts it. This applies to the mobile branch
+  // — desktop uses scroll-driven scrubbing, not autoplay.
+  useEffect(() => {
+    if (!isMobile) return
+    const v = videoRef.current
+    if (!v) return
+    if (typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            v.play().catch(() => {})
+          } else {
+            v.pause()
+          }
+        }
+      },
+      { threshold: 0.01 },
+    )
+    io.observe(v)
+    return () => io.disconnect()
+  }, [isMobile])
+
   // Pure scroll-scrubbed progress through this section.
   const { scrollYProgress } = useScroll({
     target: sectionRef,
