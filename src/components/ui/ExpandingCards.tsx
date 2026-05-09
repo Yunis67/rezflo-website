@@ -88,7 +88,9 @@ export function ExpandingCards({
     <div
       ref={containerRef}
       role="list"
-      className="grid w-full gap-3 transition-[grid-template-columns,grid-template-rows] duration-[700ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+      // Shorter transition on mobile (300ms) to feel responsive on
+      // tap; the desktop 700ms reads better when columns expand.
+      className="grid w-full gap-3 transition-[grid-template-columns,grid-template-rows] duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] md:duration-[700ms]"
       style={{ gridTemplateColumns, gridTemplateRows, height: containerHeight }}
     >
       {items.map((item, i) => (
@@ -143,11 +145,16 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
         draggable={false}
         decoding="async"
         loading="eager"
+        // Mobile: only animate transform (cheap, GPU-composited).
+        // CSS filter transitions are extremely expensive on mobile —
+        // they were the cause of the buffering/stutter when tapping
+        // a card to expand. Desktop keeps the full smooth transform
+        // + filter cross-fade for the premium look.
         className={cn(
-          'absolute inset-0 h-full w-full select-none object-cover transition-[transform,filter] duration-[900ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]',
+          'absolute inset-0 h-full w-full select-none object-cover transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] md:transition-[transform,filter] md:duration-[900ms]',
           active
-            ? 'scale-100 brightness-105 contrast-[1.08] saturate-[1.18]'
-            : 'scale-110 blur-[6px] brightness-[0.4] saturate-[0.85]',
+            ? 'scale-100 md:brightness-105 md:contrast-[1.08] md:saturate-[1.18]'
+            : 'scale-110 brightness-[0.4] md:blur-[6px] md:saturate-[0.85]',
         )}
         style={{
           imageRendering: 'auto',

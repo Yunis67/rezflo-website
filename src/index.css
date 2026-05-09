@@ -39,6 +39,34 @@ html, body {
   }
 }
 
+/* Anthony live conversation in progress — pause every continuous
+   animation on the page so the CPU/GPU isn't fighting the WebRTC
+   audio thread. The widget toggles
+   `<html data-anthony-active="true|false">` via anthonyAgent.ts.
+   On mobile this is the largest single fix for "muffled/laggy"
+   audio: marquees and conic-gradient orb spins are surprisingly
+   expensive on phones once the audio decoder is also running. */
+html[data-anthony-active="true"] .animate-marquee,
+html[data-anthony-active="true"] .animate-marquee-vertical,
+html[data-anthony-active="true"] [class*="animate-spin"],
+html[data-anthony-active="true"] [class*="animate-pulse"],
+html[data-anthony-active="true"] [class*="animate-bounce"] {
+  animation-play-state: paused !important;
+}
+/* WarmOrb keyframes (orbSpin / orbPulse / orbShimmer) are inline
+   <style> rules; pause anything matching their names too. */
+html[data-anthony-active="true"] *,
+html[data-anthony-active="true"] *::before,
+html[data-anthony-active="true"] *::after {
+  animation-play-state: paused !important;
+}
+/* Keep the widget itself live — it has its own animations
+   (microphone ring, talk indicator) that must continue. */
+html[data-anthony-active="true"] elevenlabs-convai,
+html[data-anthony-active="true"] elevenlabs-convai * {
+  animation-play-state: running !important;
+}
+
 /* Marquee keyframes + explicit utility classes. We define the
    animation classes directly (rather than via Tailwind's @theme
    inline auto-generation) so they're guaranteed to render. */

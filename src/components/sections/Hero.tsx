@@ -96,13 +96,20 @@ export function Hero() {
 
       {/* === Content =================================================== */}
       <Container className="relative z-10 flex flex-1 flex-col">
-        {/* Top intro paragraphs (just below nav) */}
-        <div className="grid grid-cols-1 gap-6 pt-28 md:pt-32 lg:grid-cols-2 lg:gap-10">
+        {/*
+          Top intro paragraphs (just below nav).
+          Mobile: more vertical breathing room (gap-9), relaxed line
+          height, and an editorial divider rule between the two
+          paragraphs so they read as two distinct beats — the
+          description + the proof point — instead of one wall of text.
+          Desktop (lg+): unchanged 2-column side-by-side layout.
+        */}
+        <div className="grid grid-cols-1 gap-9 pt-28 md:pt-32 lg:grid-cols-2 lg:gap-10">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="max-w-md text-sm font-normal text-white/80 md:text-base"
+            className="max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 md:text-base md:leading-relaxed"
           >
             RezFlo answers calls, takes orders, books reservations, filters spam,
             and captures every detail so your restaurant team can stay focused
@@ -112,7 +119,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.26 }}
-            className="ml-auto max-w-md text-sm font-normal text-white/80 lg:text-right md:text-base"
+            className="relative max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 before:mb-5 before:block before:h-px before:w-10 before:bg-gradient-to-r before:from-violet-300/70 before:to-transparent md:text-base md:leading-relaxed lg:ml-auto lg:text-right lg:before:ml-auto lg:before:bg-gradient-to-l"
           >
             0 missed calls. 24/7 restaurant coverage.
           </motion.p>

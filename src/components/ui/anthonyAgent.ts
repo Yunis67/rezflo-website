@@ -13,6 +13,18 @@
 
 const HOST_ID = 'anthony-agent-host'
 
+/**
+ * Toggle a global data attribute on <html> while the conversation is
+ * active. CSS uses [data-anthony-active="true"] selectors to pause
+ * expensive marquees, shader-style animations, and looped transforms
+ * so the device's CPU/GPU isn't fighting the WebRTC audio thread.
+ * That difference is the largest single contributor to mobile audio
+ * sounding muffled/skewed during a live call.
+ */
+function setActive(active: boolean): void {
+  document.documentElement.dataset.anthonyActive = active ? 'true' : 'false'
+}
+
 function findWidget(): HTMLElement | null {
   const host = document.getElementById(HOST_ID)
   if (!host) return null
@@ -23,6 +35,7 @@ function clickShadowLauncher(el: HTMLElement): boolean {
   // Reveal the widget UI for the duration of the conversation.
   const host = document.getElementById(HOST_ID)
   if (host) host.dataset.open = 'true'
+  setActive(true)
 
   // Walk shadow roots looking for the first interactive button.
   const visited = new Set<ShadowRoot>()
@@ -63,6 +76,7 @@ export function triggerAnthonyWidget(): void {
         ;(m as () => void).call(widget)
         const host = document.getElementById(HOST_ID)
         if (host) host.dataset.open = 'true'
+  setActive(true)
         return
       } catch {
         /* fall through to click */
@@ -76,10 +90,12 @@ export function triggerAnthonyWidget(): void {
     // click the native widget themselves.
     const host = document.getElementById(HOST_ID)
     if (host) host.dataset.open = 'true'
+  setActive(true)
   }
 }
 
 export function closeAnthonyWidget(): void {
   const host = document.getElementById(HOST_ID)
   if (host) host.dataset.open = 'false'
+  setActive(false)
 }
