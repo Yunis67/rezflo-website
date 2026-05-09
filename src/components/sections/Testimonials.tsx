@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Container } from '../ui/Container'
 import { SectionLabel } from '../ui/SectionLabel'
@@ -105,10 +105,51 @@ function DemoVideoCard({ isMobile, onPlayingChange }: DemoVideoCardProps) {
   const [paused, setPaused] = useState(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
+  // Mount the <video> from the start with preload="metadata" so when
+  // the user taps the thumbnail we can call play() synchronously in
+  // the same gesture stack — that's what works under iOS Low Power
+  // Mode (the autoPlay attribute alone is blocked there). The
+  // thumbnail simply overlays on top until the user taps.
   const handleStart = () => {
     setStarted(true)
     onPlayingChange(true)
+    const v = videoRef.current
+    if (v) {
+      v.muted = false
+      // Call play() synchronously inside the click handler so iOS
+      // counts it as user-initiated even in Low Power Mode.
+      v.play().catch(() => {
+        // If audio is blocked, retry muted as a fallback so something
+        // shows on screen rather than a frozen frame.
+        v.muted = true
+        v.play().catch(() => {
+          // Both attempts blocked — surface the play button so the
+          // user can try again on a fresh gesture.
+          setPaused(true)
+        })
+      })
+    }
   }
+
+  // Pause the demo when scrolled out of view so it stops occupying
+  // the mobile hardware decoder once the user has moved on.
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    if (typeof IntersectionObserver === 'undefined') return
+    const io = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting && started && !v.paused) {
+            v.pause()
+          }
+        }
+      },
+      { threshold: 0.01 },
+    )
+    io.observe(v)
+    return () => io.disconnect()
+  }, [started])
 
   // On mobile, the wrapper's backdrop-blur and the halo's blur-3xl
   // force the GPU to re-rasterize those layers on every video frame —
@@ -154,74 +195,65 @@ function DemoVideoCard({ isMobile, onPlayingChange }: DemoVideoCardProps) {
           className="relative overflow-hidden rounded-[20px] border border-white/[0.06]"
           style={{ aspectRatio: '9 / 16', contain: 'paint' }}
         >
-          {started ? (
-            isMobile ? (
-              // Mobile: no native controls (those redraw constantly on
-              // iOS Safari and interfere with the decoder). Single tap
-              // anywhere on the frame toggles play/pause.
-              <button
-                type="button"
-                onClick={() => {
-                  const v = videoRef.current
-                  if (!v) return
-                  if (v.paused) {
-                    v.play().catch(() => {})
-                  } else {
-                    v.pause()
-                  }
-                }}
-                aria-label={paused ? 'Play video' : 'Pause video'}
-                className="absolute inset-0 block w-full p-0 text-left focus:outline-none"
-              >
-                <video
-                  ref={videoRef}
-                  className="absolute inset-0 h-full w-full object-cover bg-black"
-                  src="/videos/qamaria-demo.mp4"
-                  autoPlay
-                  playsInline
-                  preload="auto"
-                  disablePictureInPicture
-                  disableRemotePlayback
-                  controls={false}
-                  onPlay={() => {
-                    setPaused(false)
-                    onPlayingChange(true)
-                  }}
-                  onPause={() => {
-                    setPaused(true)
-                    onPlayingChange(false)
-                  }}
-                  onEnded={() => onPlayingChange(false)}
-                  style={{ transform: 'translateZ(0)' }}
-                />
-                {paused && (
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white ring-1 ring-white/20"
-                  >
-                    <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-white" aria-hidden>
-                      <path d="M8 5.14v13.72a1 1 0 0 0 1.55.83l10.4-6.86a1 1 0 0 0 0-1.66L9.55 4.31A1 1 0 0 0 8 5.14Z" />
-                    </svg>
-                  </span>
-                )}
-              </button>
-            ) : (
-              <video
-                ref={videoRef}
-                className="absolute inset-0 h-full w-full object-cover"
-                src="/videos/qamaria-demo.mp4"
-                controls
-                autoPlay
-                playsInline
-                preload="auto"
-                disablePictureInPicture
-                disableRemotePlayback
-                onEnded={() => onPlayingChange(false)}
-                style={{ transform: 'translateZ(0)' }}
-              />
-            )
-          ) : (
-            <DemoThumbnail onPlay={handleStart} />
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover bg-black"
+            src="/videos/qamaria-demo.mp4"
+            playsInline
+            preload="metadata"
+            disablePictureInPicture
+            disableRemotePlayback
+            controls={!isMobile && started}
+            // @ts-expect-error legacy iOS attribute, still useful on older WebKit
+            webkit-playsinline="true"
+            x5-video-player-type="h5-page"
+            onPlay={() => {
+              setPaused(false)
+              onPlayingChange(true)
+            }}
+            onPause={() => {
+              setPaused(true)
+              onPlayingChange(false)
+            }}
+            onEnded={() => onPlayingChange(false)}
+            style={{ transform: 'translateZ(0)' }}
+          />
+
+          {/* Thumbnail overlay — sits above the (paused) video until
+              the user taps to start. After that it's unmounted so the
+              video and its tap-to-toggle layer get the full frame. */}
+          {!started && <DemoThumbnail onPlay={handleStart} />}
+
+          {/* Mobile-only tap-to-toggle layer. Sibling of <video> so
+              iOS Safari doesn't treat the video as a button child and
+              force its native fullscreen control overlay. */}
+          {started && isMobile && (
+            <button
+              type="button"
+              onClick={e => {
+                e.preventDefault()
+                const v = videoRef.current
+                if (!v) return
+                if (v.paused) {
+                  v.play().catch(() => {})
+                } else {
+                  v.pause()
+                }
+              }}
+              aria-label={paused ? 'Play video' : 'Pause video'}
+              className="absolute inset-0 z-10 block h-full w-full bg-transparent p-0 focus:outline-none"
+            >
+              {paused && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white ring-1 ring-white/20"
+                >
+                  <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-white" aria-hidden>
+                    <path d="M8 5.14v13.72a1 1 0 0 0 1.55.83l10.4-6.86a1 1 0 0 0 0-1.66L9.55 4.31A1 1 0 0 0 8 5.14Z" />
+                  </svg>
+                </span>
+              )}
+            </button>
           )}
         </div>
       </div>
