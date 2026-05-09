@@ -55,9 +55,9 @@ export function ScrollLogoMarqueeSection() {
     offset: ['start end', 'end start'],
   })
 
-  // Faster, more dynamic horizontal travel — bumped from ±300 to ±900.
-  const xRow1 = useTransform(scrollYProgress, [0, 1], [0, -900])
-  const xRow2 = useTransform(scrollYProgress, [0, 1], [-900, 0])
+  // Faster, more dynamic horizontal travel — bumped from ±900 to ±1400.
+  const xRow1 = useTransform(scrollYProgress, [0, 1], [0, -1400])
+  const xRow2 = useTransform(scrollYProgress, [0, 1], [-1400, 0])
 
   return (
     <section
