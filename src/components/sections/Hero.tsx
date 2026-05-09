@@ -126,7 +126,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.18 }}
-            className="max-w-md text-sm font-normal text-white/80 md:text-base"
+            className="hidden md:block max-w-md text-sm font-normal text-white/80 md:text-base"
           >
             RezFlo answers calls, takes orders, books reservations, filters spam,
             and captures every detail so your restaurant team can stay focused
