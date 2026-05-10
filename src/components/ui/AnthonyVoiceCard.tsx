@@ -147,13 +147,6 @@ export function WarmOrb({ size = 88 }: { size?: number }) {
   // gradient defs (which would let later ones override earlier ones).
   const uid = useId().replace(/:/g, '')
 
-  // 12 wedges around the disc, alternating bright / dim so the
-  // rotating group reads as metallic radiant beams.
-  const wedges = Array.from({ length: 12 }, (_, i) => ({
-    angle: i * 30,
-    bright: i % 2 === 0,
-  }))
-
   return (
     <span
       aria-hidden
@@ -186,14 +179,29 @@ export function WarmOrb({ size = 88 }: { size?: number }) {
             <stop offset="55%" stopColor="#5b21b6" />
             <stop offset="100%" stopColor="#1f0648" />
           </radialGradient>
+          {/* Each ray is a vertical ellipse running from center to
+              edge, filled with this top-to-bottom gradient so it's
+              bright in the middle and fades out at the tip + the
+              center of the disc. */}
+          <linearGradient id={`orb-ray-${uid}`} x1="50%" y1="0%" x2="50%" y2="100%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0)" />
+            <stop offset="35%" stopColor="rgba(255,255,255,0.85)" />
+            <stop offset="65%" stopColor="rgba(255,255,255,0.85)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </linearGradient>
           <radialGradient id={`orb-edge-${uid}`} cx="50%" cy="50%" r="50%">
             <stop offset="55%" stopColor="rgba(20,4,55,0)" />
-            <stop offset="100%" stopColor="rgba(20,4,55,0.7)" />
+            <stop offset="100%" stopColor="rgba(20,4,55,0.75)" />
           </radialGradient>
           <radialGradient id={`orb-spec-${uid}`} cx="35%" cy="28%" r="22%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
+            <stop offset="0%" stopColor="rgba(255,255,255,0.9)" />
             <stop offset="100%" stopColor="rgba(255,255,255,0)" />
           </radialGradient>
+          {/* Gaussian blur softens the rays so they read as smooth
+              metallic beams instead of sharp ellipses. */}
+          <filter id={`orb-ray-blur-${uid}`} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.6" />
+          </filter>
           <clipPath id={`orb-clip-${uid}`}>
             <circle cx="50" cy="50" r="50" />
           </clipPath>
@@ -203,23 +211,23 @@ export function WarmOrb({ size = 88 }: { size?: number }) {
           {/* Base disc */}
           <circle cx="50" cy="50" r="50" fill={`url(#orb-base-${uid})`} />
 
-          {/* Rotating metallic rays. Each wedge is a narrow rect
-              from center to edge, alternating bright + dim. */}
+          {/* Four broad rotating rays — matches the desktop conic
+              version which has 4 white peaks at ~18°/110°/210°/310°. */}
           <g
             style={{
               animation: 'orbSpin 16s linear infinite',
               transformOrigin: '50px 50px',
             }}
+            filter={`url(#orb-ray-blur-${uid})`}
           >
-            {wedges.map(({ angle, bright }) => (
-              <rect
+            {[18, 110, 210, 310].map(angle => (
+              <ellipse
                 key={angle}
-                x="48"
-                y="0"
-                width="4"
-                height="50"
-                fill="rgb(255,255,255)"
-                opacity={bright ? 0.55 : 0.18}
+                cx="50"
+                cy="50"
+                rx="6"
+                ry="50"
+                fill={`url(#orb-ray-${uid})`}
                 transform={`rotate(${angle} 50 50)`}
               />
             ))}
