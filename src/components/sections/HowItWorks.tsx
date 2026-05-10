@@ -634,18 +634,19 @@ function CallFlowMockup() {
               </div>
 
               <div className="mt-4 space-y-2 text-[0.8rem] text-white/75">
-                {/* Lines stay mounted across phases. Their opacity is
-                    driven by the current phase so the parent card's
-                    fade and the line fades end at the same instant —
-                    no more transcripts vanishing while the card body
-                    is still fading. Stagger only applies on entry. */}
-                <TranscriptLine visible={phase === 2} delay={0.1}>
+                {/* No stagger / per-line fade. The parent phase-2
+                    container handles the opacity transition, and the
+                    chat bubbles appear as one unit with the header —
+                    no "empty answering card" intermediate frame
+                    between the notifications stage and the full
+                    conversation stage. */}
+                <TranscriptLine>
                   “Thanks for calling Bella Pasta — how can I help?”
                 </TranscriptLine>
-                <TranscriptLine visible={phase === 2} delay={0.6} muted>
+                <TranscriptLine muted>
                   “Hi, I&rsquo;d like to book a table for 4 at 7pm.”
                 </TranscriptLine>
-                <TranscriptLine visible={phase === 2} delay={1.1}>
+                <TranscriptLine>
                   “Great — booked. Anything else?”
                 </TranscriptLine>
               </div>
@@ -756,23 +757,13 @@ function FadeSlot({
 
 function TranscriptLine({
   children,
-  delay = 0,
   muted = false,
-  visible = true,
 }: {
   children: React.ReactNode
-  delay?: number
   muted?: boolean
-  visible?: boolean
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: visible ? 1 : 0 }}
-      // Apply the staggered delay only on entry; on exit we want all
-      // lines to fade out together so they end exactly when the parent
-      // card finishes its own fade-out.
-      transition={{ duration: 0.45, delay: visible ? delay : 0, ease: 'easeOut' }}
+    <div
       className={`rounded-lg px-3 py-2 ${
         muted
           ? 'self-end bg-white/[0.05] text-white/65'
@@ -781,10 +772,9 @@ function TranscriptLine({
       style={{
         maxWidth: '85%',
         marginLeft: muted ? 'auto' : 0,
-        willChange: 'opacity',
       }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
