@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { Container } from '../ui/Container'
 import { Button } from '../ui/Button'
-import { triggerAnthonyWidget } from '../ui/anthonyAgent'
 import { site } from '../../data/site'
 
 export function FinalCTA() {
@@ -72,15 +71,7 @@ export function FinalCTA() {
               >
                 {site.cta.bookDemoLabel}
               </Button>
-              <Button
-                href="#try"
-                size="lg"
-                variant="secondary"
-                onClick={e => {
-                  e.preventDefault()
-                  triggerAnthonyWidget()
-                }}
-              >
+              <Button href="#top" size="lg" variant="secondary">
                 {site.cta.tryItLabel}
               </Button>
             </div>
