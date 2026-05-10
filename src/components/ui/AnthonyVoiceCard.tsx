@@ -1,4 +1,4 @@
-import { useRef, type MouseEvent } from 'react'
+import { useId, useRef, type MouseEvent } from 'react'
 import { motion } from 'framer-motion'
 import { triggerAnthonyWidget } from './anthonyAgent'
 
@@ -134,18 +134,33 @@ export function AnthonyVoiceCard() {
 }
 
 /* ============================================================
-   Metallic purple orb — radiant conic-gradient with slow rotating
-   light beams, soft violet halo, and a specular highlight. Used
-   in the hero card AND the floating button.
+   Metallic purple orb — SVG-based so it renders identically on
+   iOS Safari and desktop. The original CSS conic-gradient version
+   hit a known iOS Safari bug when combined with overflow:hidden +
+   border-radius + multiple inset box-shadows inside a preserve-3d
+   parent (the Anthony hero card), which collapsed the orb to a flat
+   purple sphere on phones. SVG gradients + rotated rays render
+   reliably across all browsers.
    ============================================================ */
 export function WarmOrb({ size = 88 }: { size?: number }) {
+  // Stable unique id so multiple WarmOrbs on a page don't share
+  // gradient defs (which would let later ones override earlier ones).
+  const uid = useId().replace(/:/g, '')
+
+  // 12 wedges around the disc, alternating bright / dim so the
+  // rotating group reads as metallic radiant beams.
+  const wedges = Array.from({ length: 12 }, (_, i) => ({
+    angle: i * 30,
+    bright: i % 2 === 0,
+  }))
+
   return (
     <span
       aria-hidden
       className="relative inline-block"
       style={{ width: size, height: size }}
     >
-      {/* Outer pulsing halo */}
+      {/* Outer pulsing halo — pure CSS works fine, no conic involved */}
       <span
         className="absolute inset-[-32%] rounded-full"
         style={{
@@ -156,41 +171,67 @@ export function WarmOrb({ size = 88 }: { size?: number }) {
         }}
       />
 
-      {/* Conic radiant beams — slowly rotating light streaks */}
-      <span
-        className="absolute inset-0 rounded-full overflow-hidden"
+      <svg
+        viewBox="0 0 100 100"
+        width={size}
+        height={size}
+        className="absolute inset-0 block"
         style={{
-          animation: 'orbSpin 16s linear infinite',
-          background:
-            'conic-gradient(from 0deg, #3b0d80 0deg, #ffffff 18deg, #6d28d9 40deg, #2a0860 80deg, #ffffff 110deg, #5b21b6 140deg, #1f0648 180deg, #ffffff 210deg, #6d28d9 240deg, #2a0860 280deg, #ffffff 310deg, #3b0d80 360deg)',
-          boxShadow:
-            '0 0 32px 6px rgba(124,58,237,0.55), inset 0 -10px 22px rgba(20,4,55,0.65), inset 0 6px 16px rgba(255,255,255,0.35)',
+          filter: 'drop-shadow(0 0 18px rgba(124,58,237,0.55))',
         }}
-      />
+      >
+        <defs>
+          <radialGradient id={`orb-base-${uid}`} cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor="#a78bfa" />
+            <stop offset="55%" stopColor="#5b21b6" />
+            <stop offset="100%" stopColor="#1f0648" />
+          </radialGradient>
+          <radialGradient id={`orb-edge-${uid}`} cx="50%" cy="50%" r="50%">
+            <stop offset="55%" stopColor="rgba(20,4,55,0)" />
+            <stop offset="100%" stopColor="rgba(20,4,55,0.7)" />
+          </radialGradient>
+          <radialGradient id={`orb-spec-${uid}`} cx="35%" cy="28%" r="22%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </radialGradient>
+          <clipPath id={`orb-clip-${uid}`}>
+            <circle cx="50" cy="50" r="50" />
+          </clipPath>
+        </defs>
 
-      {/* Glassy core overlay — softens beams and adds depth */}
-      <span
-        className="absolute inset-0 rounded-full pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(circle at 50% 50%, rgba(124,58,237,0) 0%, rgba(76,29,149,0.35) 55%, rgba(20,4,55,0.55) 100%)',
-        }}
-      />
+        <g clipPath={`url(#orb-clip-${uid})`}>
+          {/* Base disc */}
+          <circle cx="50" cy="50" r="50" fill={`url(#orb-base-${uid})`} />
 
-      {/* Specular highlight — subtle gleam, fixed position */}
-      <span
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          top: '12%',
-          left: '20%',
-          width: '42%',
-          height: '30%',
-          background:
-            'radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.85), transparent 70%)',
-          filter: 'blur(2px)',
-          animation: 'orbShimmer 4.8s ease-in-out infinite',
-        }}
-      />
+          {/* Rotating metallic rays. Each wedge is a narrow rect
+              from center to edge, alternating bright + dim. */}
+          <g
+            style={{
+              animation: 'orbSpin 16s linear infinite',
+              transformOrigin: '50px 50px',
+            }}
+          >
+            {wedges.map(({ angle, bright }) => (
+              <rect
+                key={angle}
+                x="48"
+                y="0"
+                width="4"
+                height="50"
+                fill="rgb(255,255,255)"
+                opacity={bright ? 0.55 : 0.18}
+                transform={`rotate(${angle} 50 50)`}
+              />
+            ))}
+          </g>
+
+          {/* Darken the rim so the disc reads as a 3D ball */}
+          <circle cx="50" cy="50" r="50" fill={`url(#orb-edge-${uid})`} />
+
+          {/* Upper-left specular highlight */}
+          <circle cx="35" cy="30" r="18" fill={`url(#orb-spec-${uid})`} />
+        </g>
+      </svg>
 
       <style>{`
         @keyframes orbPulse {
@@ -200,10 +241,6 @@ export function WarmOrb({ size = 88 }: { size?: number }) {
         @keyframes orbSpin {
           from { transform: rotate(0deg); }
           to   { transform: rotate(360deg); }
-        }
-        @keyframes orbShimmer {
-          0%, 100% { opacity: 0.65; }
-          50%     { opacity: 1; }
         }
       `}</style>
     </span>
