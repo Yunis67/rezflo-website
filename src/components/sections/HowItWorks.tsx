@@ -634,13 +634,20 @@ function CallFlowMockup() {
               </div>
 
               <div className="mt-4 space-y-2 text-[0.8rem] text-white/75">
-                {phase === 2 && (
-                  <>
-                    <TranscriptLine delay={0.1}>“Thanks for calling Bella Pasta — how can I help?”</TranscriptLine>
-                    <TranscriptLine delay={0.6} muted>“Hi, I&rsquo;d like to book a table for 4 at 7pm.”</TranscriptLine>
-                    <TranscriptLine delay={1.1}>“Great — booked. Anything else?”</TranscriptLine>
-                  </>
-                )}
+                {/* Lines stay mounted across phases. Their opacity is
+                    driven by the current phase so the parent card's
+                    fade and the line fades end at the same instant —
+                    no more transcripts vanishing while the card body
+                    is still fading. Stagger only applies on entry. */}
+                <TranscriptLine visible={phase === 2} delay={0.1}>
+                  “Thanks for calling Bella Pasta — how can I help?”
+                </TranscriptLine>
+                <TranscriptLine visible={phase === 2} delay={0.6} muted>
+                  “Hi, I&rsquo;d like to book a table for 4 at 7pm.”
+                </TranscriptLine>
+                <TranscriptLine visible={phase === 2} delay={1.1}>
+                  “Great — booked. Anything else?”
+                </TranscriptLine>
               </div>
             </div>
           </div>
@@ -734,7 +741,10 @@ function FadeSlot({
     <div
       style={{
         opacity: show ? 1 : 0,
-        transition: `opacity 350ms ease ${delay * 1000}ms`,
+        // Match the 500ms transition the phase-2 / phase-3 main
+        // content slots use so notifications, conversation card, and
+        // logo+pills all fade together — no slot finishes early.
+        transition: `opacity 500ms ease ${delay * 1000}ms`,
         pointerEvents: show ? 'auto' : 'none',
         willChange: 'opacity',
       }}
@@ -748,16 +758,21 @@ function TranscriptLine({
   children,
   delay = 0,
   muted = false,
+  visible = true,
 }: {
   children: React.ReactNode
   delay?: number
   muted?: boolean
+  visible?: boolean
 }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.45, delay, ease: 'easeOut' }}
+      animate={{ opacity: visible ? 1 : 0 }}
+      // Apply the staggered delay only on entry; on exit we want all
+      // lines to fade out together so they end exactly when the parent
+      // card finishes its own fade-out.
+      transition={{ duration: 0.45, delay: visible ? delay : 0, ease: 'easeOut' }}
       className={`rounded-lg px-3 py-2 ${
         muted
           ? 'self-end bg-white/[0.05] text-white/65'

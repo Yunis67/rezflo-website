@@ -20,8 +20,14 @@ html, body {
    Selectors use exact class names — substring matching ([class*=...])
    would also catch `md:backdrop-blur-*` whose Tailwind rule is itself
    guarded by min-width:768px and would leak the reduced blur down to
-   mobile. */
-@media (max-width: 767px) {
+   mobile.
+
+   Match phones in BOTH orientations: portrait (max-width 767px) and
+   landscape (short height + coarse pointer). Without the landscape
+   branch a rotated phone would keep desktop-strength blur and the
+   page would crash/lag alongside the WebGL shader. */
+@media (max-width: 767px),
+       (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
   .glass-card { backdrop-filter: blur(10px) saturate(120%); }
   .backdrop-blur-xl { backdrop-filter: blur(8px); }
   .backdrop-blur-2xl { backdrop-filter: blur(10px); }
