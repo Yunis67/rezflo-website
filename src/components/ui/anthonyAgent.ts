@@ -9,7 +9,12 @@
  *    user hits one of our custom "Talk to Anthony" CTAs.
  *  - If the widget exposes an imperative API (open/expand/start), we
  *    try those first — best-effort, with click fallback.
+ *  - Any time the widget is opened we flip on "voice mode" so the rest
+ *    of the page can pause its videos / marquees / animations and let
+ *    the WebRTC audio stream have the CPU/GPU/network to itself.
  */
+
+import { setVoiceMode } from '../../lib/voiceMode'
 
 const HOST_ID = 'anthony-agent-host'
 
@@ -53,6 +58,8 @@ export function triggerAnthonyWidget(): void {
     return
   }
 
+  setVoiceMode(true)
+
   // Try imperative APIs first (different widget versions expose
   // different method names; calls are best-effort).
   const anyWidget = widget as unknown as Record<string, unknown>
@@ -82,4 +89,5 @@ export function triggerAnthonyWidget(): void {
 export function closeAnthonyWidget(): void {
   const host = document.getElementById(HOST_ID)
   if (host) host.dataset.open = 'false'
+  setVoiceMode(false)
 }

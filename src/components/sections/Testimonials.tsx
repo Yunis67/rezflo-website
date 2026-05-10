@@ -4,6 +4,7 @@ import { Container } from '../ui/Container'
 import { SectionLabel } from '../ui/SectionLabel'
 import { testimonials } from '../../data/testimonials'
 import { useIsMobile } from '../../lib/useIsMobile'
+import { isVoiceModeActive, subscribeVoiceMode, useVoiceMode } from '../../lib/voiceMode'
 import {
   TestimonialsColumn,
   type MarqueeTestimonial,
@@ -34,8 +35,11 @@ export function Testimonials() {
   // The marquee cards use backdrop-filter (glass-card) and run a
   // continuous transform animation; combined with H.264 decode that
   // saturates the mobile GPU and makes playback stutter.
+  // Also pause it any time the Anthony voice agent is active so the
+  // WebRTC audio stream isn't fighting framer-motion + backdrop-filter.
   const [videoPlaying, setVideoPlaying] = useState(false)
-  const pauseMarquee = isMobile && videoPlaying
+  const voiceActive = useVoiceMode()
+  const pauseMarquee = (isMobile && videoPlaying) || voiceActive
 
   // The fade-out mask on the marquee container is decorative but
   // forces an offscreen compositing pass. Drop it on mobile.
@@ -131,24 +135,37 @@ function DemoVideoCard({ isMobile, onPlayingChange }: DemoVideoCardProps) {
     }
   }
 
-  // Pause the demo when scrolled out of view so it stops occupying
-  // the mobile hardware decoder once the user has moved on.
+  // Pause the demo when scrolled out of view OR when the Anthony
+  // voice agent is active. Off-screen pause frees the mobile decoder
+  // for whatever the user looks at next; voice-mode pause makes sure
+  // the demo's audio + decode aren't competing with the WebRTC voice
+  // call.
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
     if (typeof IntersectionObserver === 'undefined') return
+    let inView = true
+    const sync = () => {
+      if (!started) return
+      if ((!inView || isVoiceModeActive()) && !v.paused) {
+        v.pause()
+      }
+    }
     const io = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
-          if (!entry.isIntersecting && started && !v.paused) {
-            v.pause()
-          }
+          inView = entry.isIntersecting
         }
+        sync()
       },
       { threshold: 0.01 },
     )
     io.observe(v)
-    return () => io.disconnect()
+    const offVoice = subscribeVoiceMode(sync)
+    return () => {
+      io.disconnect()
+      offVoice()
+    }
   }, [started])
 
   // On mobile, the wrapper's backdrop-blur and the halo's blur-3xl

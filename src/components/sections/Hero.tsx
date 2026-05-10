@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { Container } from '../ui/Container'
 import { site } from '../../data/site'
 import { AnthonyVoiceCard } from '../ui/AnthonyVoiceCard'
+import { subscribeVoiceMode, isVoiceModeActive } from '../../lib/voiceMode'
 
 /**
  * Hero — full-bleed cinematic video background, left-aligned
@@ -52,28 +53,38 @@ export function Hero() {
     }
   }, [])
 
-  // Pause the hero video as soon as it scrolls out of view. Otherwise
-  // it keeps occupying the mobile hardware H.264 decoder forever, so
-  // when another video further down the page (e.g. the Qamaria demo)
-  // tries to play it has to fight for decoder time and stutters.
+  // Pause the hero video any time it scrolls out of view OR the
+  // Anthony voice agent is active. The first frees the mobile H.264
+  // decoder for other videos further down; the second frees CPU/GPU
+  // and network bandwidth for the WebRTC voice stream so the call
+  // doesn't come through choppy.
   useEffect(() => {
     const v = heroVideoRef.current
     if (!v) return
     if (typeof IntersectionObserver === 'undefined') return
+    let inView = false
+    const sync = () => {
+      if (inView && !isVoiceModeActive()) {
+        v.play().catch(() => {})
+      } else {
+        v.pause()
+      }
+    }
     const io = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            v.play().catch(() => {})
-          } else {
-            v.pause()
-          }
+          inView = entry.isIntersecting
         }
+        sync()
       },
       { threshold: 0.01 },
     )
     io.observe(v)
-    return () => io.disconnect()
+    const offVoice = subscribeVoiceMode(sync)
+    return () => {
+      io.disconnect()
+      offVoice()
+    }
   }, [])
 
   return (
