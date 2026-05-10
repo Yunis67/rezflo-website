@@ -25,9 +25,18 @@ export function useIsMobile(): boolean {
 
   useEffect(() => {
     const mql = window.matchMedia(MOBILE_QUERY)
-    const onChange = () => setIsMobile(mql.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
+    // Some Android browsers don't fire the matchMedia `change` event
+    // reliably on rotation, so also listen for resize +
+    // orientationchange. Always re-read the current match value.
+    const update = () => setIsMobile(window.matchMedia(MOBILE_QUERY).matches)
+    mql.addEventListener('change', update)
+    window.addEventListener('resize', update)
+    window.addEventListener('orientationchange', update)
+    return () => {
+      mql.removeEventListener('change', update)
+      window.removeEventListener('resize', update)
+      window.removeEventListener('orientationchange', update)
+    }
   }, [])
 
   return isMobile
