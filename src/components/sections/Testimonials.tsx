@@ -221,7 +221,6 @@ function DemoVideoCard({ isMobile, onPlayingChange }: DemoVideoCardProps) {
             disablePictureInPicture
             disableRemotePlayback
             controls={!isMobile && started}
-            // @ts-expect-error legacy iOS attribute, still useful on older WebKit
             webkit-playsinline="true"
             x5-video-player-type="h5-page"
             onPlay={() => {
