@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy": "wrangler versions upload --assets ./dist --compatibility-date 2026-05-11",
     "lint": "eslint .",
     "preview": "vite preview"
   },
