@@ -20,14 +20,34 @@ html, body {
    Selectors use exact class names — substring matching ([class*=...])
    would also catch `md:backdrop-blur-*` whose Tailwind rule is itself
    guarded by min-width:768px and would leak the reduced blur down to
-   mobile. */
-@media (max-width: 767px) {
+   mobile.
+
+   Match phones in BOTH orientations: portrait (max-width 767px) and
+   landscape (short height + coarse pointer). Without the landscape
+   branch a rotated phone would keep desktop-strength blur and the
+   page would crash/lag alongside the WebGL shader. */
+@media (max-width: 767px),
+       (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
   .glass-card { backdrop-filter: blur(10px) saturate(120%); }
   .backdrop-blur-xl { backdrop-filter: blur(8px); }
   .backdrop-blur-2xl { backdrop-filter: blur(10px); }
   .backdrop-blur-3xl { backdrop-filter: blur(12px); }
   .blur-3xl { filter: blur(20px); }
   .blur-2xl { filter: blur(14px); }
+}
+
+/* Landscape-phone formatting safety net. Phones rotated to landscape
+   have ~430px of vertical space — much of the page's `min-h-[88vh]`
+   / large pt/pb padding values were tuned for portrait and produce
+   awkward empty regions in landscape. Override the most painful ones
+   so the page still reads well on rotation. */
+@media (max-height: 500px) and (orientation: landscape) and (pointer: coarse) {
+  /* Hero: drop the 88vh floor so it sizes by its content instead of
+     pushing the headline far below the fold. */
+  section#top { min-height: 0; }
+  /* Section vertical padding compresses — `py-28 md:py-36` is ~7-9rem
+     each side which dominates the visible viewport in landscape. */
+  section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
 }
 
 /* Pause the heaviest infinite keyframes on mobile. These look great

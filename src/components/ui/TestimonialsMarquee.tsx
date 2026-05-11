@@ -13,6 +13,10 @@ interface ColumnProps {
   className?: string
   testimonials: MarqueeTestimonial[]
   duration?: number
+  /** When true, freeze the scroll loop. Used on mobile while the
+   *  demo video is playing so the GPU can dedicate cycles to video
+   *  decode instead of repainting backdrop-filtered marquee cards. */
+  paused?: boolean
 }
 
 /**
@@ -20,12 +24,16 @@ interface ColumnProps {
  * duplicated so the loop is seamless when motion translates Y by -50%.
  * Each card is a dark-glass quote with a gradient-bordered avatar.
  */
-export function TestimonialsColumn({ className = '', testimonials, duration = 16 }: ColumnProps) {
+export function TestimonialsColumn({ className = '', testimonials, duration = 16, paused = false }: ColumnProps) {
   return (
     <div className={className}>
       <motion.ul
-        animate={{ translateY: '-50%' }}
-        transition={{ duration, repeat: Infinity, ease: 'linear', repeatType: 'loop' }}
+        animate={paused ? { translateY: '0%' } : { translateY: '-50%' }}
+        transition={
+          paused
+            ? { duration: 0 }
+            : { duration, repeat: Infinity, ease: 'linear', repeatType: 'loop' }
+        }
         className="flex flex-col gap-6 pb-6 list-none m-0 p-0"
       >
         {[

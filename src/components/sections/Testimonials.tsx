@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Container } from '../ui/Container'
 import { SectionLabel } from '../ui/SectionLabel'
 import { testimonials } from '../../data/testimonials'
+import { useIsMobile } from '../../lib/useIsMobile'
+import { isVoiceModeActive, subscribeVoiceMode, useVoiceMode } from '../../lib/voiceMode'
 import {
   TestimonialsColumn,
   type MarqueeTestimonial,
@@ -28,6 +30,23 @@ const col1 = [items[0], items[2], items[4], items[1]]
 const col2 = [items[3], items[5], items[0], items[2]]
 
 export function Testimonials() {
+  const isMobile = useIsMobile()
+  // Pause the marquee while the demo video is playing on mobile.
+  // The marquee cards use backdrop-filter (glass-card) and run a
+  // continuous transform animation; combined with H.264 decode that
+  // saturates the mobile GPU and makes playback stutter.
+  // Also pause it any time the Anthony voice agent is active so the
+  // WebRTC audio stream isn't fighting framer-motion + backdrop-filter.
+  const [videoPlaying, setVideoPlaying] = useState(false)
+  const voiceActive = useVoiceMode()
+  const pauseMarquee = (isMobile && videoPlaying) || voiceActive
+
+  // The fade-out mask on the marquee container is decorative but
+  // forces an offscreen compositing pass. Drop it on mobile.
+  const marqueeMask = isMobile
+    ? ''
+    : '[mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]'
+
   return (
     <section
       id="stories"
@@ -61,17 +80,18 @@ export function Testimonials() {
             <div
               role="region"
               aria-label="Scrolling Testimonials"
-              className="flex justify-center sm:justify-start gap-6 max-h-[440px] sm:max-h-[640px] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]"
+              className={`flex justify-center sm:justify-start gap-6 max-h-[440px] sm:max-h-[640px] overflow-hidden ${marqueeMask}`}
             >
-              <TestimonialsColumn testimonials={col1} duration={26} />
+              <TestimonialsColumn testimonials={col1} duration={26} paused={pauseMarquee} />
               <TestimonialsColumn
                 testimonials={col2}
                 className="hidden sm:block"
                 duration={32}
+                paused={pauseMarquee}
               />
             </div>
 
-            <DemoVideoCard />
+            <DemoVideoCard isMobile={isMobile} onPlayingChange={setVideoPlaying} />
           </div>
         </motion.div>
       </Container>
@@ -79,24 +99,102 @@ export function Testimonials() {
   )
 }
 
-function DemoVideoCard() {
-  const [playing, setPlaying] = useState(false)
+interface DemoVideoCardProps {
+  isMobile: boolean
+  onPlayingChange: (playing: boolean) => void
+}
 
+function DemoVideoCard({ isMobile, onPlayingChange }: DemoVideoCardProps) {
+  const [started, setStarted] = useState(false)
+  const [paused, setPaused] = useState(false)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  // Mount the <video> from the start with preload="metadata" so when
+  // the user taps the thumbnail we can call play() synchronously in
+  // the same gesture stack — that's what works under iOS Low Power
+  // Mode (the autoPlay attribute alone is blocked there). The
+  // thumbnail simply overlays on top until the user taps.
+  const handleStart = () => {
+    setStarted(true)
+    onPlayingChange(true)
+    const v = videoRef.current
+    if (v) {
+      v.muted = false
+      // Call play() synchronously inside the click handler so iOS
+      // counts it as user-initiated even in Low Power Mode.
+      v.play().catch(() => {
+        // If audio is blocked, retry muted as a fallback so something
+        // shows on screen rather than a frozen frame.
+        v.muted = true
+        v.play().catch(() => {
+          // Both attempts blocked — surface the play button so the
+          // user can try again on a fresh gesture.
+          setPaused(true)
+        })
+      })
+    }
+  }
+
+  // Pause the demo when scrolled out of view OR when the Anthony
+  // voice agent is active. Off-screen pause frees the mobile decoder
+  // for whatever the user looks at next; voice-mode pause makes sure
+  // the demo's audio + decode aren't competing with the WebRTC voice
+  // call.
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    if (typeof IntersectionObserver === 'undefined') return
+    let inView = true
+    const sync = () => {
+      if (!started) return
+      if ((!inView || isVoiceModeActive()) && !v.paused) {
+        v.pause()
+      }
+    }
+    const io = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          inView = entry.isIntersecting
+        }
+        sync()
+      },
+      { threshold: 0.01 },
+    )
+    io.observe(v)
+    const offVoice = subscribeVoiceMode(sync)
+    return () => {
+      io.disconnect()
+      offVoice()
+    }
+  }, [started])
+
+  // On mobile, the wrapper's backdrop-blur and the halo's blur-3xl
+  // force the GPU to re-rasterize those layers on every video frame —
+  // which is what causes the stutter and "doesn't always play" symptoms.
+  // We swap to a solid violet card + drop the halo on mobile, and
+  // isolate the video's paint so its frame updates don't bleed into
+  // surrounding layers. Desktop is unchanged.
   return (
     <div className="relative mx-auto w-full max-w-[420px] lg:max-w-none lg:sticky lg:top-28">
+      {!isMobile && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-6 rounded-[36px] opacity-70 blur-3xl"
+          style={{
+            background:
+              'radial-gradient(60% 50% at 50% 30%, rgba(124,58,237,0.45), transparent 70%)',
+          }}
+        />
+      )}
       <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-6 rounded-[36px] opacity-70 blur-3xl"
+        className={
+          'relative overflow-hidden rounded-[28px] border border-white/[0.08] p-3 ' +
+          (isMobile ? '' : 'backdrop-blur-xl')
+        }
         style={{
-          background:
-            'radial-gradient(60% 50% at 50% 30%, rgba(124,58,237,0.45), transparent 70%)',
-        }}
-      />
-      <div
-        className="relative overflow-hidden rounded-[28px] border border-white/[0.08] p-3 backdrop-blur-xl"
-        style={{
-          background:
-            'linear-gradient(180deg, rgba(30,16,60,0.78) 0%, rgba(12,8,28,0.92) 100%)',
+          background: isMobile
+            ? 'linear-gradient(180deg, #1f1240 0%, #0c081c 100%)'
+            : 'linear-gradient(180deg, rgba(30,16,60,0.78) 0%, rgba(12,8,28,0.92) 100%)',
           boxShadow:
             '0 30px 80px -30px rgba(124,58,237,0.55), 0 0 0 1px rgba(167,139,250,0.18) inset',
         }}
@@ -112,19 +210,66 @@ function DemoVideoCard() {
 
         <div
           className="relative overflow-hidden rounded-[20px] border border-white/[0.06]"
-          style={{ aspectRatio: '9 / 16' }}
+          style={{ aspectRatio: '9 / 16', contain: 'paint' }}
         >
-          {playing ? (
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src="https://pub-18bcf9c15a904bdea03e89f192ed5bfc.r2.dev/qamaria-demo.mp4"
-              controls
-              autoPlay
-              playsInline
-              preload="metadata"
-            />
-          ) : (
-            <DemoThumbnail onPlay={() => setPlaying(true)} />
+          <video
+            ref={videoRef}
+            className="absolute inset-0 h-full w-full object-cover bg-black"
+            src="/videos/qamaria-demo.mp4"
+            playsInline
+            preload="metadata"
+            disablePictureInPicture
+            disableRemotePlayback
+            controls={!isMobile && started}
+            webkit-playsinline="true"
+            x5-video-player-type="h5-page"
+            onPlay={() => {
+              setPaused(false)
+              onPlayingChange(true)
+            }}
+            onPause={() => {
+              setPaused(true)
+              onPlayingChange(false)
+            }}
+            onEnded={() => onPlayingChange(false)}
+            style={{ transform: 'translateZ(0)' }}
+          />
+
+          {/* Thumbnail overlay — sits above the (paused) video until
+              the user taps to start. After that it's unmounted so the
+              video and its tap-to-toggle layer get the full frame. */}
+          {!started && <DemoThumbnail onPlay={handleStart} />}
+
+          {/* Mobile-only tap-to-toggle layer. Sibling of <video> so
+              iOS Safari doesn't treat the video as a button child and
+              force its native fullscreen control overlay. */}
+          {started && isMobile && (
+            <button
+              type="button"
+              onClick={e => {
+                e.preventDefault()
+                const v = videoRef.current
+                if (!v) return
+                if (v.paused) {
+                  v.play().catch(() => {})
+                } else {
+                  v.pause()
+                }
+              }}
+              aria-label={paused ? 'Play video' : 'Pause video'}
+              className="absolute inset-0 z-10 block h-full w-full bg-transparent p-0 focus:outline-none"
+            >
+              {paused && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/55 text-white ring-1 ring-white/20"
+                >
+                  <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 fill-white" aria-hidden>
+                    <path d="M8 5.14v13.72a1 1 0 0 0 1.55.83l10.4-6.86a1 1 0 0 0 0-1.66L9.55 4.31A1 1 0 0 0 8 5.14Z" />
+                  </svg>
+                </span>
+              )}
+            </button>
           )}
         </div>
       </div>

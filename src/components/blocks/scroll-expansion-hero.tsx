@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 're
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react'
 import { useIsMobile } from '../../lib/useIsMobile'
+import { isVoiceModeActive, subscribeVoiceMode } from '../../lib/voiceMode'
 
 /**
  * ScrollExpandMedia — clean scroll-scrubbed sticky media expander.
@@ -66,6 +67,41 @@ export default function ScrollExpandMedia({
       window.history.scrollRestoration = 'manual'
     }
     window.scrollTo(0, 0)
+  }, [isMobile])
+
+  // Pause the video any time it scrolls out of view OR the Anthony
+  // voice agent is active. Off-screen pause frees the mobile H.264
+  // decoder for other videos; voice-mode pause frees CPU/GPU/network
+  // for the WebRTC voice stream. Mobile branch only — desktop uses
+  // scroll-driven scrubbing, not autoplay.
+  useEffect(() => {
+    if (!isMobile) return
+    const v = videoRef.current
+    if (!v) return
+    if (typeof IntersectionObserver === 'undefined') return
+    let inView = false
+    const sync = () => {
+      if (inView && !isVoiceModeActive()) {
+        v.play().catch(() => {})
+      } else {
+        v.pause()
+      }
+    }
+    const io = new IntersectionObserver(
+      entries => {
+        for (const entry of entries) {
+          inView = entry.isIntersecting
+        }
+        sync()
+      },
+      { threshold: 0.01 },
+    )
+    io.observe(v)
+    const offVoice = subscribeVoiceMode(sync)
+    return () => {
+      io.disconnect()
+      offVoice()
+    }
   }, [isMobile])
 
   // Pure scroll-scrubbed progress through this section.

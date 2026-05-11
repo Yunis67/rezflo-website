@@ -634,13 +634,21 @@ function CallFlowMockup() {
               </div>
 
               <div className="mt-4 space-y-2 text-[0.8rem] text-white/75">
-                {phase === 2 && (
-                  <>
-                    <TranscriptLine delay={0.1}>“Thanks for calling Bella Pasta — how can I help?”</TranscriptLine>
-                    <TranscriptLine delay={0.6} muted>“Hi, I&rsquo;d like to book a table for 4 at 7pm.”</TranscriptLine>
-                    <TranscriptLine delay={1.1}>“Great — booked. Anything else?”</TranscriptLine>
-                  </>
-                )}
+                {/* No stagger / per-line fade. The parent phase-2
+                    container handles the opacity transition, and the
+                    chat bubbles appear as one unit with the header —
+                    no "empty answering card" intermediate frame
+                    between the notifications stage and the full
+                    conversation stage. */}
+                <TranscriptLine>
+                  “Thanks for calling Bella Pasta — how can I help?”
+                </TranscriptLine>
+                <TranscriptLine muted>
+                  “Hi, I&rsquo;d like to book a table for 4 at 7pm.”
+                </TranscriptLine>
+                <TranscriptLine>
+                  “Great — booked. Anything else?”
+                </TranscriptLine>
               </div>
             </div>
           </div>
@@ -734,7 +742,10 @@ function FadeSlot({
     <div
       style={{
         opacity: show ? 1 : 0,
-        transition: `opacity 350ms ease ${delay * 1000}ms`,
+        // Match the 500ms transition the phase-2 / phase-3 main
+        // content slots use so notifications, conversation card, and
+        // logo+pills all fade together — no slot finishes early.
+        transition: `opacity 500ms ease ${delay * 1000}ms`,
         pointerEvents: show ? 'auto' : 'none',
         willChange: 'opacity',
       }}
@@ -746,18 +757,13 @@ function FadeSlot({
 
 function TranscriptLine({
   children,
-  delay = 0,
   muted = false,
 }: {
   children: React.ReactNode
-  delay?: number
   muted?: boolean
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.45, delay, ease: 'easeOut' }}
+    <div
       className={`rounded-lg px-3 py-2 ${
         muted
           ? 'self-end bg-white/[0.05] text-white/65'
@@ -766,10 +772,9 @@ function TranscriptLine({
       style={{
         maxWidth: '85%',
         marginLeft: muted ? 'auto' : 0,
-        willChange: 'opacity',
       }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
