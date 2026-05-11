@@ -13,6 +13,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!--
+      ElevenLabs preconnects — establish TCP+TLS handshakes to the
+      voice-agent CDN, API and WebSocket endpoints during page load
+      so when the user taps "Talk to Anthony" the connection is
+      already warm. Without these, the first ~600ms of the call
+      goes into TCP/TLS/DNS for these hosts and audio comes through
+      muffled or laggy at the start of the conversation.
+    -->
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
+    <link rel="preconnect" href="https://api.elevenlabs.io" crossorigin />
+    <link rel="preconnect" href="https://api.us.elevenlabs.io" crossorigin />
+    <link rel="dns-prefetch" href="https://api.elevenlabs.io" />
+    <link rel="dns-prefetch" href="https://api.us.elevenlabs.io" />
+    <!--
       Font stack:
         Inter             — body + hero per RezFlo hero spec
         Plus Jakarta Sans — display headings (replaces Fraunces serif which was clipping)

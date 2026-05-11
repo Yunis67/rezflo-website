@@ -14,13 +14,27 @@
  *     loading), wait up to 5s with customElements.whenDefined, then
  *     retry the whole sequence a few times with small backoffs.
  *  6. Voice mode is flipped on so videos/marquees pause for the
- *     duration of the call.
+ *     duration of the call. The flip happens via two independent
+ *     channels — setVoiceMode() (React pub/sub used by JS pausing
+ *     logic) and setActive() (sets <html data-anthony-active="true">
+ *     used by the CSS rules in index.css that pause keyframe-driven
+ *     animations).
  */
 
 import { setVoiceMode } from '../../lib/voiceMode'
 
 const HOST_ID = 'anthony-agent-host'
 const WIDGET_TAG = 'elevenlabs-convai'
+
+/**
+ * Toggle a global data attribute on <html> while the conversation is
+ * active. CSS uses [data-anthony-active="true"] selectors to pause
+ * expensive marquees, shader-style animations, and looped transforms
+ * so the device's CPU/GPU isn't fighting the WebRTC audio thread.
+ */
+function setActive(active: boolean): void {
+  document.documentElement.dataset.anthonyActive = active ? 'true' : 'false'
+}
 
 function findWidget(): HTMLElement | null {
   const host = document.getElementById(HOST_ID)
@@ -123,6 +137,7 @@ export async function triggerAnthonyWidget(): Promise<void> {
   const host = document.getElementById(HOST_ID)
   if (host) host.dataset.open = 'true'
   setVoiceMode(true)
+  setActive(true)
 
   // Step 2 — synchronous open attempt (most common path: script
   // already loaded by the time the user clicks).
@@ -156,4 +171,5 @@ export function closeAnthonyWidget(): void {
   const host = document.getElementById(HOST_ID)
   if (host) host.dataset.open = 'false'
   setVoiceMode(false)
+  setActive(false)
 }

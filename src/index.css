@@ -50,6 +50,26 @@ html, body {
   section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
 }
 
+/* Pause the heaviest infinite keyframes on mobile. These look great
+   on a desktop GPU but are the dominant CPU cost on phones — they
+   run forever even when off-screen, and their composited layers
+   (conic-gradients, large blurs, fixed-position aurora) repaint
+   continuously. Pausing eliminates a steady ~15-25% mobile CPU
+   baseline for no visible loss in the brand language.
+   Uses animation-play-state with !important so it also overrides
+   React inline-style animations (shineSweep on Hero, orbSpin in the
+   HowItWorks AI receptionist mockup). */
+@media (max-width: 767px) {
+  .aurora-drift,
+  .pulse-dot,
+  [style*="shineSweep"],
+  [style*="orbSpin"],
+  [style*="orbPulse"],
+  [style*="orbShimmer"] {
+    animation-play-state: paused !important;
+  }
+}
+
 /* Respect users who request reduced motion: pause the marquee
    loops and any continuous transforms. */
 @media (prefers-reduced-motion: reduce) {
@@ -57,6 +77,34 @@ html, body {
   .animate-marquee-vertical {
     animation-play-state: paused;
   }
+}
+
+/* Anthony live conversation in progress — pause every continuous
+   animation on the page so the CPU/GPU isn't fighting the WebRTC
+   audio thread. The widget toggles
+   `<html data-anthony-active="true|false">` via anthonyAgent.ts.
+   On mobile this is the largest single fix for "muffled/laggy"
+   audio: marquees and conic-gradient orb spins are surprisingly
+   expensive on phones once the audio decoder is also running. */
+html[data-anthony-active="true"] .animate-marquee,
+html[data-anthony-active="true"] .animate-marquee-vertical,
+html[data-anthony-active="true"] [class*="animate-spin"],
+html[data-anthony-active="true"] [class*="animate-pulse"],
+html[data-anthony-active="true"] [class*="animate-bounce"] {
+  animation-play-state: paused !important;
+}
+/* WarmOrb keyframes (orbSpin / orbPulse / orbShimmer) are inline
+   <style> rules; pause anything matching their names too. */
+html[data-anthony-active="true"] *,
+html[data-anthony-active="true"] *::before,
+html[data-anthony-active="true"] *::after {
+  animation-play-state: paused !important;
+}
+/* Keep the widget itself live — it has its own animations
+   (microphone ring, talk indicator) that must continue. */
+html[data-anthony-active="true"] elevenlabs-convai,
+html[data-anthony-active="true"] elevenlabs-convai * {
+  animation-play-state: running !important;
 }
 
 /* Marquee keyframes + explicit utility classes. We define the

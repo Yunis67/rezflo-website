@@ -39,7 +39,7 @@ export function SceneBackdrop() {
 
       {/* Layer 3a: drifting upper-right aurora — desktop only */}
       <div
-        className="aurora-drift absolute -top-[20%] -right-[10%] h-[80vh] w-[70vw] rounded-full hidden md:block"
+        className="aurora-drift hidden md:block absolute -top-[20%] -right-[10%] h-[80vh] w-[70vw] rounded-full hidden md:block"
         style={{
           background:
             'radial-gradient(closest-side, rgba(139, 92, 246, 0.32), transparent 70%)',
@@ -49,7 +49,7 @@ export function SceneBackdrop() {
 
       {/* Layer 3b: drifting lower-left aurora — desktop only */}
       <div
-        className="aurora-drift absolute -bottom-[15%] -left-[15%] h-[70vh] w-[70vw] rounded-full hidden md:block"
+        className="aurora-drift hidden md:block absolute -bottom-[15%] -left-[15%] h-[70vh] w-[70vw] rounded-full hidden md:block"
         style={{
           background:
             'radial-gradient(closest-side, rgba(91, 33, 182, 0.28), transparent 70%)',
