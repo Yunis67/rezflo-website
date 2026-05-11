@@ -13,7 +13,6 @@ import { Testimonials } from './components/sections/Testimonials'
 import { Pricing } from './components/sections/Pricing'
 import { ROICalculator } from './components/sections/ROICalculator'
 import { FAQ } from './components/sections/FAQ'
-import { FinalCTA } from './components/sections/FinalCTA'
 
 export default function App() {
   return (
@@ -38,7 +37,6 @@ export default function App() {
           <ROICalculator />
           <Pricing />
           <FAQ />
-          <FinalCTA />
         </RezFloShaderBackground>
       </main>
       <Footer />
