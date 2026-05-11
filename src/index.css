@@ -133,6 +133,13 @@ html[data-anthony-active="true"] elevenlabs-convai * {
   color: #ffffff;
 }
 
+/* Three-dot typing indicator inside the RezFlo blue tablet mock that
+   lives in the ProblemStats ContainerScroll. */
+@keyframes tabletTypingDot {
+  0%, 100% { opacity: 0.35; transform: translateY(0); }
+  50%      { opacity: 1;    transform: translateY(-2px); }
+}
+
 /* ROI calculator range sliders — track + thumb tint via the
    --slider-color CSS var so each tab can theme its sliders. */
 .roi-slider {
