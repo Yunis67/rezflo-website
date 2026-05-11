@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b --force && vite build",
     "deploy": "wrangler versions upload --assets ./dist --compatibility-date 2026-05-11",
     "lint": "eslint .",
     "preview": "vite preview"
