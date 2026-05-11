@@ -81,17 +81,22 @@ function Card({
   scale: MotionValue<number>
   children: ReactNode
 }) {
+  // No gray frame / dark fill — the children (e.g. the RezFlo tablet
+  // image) already render their own device bezel and don't need a
+  // second frame around them. Just a transformable wrapper that
+  // rotateX + scales as the user scrolls past, with a soft drop
+  // shadow so the floating element reads against the dark page bg.
   return (
     <motion.div
       style={{
         rotateX: rotate,
         scale,
-        boxShadow:
-          '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
+        filter:
+          'drop-shadow(0 25px 50px rgba(0,0,0,0.55)) drop-shadow(0 0 90px rgba(124,58,237,0.18))',
       }}
-      className="mx-auto -mt-12 h-[30rem] w-full max-w-5xl rounded-[30px] border-4 border-[#6C6C6C] bg-[#222222] p-2 shadow-2xl md:h-[40rem] md:p-6"
+      className="mx-auto -mt-12 h-[30rem] w-full max-w-5xl md:h-[44rem]"
     >
-      <div className="h-full w-full overflow-hidden rounded-2xl md:rounded-2xl">
+      <div className="flex h-full w-full items-center justify-center">
         {children}
       </div>
     </motion.div>
