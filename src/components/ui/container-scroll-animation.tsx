@@ -35,12 +35,15 @@ export function ContainerScroll({ children }: { children: ReactNode }) {
   }, [])
 
   const scaleDimensions = (): [number, number] =>
-    isMobile ? [0.85, 1] : [1.04, 1]
+    isMobile ? [0.88, 1] : [0.85, 1.08]
 
-  // Drive the transforms across the first ~60% of scroll progress so
-  // the card is settled by the time the section is fully in view.
-  const rotate = useTransform(scrollYProgress, [0, 0.6], [18, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.6], scaleDimensions())
+  // Drive the transforms across the first ~65% of scroll progress so
+  // the card is settled by the time the section is centered in view.
+  const rotate = useTransform(scrollYProgress, [0, 0.65], [12, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.65], scaleDimensions())
+  // Small upward drift as it scales in — makes the reveal feel more
+  // intentional than scale alone.
+  const translateY = useTransform(scrollYProgress, [0, 0.65], [40, 0])
 
   return (
     <div
@@ -48,17 +51,18 @@ export function ContainerScroll({ children }: { children: ReactNode }) {
       // Compact runway: just enough room for the rotate/scale to play
       // out without forcing a "separate page" of empty space above
       // the card.
-      className="relative flex items-center justify-center px-4 py-12 md:px-8 md:py-16"
+      className="relative flex items-center justify-center px-4 py-6 md:px-8 md:py-10"
       style={{ perspective: '1200px' }}
     >
       <motion.div
         style={{
           rotateX: rotate,
           scale,
+          y: translateY,
           filter:
-            'drop-shadow(0 25px 50px rgba(0,0,0,0.55)) drop-shadow(0 0 90px rgba(124,58,237,0.18))',
+            'drop-shadow(0 35px 70px rgba(0,0,0,0.6)) drop-shadow(0 0 90px rgba(124,58,237,0.22))',
         }}
-        className="mx-auto w-full max-w-5xl"
+        className="mx-auto w-full max-w-6xl"
       >
         {children}
       </motion.div>

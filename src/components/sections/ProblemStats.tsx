@@ -110,12 +110,10 @@ export function ProblemStats() {
           ))}
         </div>
 
-        {/* Scroll-driven RezFlo tablet reveal — sits directly under
-            the three cards inside the same Container so vertical
-            spacing matches the rest of the section. The tablet is
-            built in HTML/CSS to match the design reference exactly
-            — no image file needed, sharp at every DPR. */}
-        <div className="mt-12 md:mt-16">
+        {/* Scroll-driven RezFlo tablet reveal — tight gap below the
+            cards, no internal heading, HTML/CSS tablet (no image file
+            needed). */}
+        <div className="mt-6 md:mt-8">
           <ContainerScroll>
             <RezFloTablet />
           </ContainerScroll>
@@ -134,24 +132,24 @@ export function ProblemStats() {
    ============================================================ */
 function RezFloTablet() {
   return (
-    <div className="mx-auto flex h-full w-full max-w-[1100px] items-center justify-center px-4 md:px-0">
-      {/* Outer tablet body — dark bezel with subtle gradient + soft
-          highlight on the top edge. Aspect ratio held with padding-
-          bottom trick so the whole thing scales fluidly. */}
+    <div className="mx-auto flex h-full w-full items-center justify-center">
+      {/* Outer tablet body — dark bezel with a hairline white outline
+          to match the reference. Aspect ratio held with the
+          aspect-ratio property so the whole thing scales fluidly. */}
       <div
         className="relative w-full overflow-hidden rounded-[32px] md:rounded-[44px]"
         style={{
           aspectRatio: '4 / 3',
           background: 'linear-gradient(160deg, #1a1a22 0%, #0a0a10 100%)',
           boxShadow:
-            'inset 0 0 0 2px rgba(255,255,255,0.04), inset 0 2px 0 rgba(255,255,255,0.08), 0 30px 80px -30px rgba(0,0,0,0.7)',
+            'inset 0 0 0 1.5px rgba(255,255,255,0.55), inset 0 2px 0 rgba(255,255,255,0.10), 0 30px 80px -30px rgba(0,0,0,0.7)',
           padding: 'clamp(10px, 1.5vw, 22px)',
         }}
       >
-        {/* Screen */}
+        {/* Screen — violet, matching the new reference */}
         <div
           className="relative h-full w-full overflow-hidden rounded-[22px] md:rounded-[28px]"
-          style={{ background: '#2540ff' }}
+          style={{ background: '#6E4FFF' }}
         >
           {/* RezFlo logo top-right */}
           <div className="absolute right-[3%] top-[5%] flex items-center gap-[0.6vw]">
