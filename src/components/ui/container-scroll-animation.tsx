@@ -1,27 +1,30 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 /**
- * Aceternity-style ContainerScroll. The header slides up while the
- * card "lays down" — starts tilted forward (rotateX 20°) and slightly
- * zoomed, settles to flat 0° + base scale by the time the user has
- * scrolled through the section. Adapted for plain React + Tailwind v4
- * (no Next.js Image, no "use client").
+ * Tightened ContainerScroll. The original Aceternity component was
+ * designed as a standalone hero with an internal heading and ~80rem
+ * of scroll runway — when embedded between other sections that ran
+ * as a huge empty gap above the card. This version:
  *
- * The outer wrapper is tall on purpose — that's the scroll runway. As
- * the user scrolls past it, scrollYProgress goes 0 → 1 and drives the
- * card's transforms. Mobile uses gentler scale values so the tablet
- * frame doesn't overflow the viewport.
+ *  - Removes the internal heading slot. Use the section's own
+ *    heading above the component instead.
+ *  - Keeps the rotateX 20° → 0° + scale animation but uses a much
+ *    shorter scroll runway so the card sits right under the section
+ *    above it.
+ *
+ * Mobile uses gentler scale values so the embedded element doesn't
+ * overflow the viewport.
  */
-export function ContainerScroll({
-  titleComponent,
-  children,
-}: {
-  titleComponent: ReactNode
-  children: ReactNode
-}) {
+export function ContainerScroll({ children }: { children: ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: containerRef })
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    // Start animating just before the section enters; finish just as
+    // the section's bottom hits the viewport bottom. Keeps the
+    // animation tight against the runway.
+    offset: ['start end', 'end start'],
+  })
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -31,74 +34,34 @@ export function ContainerScroll({
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  const scaleDimensions = (): [number, number] => (isMobile ? [0.7, 0.9] : [1.05, 1])
+  const scaleDimensions = (): [number, number] =>
+    isMobile ? [0.85, 1] : [1.04, 1]
 
-  const rotate = useTransform(scrollYProgress, [0, 1], [20, 0])
-  const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions())
-  const translate = useTransform(scrollYProgress, [0, 1], [0, -100])
+  // Drive the transforms across the first ~60% of scroll progress so
+  // the card is settled by the time the section is fully in view.
+  const rotate = useTransform(scrollYProgress, [0, 0.6], [18, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.6], scaleDimensions())
 
   return (
     <div
       ref={containerRef}
-      className="relative flex h-[60rem] items-center justify-center p-2 md:h-[80rem] md:p-20"
+      // Compact runway: just enough room for the rotate/scale to play
+      // out without forcing a "separate page" of empty space above
+      // the card.
+      className="relative flex items-center justify-center px-4 py-12 md:px-8 md:py-16"
+      style={{ perspective: '1200px' }}
     >
-      <div
-        className="relative w-full py-10 md:py-40"
-        style={{ perspective: '1000px' }}
+      <motion.div
+        style={{
+          rotateX: rotate,
+          scale,
+          filter:
+            'drop-shadow(0 25px 50px rgba(0,0,0,0.55)) drop-shadow(0 0 90px rgba(124,58,237,0.18))',
+        }}
+        className="mx-auto w-full max-w-5xl"
       >
-        <Header translate={translate}>{titleComponent}</Header>
-        <Card rotate={rotate} scale={scale}>
-          {children}
-        </Card>
-      </div>
-    </div>
-  )
-}
-
-function Header({
-  translate,
-  children,
-}: {
-  translate: MotionValue<number>
-  children: ReactNode
-}) {
-  return (
-    <motion.div
-      style={{ translateY: translate }}
-      className="mx-auto max-w-5xl text-center"
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function Card({
-  rotate,
-  scale,
-  children,
-}: {
-  rotate: MotionValue<number>
-  scale: MotionValue<number>
-  children: ReactNode
-}) {
-  // No gray frame / dark fill — the children (e.g. the RezFlo tablet
-  // image) already render their own device bezel and don't need a
-  // second frame around them. Just a transformable wrapper that
-  // rotateX + scales as the user scrolls past, with a soft drop
-  // shadow so the floating element reads against the dark page bg.
-  return (
-    <motion.div
-      style={{
-        rotateX: rotate,
-        scale,
-        filter:
-          'drop-shadow(0 25px 50px rgba(0,0,0,0.55)) drop-shadow(0 0 90px rgba(124,58,237,0.18))',
-      }}
-      className="mx-auto -mt-12 h-[30rem] w-full max-w-5xl md:h-[44rem]"
-    >
-      <div className="flex h-full w-full items-center justify-center">
         {children}
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   )
 }

@@ -109,29 +109,18 @@ export function ProblemStats() {
             </motion.div>
           ))}
         </div>
-      </Container>
 
-      {/* Scroll-driven RezFlo tablet reveal — sits directly under the
-          three cards. The ContainerScroll runway is tall on purpose so
-          the rotateX/scale animation has room to play without causing
-          layout shift in adjacent sections. The tablet is built in
-          HTML/CSS to match the design reference exactly — no image
-          file needed, and it renders sharp at every DPR. */}
-      <ContainerScroll
-        titleComponent={
-          <div className="px-6">
-            <p className="text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-violet-300/85">
-              Meet the fix
-            </p>
-            <h3 className="font-display mt-4 text-[1.85rem] font-medium leading-[1.05] tracking-[-0.018em] text-white sm:text-[2.5rem] md:text-[3.5rem]">
-              An <span className="gradient-text">AI Host</span> that answers
-              every call.
-            </h3>
-          </div>
-        }
-      >
-        <RezFloTablet />
-      </ContainerScroll>
+        {/* Scroll-driven RezFlo tablet reveal — sits directly under
+            the three cards inside the same Container so vertical
+            spacing matches the rest of the section. The tablet is
+            built in HTML/CSS to match the design reference exactly
+            — no image file needed, sharp at every DPR. */}
+        <div className="mt-12 md:mt-16">
+          <ContainerScroll>
+            <RezFloTablet />
+          </ContainerScroll>
+        </div>
+      </Container>
     </section>
   )
 }
