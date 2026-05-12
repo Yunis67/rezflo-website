@@ -27,19 +27,22 @@ export function ContainerScroll({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  const scaleRange: [number, number] = isMobile ? [0.88, 1] : [0.85, 1.08]
+  const scaleRange: [number, number] = isMobile ? [0.90, 1.02] : [0.82, 1.10]
 
-  // Animation completes ~65% through the wrapper so the wrapped
-  // element is fully settled when it's centered in view.
-  const rotate = useTransform(scrollYProgress, [0, 0.65], [12, 0])
-  const scale = useTransform(scrollYProgress, [0, 0.65], scaleRange)
-  const translateY = useTransform(scrollYProgress, [0, 0.65], [40, 0])
+  // Smooth, broad scroll range — animation completes ~75% in so the
+  // tablet is fully settled when it's centered in view. Wider easing
+  // bands soften the curve so motion feels premium rather than
+  // snappy. Spring damping (via the LayoutGroup-style overshoot) is
+  // avoided to keep the reveal smooth + reversible.
+  const rotate = useTransform(scrollYProgress, [0, 0.75], [10, 0])
+  const scale = useTransform(scrollYProgress, [0, 0.75], scaleRange)
+  const translateY = useTransform(scrollYProgress, [0, 0.75], [60, 0])
 
   return (
     <div
       ref={containerRef}
-      className="relative flex items-center justify-center px-4 py-6 md:px-8 md:py-10"
-      style={{ perspective: '1200px' }}
+      className="relative flex items-center justify-center px-2 py-4 md:px-4 md:py-8"
+      style={{ perspective: '1400px' }}
     >
       <motion.div
         style={{
@@ -47,9 +50,9 @@ export function ContainerScroll({ children }: { children: ReactNode }) {
           scale,
           y: translateY,
           filter:
-            'drop-shadow(0 35px 70px rgba(0,0,0,0.6)) drop-shadow(0 0 90px rgba(124,58,237,0.22))',
+            'drop-shadow(0 40px 80px rgba(0,0,0,0.55)) drop-shadow(0 0 120px rgba(124,58,237,0.25))',
         }}
-        className="mx-auto w-full max-w-6xl"
+        className="mx-auto w-full max-w-[1400px]"
       >
         {children}
       </motion.div>
