@@ -89,7 +89,7 @@ export function AnthonyVoiceCard() {
             Meet Flo
           </h3>
           <p className="mt-2 max-w-[300px] text-[0.92rem] leading-relaxed text-mist-300">
-            Ask Anthony anything — hours, menu, reservations, and more.
+            Ask Flo anything — hours, menu, reservations, and more.
           </p>
         </div>
 
@@ -99,10 +99,10 @@ export function AnthonyVoiceCard() {
             type="button"
             onClick={triggerAnthonyWidget}
             className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[0.95rem] font-semibold tracking-tight text-neutral-900 shadow-[0_14px_30px_-10px_rgba(124,58,237,0.55),0_0_0_1px_rgba(255,255,255,0.7)_inset] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_20px_50px_-12px_rgba(124,58,237,0.85),0_0_0_1px_rgba(255,255,255,0.85)_inset]"
-            aria-label="Talk to Anthony — open live voice agent"
+            aria-label="Talk to Flo — open live voice agent"
           >
             <SparkleIcon />
-            Talk to Anthony
+            Talk to Flo
           </button>
           <p className="text-[0.7rem] tracking-wide text-mist-400">
             Mic access required • English

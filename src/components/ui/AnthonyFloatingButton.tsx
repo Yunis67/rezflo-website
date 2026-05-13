@@ -3,7 +3,7 @@ import { WarmOrb } from './AnthonyVoiceCard'
 import { triggerAnthonyWidget } from './anthonyAgent'
 
 /**
- * Sticky floating "Live Demo · Talk to Anthony" pill at the bottom-
+ * Sticky floating "Live Demo · Talk to Flo" pill at the bottom-
  * center of the viewport. Clicking it opens the hidden ElevenLabs
  * voice agent.
  *
@@ -37,7 +37,7 @@ export function AnthonyFloatingButton() {
         type="button"
         onClick={triggerAnthonyWidget}
         className="pointer-events-auto group inline-flex items-center gap-3 rounded-full bg-white/95 py-2 pl-2 pr-5 text-[0.92rem] font-medium tracking-tight text-neutral-900 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.7)_inset] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_22px_50px_-12px_rgba(124,58,237,0.55),0_0_0_1px_rgba(255,255,255,0.8)_inset]"
-        aria-label="Talk to Anthony — open the live voice demo"
+        aria-label="Talk to Flo — open the live voice demo"
       >
         <span className="relative flex h-9 w-9 items-center justify-center">
           <WarmOrb size={36} />
@@ -47,7 +47,7 @@ export function AnthonyFloatingButton() {
             Live Demo
           </span>
           <span className="text-[0.95rem] font-semibold text-neutral-900">
-            Talk to Anthony
+            Talk to Flo
           </span>
         </span>
         <svg
