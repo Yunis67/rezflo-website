@@ -70,6 +70,29 @@ html, body {
   }
 }
 
+/* Smoother scrolling on a long page.
+   1. `content-visibility: auto` on each <section> tells the browser
+      it can skip layout + paint for any section that's off-screen.
+      Combined with `contain-intrinsic-size` (an estimated height so
+      the scrollbar doesn't jump), this is the single biggest
+      perceptible smoothness win for pages with many heavy sections.
+      The Hero stays excluded — it's always at the top, painting it
+      eagerly is fine.
+   2. `contain: layout paint` on each section isolates its own layout
+      / paint work so a transform inside one section can't invalidate
+      neighbours.
+   Skip both on Safari < 18 by feature-querying `content-visibility`
+   so older browsers don't get the intrinsic-size jump. */
+@supports (content-visibility: auto) {
+  main section[id]:not(#top) {
+    content-visibility: auto;
+    /* `auto` keyword: browser uses 900px as initial estimate, then
+       remembers the actual size so subsequent scrolls don't jump. */
+    contain-intrinsic-size: auto 900px;
+    contain: layout paint;
+  }
+}
+
 /* Respect users who request reduced motion: pause the marquee
    loops and any continuous transforms. */
 @media (prefers-reduced-motion: reduce) {
