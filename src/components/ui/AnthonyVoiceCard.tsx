@@ -86,7 +86,7 @@ export function AnthonyVoiceCard() {
         <div className="mt-8 flex flex-col items-center text-center">
           <WarmOrb size={108} />
           <h3 className="font-display mt-7 text-[1.55rem] font-medium leading-tight tracking-[-0.01em] text-white">
-            Meet Anthony
+            Meet Flo
           </h3>
           <p className="mt-2 max-w-[300px] text-[0.92rem] leading-relaxed text-mist-300">
             Ask Anthony anything — hours, menu, reservations, and more.
