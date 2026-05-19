@@ -23,6 +23,7 @@
 
 import { setVoiceMode } from '../../lib/voiceMode'
 import { getMicState, setMicState } from '../../lib/micPermission'
+import { isInAppBrowser } from '../../lib/inAppBrowser'
 
 const HOST_ID = 'anthony-agent-host'
 const WIDGET_TAG = 'elevenlabs-convai'
@@ -146,9 +147,17 @@ export function triggerAnthonyWidget(): void {
     void openFloAgentNow()
     return
   }
-  // Not granted yet — show the custom permission card. Mounting the
-  // ElevenLabs element + calling getUserMedia happens later, only
-  // after the user taps "Allow Microphone".
+  // In-app browsers (Instagram / Facebook / TikTok / ...) block the
+  // mic at the platform level — getUserMedia would just fail. Skip
+  // the attempt entirely and route the user to a real browser, the
+  // same way Alven.ai does.
+  if (isInAppBrowser()) {
+    setMicState('needs-browser')
+    return
+  }
+  // Real browser — show the permission card. Mounting the ElevenLabs
+  // element + calling getUserMedia happens later, only after the
+  // user taps "Allow Microphone".
   setMicState('asking')
 }
 
