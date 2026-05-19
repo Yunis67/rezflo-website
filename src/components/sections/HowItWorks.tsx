@@ -4,6 +4,7 @@ import { Phone, Bot, ShoppingBag, Eye, CheckCircle2, Send } from 'lucide-react'
 import { Container } from '../ui/Container'
 import { SectionAura } from '../ui/SectionAura'
 import { SectionLabel } from '../ui/SectionLabel'
+import { useIsMobile } from '../../lib/useIsMobile'
 
 interface FlowStep {
   number: string
@@ -186,7 +187,7 @@ function Carousel({
 
   return (
     <div
-      className="relative mx-auto h-[500px] w-full max-w-6xl select-none sm:h-[540px] md:h-[460px]"
+      className="hiw-carousel relative mx-auto h-[500px] w-full max-w-6xl select-none sm:h-[540px] md:h-[460px]"
       role="region"
       aria-label="How RezFlo works — animated walkthrough"
     >
@@ -346,7 +347,7 @@ function ActiveCard({ step, active }: { step: FlowStep; active: boolean }) {
             {/* Reserved title block — min-height accommodates 2 lines so
                 short and long titles sit in the same vertical slot. */}
             <h3
-              className="font-display mt-5 text-[1.85rem] font-medium leading-[1.1] tracking-[-0.015em] text-white sm:text-[2.1rem] md:text-[2.4rem]"
+              className="cf-step-title font-display mt-5 text-[1.85rem] font-medium leading-[1.1] tracking-[-0.015em] text-white sm:text-[2.1rem] md:text-[2.4rem]"
               style={{ minHeight: '5.4rem' }}
             >
               {step.title}
@@ -355,7 +356,7 @@ function ActiveCard({ step, active }: { step: FlowStep; active: boolean }) {
             {/* Reserved description block — clamps to 3 lines so any
                 copy length sits in the same slot. */}
             <p
-              className="mt-4 max-w-md text-[1rem] leading-relaxed text-white/75 md:text-[1.05rem]"
+              className="cf-step-desc mt-4 max-w-md text-[1rem] leading-relaxed text-white/75 md:text-[1.05rem]"
               style={{
                 minHeight: '4.5rem',
                 display: '-webkit-box',
@@ -494,6 +495,13 @@ function PillFlow({ active }: { active: number }) {
 function CallFlowMockup() {
   const [phase, setPhase] = useState(0) // 0..3
   const cardRef = useRef<HTMLDivElement | null>(null)
+  const isMobile = useIsMobile()
+  // The slots are absolutely positioned at fixed px offsets, so on
+  // narrow phones the wrapped conversation text outgrows the 460px
+  // frame and collides with the footer/notifications. A taller frame
+  // on mobile enlarges the middle content slot enough to fit the
+  // wrapped text. Desktop stays exactly 460.
+  const cardHeight = isMobile ? 560 : 460
 
   useEffect(() => {
     const id = window.setInterval(() => setPhase(p => (p + 1) % 4), 2400)
@@ -551,7 +559,7 @@ function CallFlowMockup() {
             'linear-gradient(180deg, rgba(30,16,60,0.92) 0%, rgba(12,8,28,0.96) 100%)',
           boxShadow:
             '0 30px 80px -30px rgba(124,58,237,0.55), 0 0 0 1px rgba(167,139,250,0.18) inset',
-          height: 460,
+          height: cardHeight,
           transformStyle: 'preserve-3d',
         }}
       >
