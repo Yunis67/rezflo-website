@@ -9,12 +9,19 @@ import { useEffect, useState } from 'react'
  *           on screen waiting for them to choose Allow / Not Now.
  * granted — user clicked Allow and getUserMedia() resolved
  *           successfully. The widget is allowed to mount.
- * denied  — getUserMedia() rejected (or the API isn't available, e.g.
- *           inside Instagram's in-app browser). The card shows a
- *           friendly fallback message instead of letting the widget
- *           render and error out.
+ * denied  — getUserMedia() rejected in a real browser. The card
+ *           shows a friendly fallback message.
+ * needs-browser — we detected an in-app browser (Instagram, etc.)
+ *           where the mic is blocked at the platform level. We never
+ *           attempt getUserMedia; instead the card guides the user
+ *           to open the page in Safari/Chrome.
  */
-export type MicState = 'idle' | 'asking' | 'granted' | 'denied'
+export type MicState =
+  | 'idle'
+  | 'asking'
+  | 'granted'
+  | 'denied'
+  | 'needs-browser'
 
 const listeners = new Set<(s: MicState) => void>()
 let state: MicState = 'idle'

@@ -29,30 +29,30 @@ export function AnthonyFloatingButton() {
 
   return (
     <div
-      className={`pointer-events-none fixed inset-x-0 bottom-5 z-50 flex justify-center px-4 transition-all duration-500 sm:bottom-7 ${
+      className={`anthony-fab pointer-events-none fixed inset-x-0 z-50 flex justify-center px-4 transition-all duration-500 ${
         visible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
       }`}
     >
       <button
         type="button"
         onClick={triggerAnthonyWidget}
-        className="pointer-events-auto group inline-flex items-center gap-3 rounded-full bg-white/95 py-2 pl-2 pr-5 text-[0.92rem] font-medium tracking-tight text-neutral-900 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.7)_inset] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_22px_50px_-12px_rgba(124,58,237,0.55),0_0_0_1px_rgba(255,255,255,0.8)_inset]"
+        className="pointer-events-auto group inline-flex max-w-[calc(100vw-2rem)] items-center gap-2.5 rounded-full bg-white/95 py-2 pl-2 pr-4 text-[0.92rem] font-medium tracking-tight text-neutral-900 shadow-[0_18px_40px_-12px_rgba(0,0,0,0.45),0_0_0_1px_rgba(255,255,255,0.7)_inset] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_22px_50px_-12px_rgba(124,58,237,0.55),0_0_0_1px_rgba(255,255,255,0.8)_inset] sm:gap-3 sm:pr-5"
         aria-label="Talk to Flo — open the live voice demo"
       >
-        <span className="relative flex h-9 w-9 items-center justify-center">
-          <WarmOrb size={36} />
+        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center sm:h-9 sm:w-9">
+          <WarmOrb size={32} />
         </span>
         <span className="flex flex-col items-start leading-tight">
-          <span className="text-[0.66rem] uppercase tracking-[0.16em] text-neutral-500">
+          <span className="text-[0.6rem] uppercase tracking-[0.16em] text-neutral-500 sm:text-[0.66rem]">
             Live Demo
           </span>
-          <span className="text-[0.95rem] font-semibold text-neutral-900">
+          <span className="text-[0.88rem] font-semibold text-neutral-900 sm:text-[0.95rem]">
             Talk to Flo
           </span>
         </span>
         <svg
           viewBox="0 0 24 24"
-          className="ml-1 h-4 w-4 stroke-neutral-700 transition-transform duration-300 group-hover:translate-x-0.5"
+          className="ml-0.5 h-4 w-4 shrink-0 stroke-neutral-700 transition-transform duration-300 group-hover:translate-x-0.5 sm:ml-1"
           fill="none"
           strokeWidth="2"
           strokeLinecap="round"

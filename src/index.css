@@ -13,6 +13,108 @@
 html, body {
   overflow-x: hidden;
   overflow-x: clip;
+  width: 100%;
+}
+
+/* Floating "Talk to Flo" pill — base (desktop) bottom offset. The
+   mobile media query below overrides this with a safe-area inset. */
+.anthony-fab {
+  bottom: 1.75rem;
+}
+
+/* ============================================================
+   MOBILE RESPONSIVENESS PASS — everything here is scoped to
+   <= 767px so desktop/tablet (>= 768px) is completely unchanged.
+   Targets the issues seen across iPhone Safari, Android Chrome,
+   Samsung Internet and the Instagram in-app browser.
+   ============================================================ */
+@media (max-width: 767px) {
+  /* Media never overflows the viewport. (Horizontal scroll is
+     already prevented by html,body overflow-x above — we avoid a
+     universal `* { max-width }` because it would clamp the
+     testimonials marquee's intentionally-wide translating track.) */
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Use dynamic viewport units so the iOS Safari / Instagram
+     browser chrome growing & shrinking doesn't break full-height
+     sections. min-h-[88vh] on the hero etc. -> dvh. */
+  #top {
+    min-height: 88dvh;
+  }
+
+  /* Fixed nav must never bleed past the screen edge, and should
+     clear the iOS notch / Instagram top bar. */
+  header {
+    max-width: calc(100vw - 16px) !important;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Floating "Talk to Flo" pill: sit above the bottom browser bar
+     using the safe-area inset, and keep it from covering content
+     (the page already has bottom padding from main pb-24). */
+  .anthony-fab {
+    bottom: calc(14px + env(safe-area-inset-bottom));
+  }
+
+  /* Responsive display headings — shrink fluidly so big titles
+     never clip or get pushed off-screen, and never wrap into an
+     ugly single-word line. clamp(min, fluid, max). */
+  h1 {
+    font-size: clamp(2.1rem, 9vw, 3.4rem);
+    line-height: 1.08;
+  }
+  section h2 {
+    font-size: clamp(1.9rem, 7.5vw, 2.85rem);
+    line-height: 1.12;
+  }
+  section h3 {
+    line-height: 1.15;
+  }
+  /* Body copy stays comfortably readable. */
+  p {
+    line-height: 1.55;
+  }
+  /* Prevent the giant pricing/typographic words ("Custom") from
+     overflowing their column. */
+  .gradient-text,
+  h1, h2, h3 {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* HowItWorks carousel: the cards are absolutely positioned, so the
+     container MUST keep an explicit height (height:auto would
+     collapse it to zero). Give it a taller fixed height on phones so
+     the step text has room, drop the title's reserved min-height,
+     and let the description show many more lines instead of the
+     desktop 3-line "..." clamp. */
+  .hiw-carousel {
+    height: 620px !important;
+  }
+  .cf-step-title {
+    min-height: 0 !important;
+    font-size: clamp(1.6rem, 7vw, 2.1rem) !important;
+  }
+  .cf-step-desc {
+    min-height: 0 !important;
+    -webkit-line-clamp: 7 !important;
+  }
+
+  /* Cards never clip their own text on mobile. */
+  .glass-card,
+  .glow-border {
+    height: auto;
+  }
+
+  /* Extra breathing room at the very bottom so the last section's
+     CTA / text is never hidden behind the floating pill. */
+  main {
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+  }
 }
 
 /* Reduce expensive blur/backdrop-filter cost on small screens.
