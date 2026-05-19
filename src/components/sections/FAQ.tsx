@@ -1,9 +1,15 @@
 import { useState } from 'react'
-import { Plus, Minus } from 'lucide-react'
 import { Container } from '../ui/Container'
 import { SectionLabel } from '../ui/SectionLabel'
 import { faqs } from '../../data/faqs'
 
+/**
+ * Faq accordion modeled after the supplied snippet. Adapted from the
+ * snippet's light slate theme to RezFlo's dark violet theme. Each row
+ * uses CSS max-height + opacity transitions (no JS height
+ * measurement, no Framer Motion) which is hardware-accelerated and
+ * stays smooth even on lower-powered devices.
+ */
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
@@ -11,90 +17,58 @@ export function FAQ() {
     <section id="faq" className="relative py-28 md:py-36">
       <div aria-hidden className="divider-violet absolute inset-x-0 top-0 h-px" />
       <Container narrow>
-        <div className="text-center">
+        <div className="mx-auto flex flex-col items-center justify-center px-4 md:px-0">
           <SectionLabel>FAQ</SectionLabel>
-          <h2 className="font-display mt-7 text-[2.25rem] font-medium leading-[1.1] tracking-[-0.02em] text-white sm:text-[2.85rem] lg:text-[3.5rem]">
-            Quick answers, <span className="gradient-text">no fluff.</span>
+          <h2 className="font-display mt-7 text-center text-[2.25rem] font-medium leading-[1.1] tracking-[-0.02em] text-white sm:text-[2.85rem] lg:text-[3.5rem]">
+            Looking for an{' '}
+            <span className="gradient-text">answer?</span>
           </h2>
-        </div>
+          <p className="mt-6 max-w-md text-center text-[1rem] leading-relaxed text-white/70">
+            Quick answers, no fluff — everything operators ask before going live with RezFlo.
+          </p>
 
-        {/*
-          Note: deliberately NOT using .glass-card here. That utility
-          adds backdrop-filter: blur(20px) saturate(140%) AND a
-          translateY(-4px) hover transform — when a user clicks a
-          question the row's height-expand animation runs while the
-          parent's blur has to repaint every frame against the
-          shifting content beneath it. That was the source of the
-          glitchy/slow open/close. Solid layered background gives
-          the same premium look without the per-frame compositor cost.
-        */}
-        <div
-          className="glow-border mt-16 overflow-hidden rounded-3xl"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(46,16,101,0.45) 0%, rgba(18,0,31,0.7) 100%), #0F0824',
-            boxShadow:
-              '0 30px 80px -30px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)',
-          }}
-        >
-          <div className="divide-y divide-white/[0.06]">
+          <div className="mt-12 w-full md:mt-16">
             {faqs.map((f, i) => {
               const isOpen = openIndex === i
               return (
-                <div key={f.q}>
-                  <button
-                    type="button"
-                    onClick={() => setOpenIndex(isOpen ? null : i)}
-                    aria-expanded={isOpen}
-                    className="flex w-full items-start justify-between gap-6 px-6 py-6 text-left transition-colors hover:bg-white/[0.025] md:px-9 md:py-7"
-                  >
-                    <span className="text-[1rem] font-medium text-white md:text-[1.0625rem]">
+                <div
+                  key={f.q}
+                  className="w-full cursor-pointer border-b border-white/[0.08] py-5"
+                  onClick={() => setOpenIndex(isOpen ? null : i)}
+                >
+                  <div className="flex items-center justify-between gap-6">
+                    <h3 className="text-[1rem] font-medium text-white md:text-[1.0625rem]">
                       {f.q}
-                    </span>
-                    <span
-                      className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors duration-200 ${
-                        isOpen
-                          ? 'bg-gradient-to-b from-violet-400 to-violet-600 text-white'
-                          : 'bg-violet-500/15 text-violet-200 ring-1 ring-violet-400/25'
+                    </h3>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`shrink-0 transition-transform duration-500 ease-in-out ${
+                        isOpen ? 'rotate-180' : ''
                       }`}
-                      style={
-                        isOpen
-                          ? { boxShadow: '0 8px 24px -4px rgba(124,58,237,0.5)' }
-                          : undefined
-                      }
+                      aria-hidden
                     >
-                      {isOpen ? <Minus size={14} /> : <Plus size={14} />}
-                    </span>
-                  </button>
-                  {/*
-                    CSS-only height animation: parent grid animates
-                    grid-template-rows from 0fr to 1fr; the inner div
-                    has overflow-hidden and content gets clipped during
-                    the transition. Hardware-accelerated, no JS layout
-                    measurement, no Framer Motion on every frame —
-                    massively smoother than the previous height:auto
-                    AnimatePresence approach (which was the source of
-                    the lag, especially over the .glass-card backdrop
-                    blur which had to repaint each frame).
-                  */}
-                  <div
-                    className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
-                    style={{
-                      gridTemplateRows: isOpen ? '1fr' : '0fr',
-                      opacity: isOpen ? 1 : 0,
-                      // contain:layout isolates this row's reflow from
-                      // siblings — when one row's height animates the
-                      // browser doesn't have to recompute layout for
-                      // the entire FAQ list.
-                      contain: 'layout',
-                    }}
-                  >
-                    <div className="overflow-hidden">
-                      <p className="px-6 pb-7 pr-16 text-[0.95rem] leading-[1.65] text-mist-300 md:px-9 md:pb-8">
-                        {f.a}
-                      </p>
-                    </div>
+                      <path
+                        d="m4.5 7.2 3.793 3.793a1 1 0 0 0 1.414 0L13.5 7.2"
+                        stroke="#c4b5fd"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </div>
+                  <p
+                    className={`max-w-2xl overflow-hidden text-[0.95rem] leading-[1.65] text-white/65 transition-all duration-500 ease-in-out ${
+                      isOpen
+                        ? 'max-h-[320px] translate-y-0 pt-4 opacity-100'
+                        : 'max-h-0 -translate-y-2 pt-0 opacity-0'
+                    }`}
+                  >
+                    {f.a}
+                  </p>
                 </div>
               )
             })}

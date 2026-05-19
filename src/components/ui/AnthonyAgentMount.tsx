@@ -1,18 +1,33 @@
 import { useEffect } from 'react'
-import { closeAnthonyWidget } from './anthonyAgent'
+import { closeAnthonyWidget, openFloAgentNow } from './anthonyAgent'
 import { setVoiceMode } from '../../lib/voiceMode'
+import { useMicState } from '../../lib/micPermission'
+import { MicPermissionModal } from './MicPermissionModal'
 
 /**
- * Mounts a single global <elevenlabs-convai> widget for the whole app.
+ * Alven.ai-style gated mount for the ElevenLabs ConvAI widget.
  *
- * The widget's default floating launcher is visually hidden via the
- * #anthony-agent-host[data-open="false"] rule in index.css. Our custom
- * "Talk to Anthony" CTAs call triggerAnthonyWidget() to programmatically
- * open the conversation; closeAnthonyWidget() collapses it again.
+ * The <elevenlabs-convai> element is NOT in the DOM on page load —
+ * mounting it is what makes the widget initialise and reach for the
+ * mic, which is exactly what was erroring inside Instagram's in-app
+ * browser. Instead:
+ *
+ *  1. "Talk to Flo" → triggerAnthonyWidget() → shows
+ *     <MicPermissionModal/> (state "asking").
+ *  2. User taps "Allow Microphone" → getUserMedia() runs inside that
+ *     click. On success mic state becomes "granted".
+ *  3. Only then does this component render <elevenlabs-convai>, and
+ *     once it's in the DOM we call openFloAgentNow() to start the
+ *     conversation.
+ *  4. On denial the modal shows the clean fallback message; the
+ *     widget never mounts, so no broken ElevenLabs error.
  */
 export function AnthonyAgentMount() {
+  const micState = useMicState()
+  const widgetMounted = micState === 'granted'
+
+  // Esc closes the conversation panel.
   useEffect(() => {
-    // Esc to close the conversation panel back to hidden.
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') closeAnthonyWidget()
     }
@@ -20,12 +35,23 @@ export function AnthonyAgentMount() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  // Safety net: if the user closes the call via the widget's own UI
-  // (the widget's internal X / hangup), our trigger/close helpers
-  // never fire, so voice mode would stay "true" forever and the rest
-  // of the page would stay paused. Listen for any plausible end-of-
-  // call event the widget might dispatch and flip voice mode off.
+  // Once the widget element is actually in the DOM, open the
+  // conversation. Small timeout lets the custom element upgrade +
+  // attach its shadow root first.
   useEffect(() => {
+    if (!widgetMounted) return
+    const t = window.setTimeout(() => {
+      void openFloAgentNow()
+    }, 80)
+    return () => window.clearTimeout(t)
+  }, [widgetMounted])
+
+  // Safety net: if the user closes the call via the widget's own UI,
+  // our close helper never fires, so flip voice mode off on any
+  // plausible end-of-call event. Re-attached whenever the widget
+  // (re)mounts.
+  useEffect(() => {
+    if (!widgetMounted) return
     const host = document.getElementById('anthony-agent-host')
     if (!host) return
     const endEvents = [
@@ -54,12 +80,17 @@ export function AnthonyAgentMount() {
       for (const e of endEvents) host.removeEventListener(e, onEnd)
       for (const e of startEvents) host.removeEventListener(e, onStart)
     }
-  }, [])
+  }, [widgetMounted])
 
   return (
-    <div id="anthony-agent-host" data-open="false" aria-hidden>
-      {/* @ts-expect-error - custom element provided by the embed script */}
-      <elevenlabs-convai agent-id="agent_4101kqtzr48zewjay0vsqs2h0fwk" />
-    </div>
+    <>
+      <MicPermissionModal />
+      {widgetMounted && (
+        <div id="anthony-agent-host" data-open="false" aria-hidden>
+          {/* @ts-expect-error - custom element provided by the embed script */}
+          <elevenlabs-convai agent-id="agent_4101kqtzr48zewjay0vsqs2h0fwk" />
+        </div>
+      )}
+    </>
   )
 }

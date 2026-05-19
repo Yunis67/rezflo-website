@@ -22,6 +22,7 @@
  */
 
 import { setVoiceMode } from '../../lib/voiceMode'
+import { getMicState, setMicState } from '../../lib/micPermission'
 
 const HOST_ID = 'anthony-agent-host'
 const WIDGET_TAG = 'elevenlabs-convai'
@@ -130,7 +131,33 @@ function attemptOpen(): boolean {
   return clickShadowLauncher(widget)
 }
 
-export async function triggerAnthonyWidget(): Promise<void> {
+/**
+ * Public entry for every "Talk to Flo" CTA. Alven.ai-style gate: if
+ * the user hasn't granted the mic yet, this only opens the RezFlo
+ * permission card — it does NOT touch ElevenLabs. The widget is only
+ * mounted (by AnthonyAgentMount) and opened (via openFloAgentNow,
+ * called from there) once mic state is "granted". This guarantees no
+ * ElevenLabs / getUserMedia call ever happens on page load or before
+ * an explicit user grant — which is what was erroring inside
+ * Instagram's in-app browser.
+ */
+export function triggerAnthonyWidget(): void {
+  if (getMicState() === 'granted') {
+    void openFloAgentNow()
+    return
+  }
+  // Not granted yet — show the custom permission card. Mounting the
+  // ElevenLabs element + calling getUserMedia happens later, only
+  // after the user taps "Allow Microphone".
+  setMicState('asking')
+}
+
+/**
+ * Actually open the ElevenLabs conversation. Only call this once the
+ * <elevenlabs-convai> element is in the DOM (i.e. mic granted and
+ * AnthonyAgentMount has rendered it).
+ */
+export async function openFloAgentNow(): Promise<void> {
   // Step 1 — synchronous visual + state updates so iOS counts the
   // gesture and the user sees feedback even if every later step
   // fails.
