@@ -605,7 +605,7 @@ function CallFlowMockup() {
         {/* === Main content slot (center, fixed area) =================== */}
         <div
           className="absolute inset-x-0"
-          style={{ top: 140, bottom: 56 }}
+          style={{ top: 140, bottom: isMobile ? 104 : 56 }}
         >
           {/* Phase 2: RezFlo card */}
           <div
@@ -682,7 +682,7 @@ function CallFlowMockup() {
               <img
                 src="/logos/rezflo-logo.png"
                 alt="RezFlo"
-                className="relative h-24 w-auto object-contain md:h-28"
+                className="relative h-16 w-auto object-contain sm:h-24 md:h-28"
                 style={{
                   filter: 'drop-shadow(0 6px 20px rgba(124,58,237,0.65))',
                 }}

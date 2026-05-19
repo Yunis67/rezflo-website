@@ -112,8 +112,11 @@ export function Hero() {
         />
       </video>
 
-      {/* Dark overlay for readability */}
-      <div aria-hidden className="absolute inset-0 bg-black/55" />
+      {/* Dark overlay for readability. On mobile this gets a violet
+          radial wash (see .hero-overlay in index.css) so the whole
+          hero reads as one cohesive glow even when the background
+          video is dark or blocked in an in-app browser. */}
+      <div aria-hidden className="hero-overlay absolute inset-0 bg-black/55" />
 
       {/*
         Bottom blend — fades video → deep violet → continues into the
@@ -122,7 +125,7 @@ export function Hero() {
       */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-96"
+        className="hero-bottom-blend pointer-events-none absolute inset-x-0 bottom-0 h-96"
         style={{
           background:
             'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 30%, rgba(28,9,53,0.7) 60%, rgba(46,16,101,0.85) 85%, #1A0F2E 100%)',

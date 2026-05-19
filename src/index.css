@@ -41,9 +41,30 @@ html, body {
 
   /* Use dynamic viewport units so the iOS Safari / Instagram
      browser chrome growing & shrinking doesn't break full-height
-     sections. min-h-[88vh] on the hero etc. -> dvh. */
+     sections. min-h-[88vh] on the hero etc. -> dvh. A brand violet
+     wash on the section guarantees the hero is never a flat black
+     void below the video, even when the bg video is dark or its
+     autoplay is blocked in TikTok/Instagram in-app browsers. */
   #top {
     min-height: 88dvh;
+    background:
+      radial-gradient(120% 70% at 50% 18%, rgba(124,58,237,0.30) 0%, rgba(46,16,101,0.18) 38%, transparent 72%),
+      linear-gradient(180deg, #0a0418 0%, #140a2c 45%, #1a0f2e 100%);
+  }
+
+  /* Spread the readability overlay into a violet radial so the
+     glow covers the FULL hero (not just the bright band of the
+     video) and the lower hero isn't pure black. */
+  .hero-overlay {
+    background:
+      radial-gradient(115% 60% at 50% 30%, rgba(124,58,237,0.28) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(8,4,20,0.45) 0%, rgba(8,4,20,0.62) 100%) !important;
+  }
+
+  /* Shorten the bottom blend so it doesn't turn the lower ~384px
+     of a tall mobile hero into one solid band. */
+  .hero-bottom-blend {
+    height: 11rem !important;
   }
 
   /* Fixed nav must never bleed past the screen edge, and should
