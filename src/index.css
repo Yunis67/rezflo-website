@@ -52,19 +52,33 @@ html, body {
       linear-gradient(180deg, #0a0418 0%, #140a2c 45%, #1a0f2e 100%);
   }
 
-  /* Spread the readability overlay into a violet radial so the
-     glow covers the FULL hero (not just the bright band of the
-     video) and the lower hero isn't pure black. */
+  /* Hero video — landscape footage cropped to a portrait phone via
+     object-cover only shows a narrow vertical slice (the bottom of
+     that slice is the dark lower part of the source frame). Scale
+     it up and anchor on the upper third so the bright smoke band
+     fills the visible portrait hero the way it fills the landscape
+     desktop hero. parent #top has overflow-hidden so the scale-up
+     can't cause horizontal scroll. */
+  .hero-video {
+    transform: scale(1.6);
+    transform-origin: 50% 38%;
+  }
+
+  /* Keep the readability overlay light on mobile so the smoke from
+     the (now scaled-up) video shows through full-bleed instead of
+     being washed out by a heavy black layer. Subtle violet ambient
+     instead of flat 55% black. */
   .hero-overlay {
     background:
-      radial-gradient(115% 60% at 50% 30%, rgba(124,58,237,0.28) 0%, transparent 60%),
-      linear-gradient(180deg, rgba(8,4,20,0.45) 0%, rgba(8,4,20,0.62) 100%) !important;
+      radial-gradient(120% 70% at 50% 30%, rgba(124,58,237,0.18) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(8,4,20,0.20) 0%, rgba(8,4,20,0.45) 100%) !important;
   }
 
   /* Shorten the bottom blend so it doesn't turn the lower ~384px
      of a tall mobile hero into one solid band. */
   .hero-bottom-blend {
-    height: 11rem !important;
+    height: 9rem !important;
+    opacity: 0.85;
   }
 
   /* Fixed nav must never bleed past the screen edge, and should
