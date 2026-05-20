@@ -41,44 +41,49 @@ html, body {
 
   /* Use dynamic viewport units so the iOS Safari / Instagram
      browser chrome growing & shrinking doesn't break full-height
-     sections. min-h-[88vh] on the hero etc. -> dvh. A brand violet
-     wash on the section guarantees the hero is never a flat black
-     void below the video, even when the bg video is dark or its
-     autoplay is blocked in TikTok/Instagram in-app browsers. */
+     sections. min-h-[88vh] on the hero etc. -> dvh.
+
+     The mobile hero is a tall portrait container holding both the
+     headline AND the Meet Flo card. The bg video is landscape with
+     smoke only in its upper portion — object-cover can't put smoke
+     where the source has no smoke pixels. So we layer two violet
+     radial glows here on #top itself: one anchored mid-hero (~52%)
+     and one lower (~78%). When the dark portion of the video
+     scales-in below the smoke band, these gradients keep the
+     section glowing violet straight through to where the Meet Flo
+     card sits, so the whole hero reads as one cohesive smoke/glow
+     instead of fading to flat black. */
   #top {
     min-height: 88dvh;
     background:
-      radial-gradient(120% 70% at 50% 18%, rgba(124,58,237,0.30) 0%, rgba(46,16,101,0.18) 38%, transparent 72%),
+      radial-gradient(ellipse 90% 35% at 50% 78%, rgba(124,58,237,0.32) 0%, transparent 65%),
+      radial-gradient(ellipse 110% 50% at 50% 52%, rgba(124,58,237,0.22) 0%, transparent 70%),
       linear-gradient(180deg, #0a0418 0%, #140a2c 45%, #1a0f2e 100%);
   }
 
   /* Hero video — landscape footage cropped to a portrait phone via
-     object-cover only shows a narrow vertical slice (the bottom of
-     that slice is the dark lower part of the source frame). Scale
-     it up and anchor on the upper third so the bright smoke band
-     fills the visible portrait hero the way it fills the landscape
-     desktop hero. parent #top has overflow-hidden so the scale-up
-     can't cause horizontal scroll. */
+     object-cover only shows a narrow vertical slice. Scale it up
+     and anchor on the upper third so the bright smoke band is as
+     dominant as possible in the visible portrait hero. */
   .hero-video {
-    transform: scale(1.6);
-    transform-origin: 50% 38%;
+    transform: scale(1.8);
+    transform-origin: 50% 40%;
   }
 
-  /* Keep the readability overlay light on mobile so the smoke from
-     the (now scaled-up) video shows through full-bleed instead of
-     being washed out by a heavy black layer. Subtle violet ambient
-     instead of flat 55% black. */
+  /* Keep the readability overlay very light on mobile so the smoke
+     and the #top violet gradients are the dominant visual. */
   .hero-overlay {
     background:
-      radial-gradient(120% 70% at 50% 30%, rgba(124,58,237,0.18) 0%, transparent 65%),
-      linear-gradient(180deg, rgba(8,4,20,0.20) 0%, rgba(8,4,20,0.45) 100%) !important;
+      radial-gradient(120% 70% at 50% 30%, rgba(124,58,237,0.10) 0%, transparent 70%),
+      linear-gradient(180deg, rgba(8,4,20,0.10) 0%, rgba(8,4,20,0.30) 100%) !important;
   }
 
-  /* Shorten the bottom blend so it doesn't turn the lower ~384px
-     of a tall mobile hero into one solid band. */
+  /* Shorten the bottom blend significantly so it doesn't introduce
+     a hard dark band across the bottom of the mobile hero — the
+     #top gradient already blends to the next section's color. */
   .hero-bottom-blend {
-    height: 9rem !important;
-    opacity: 0.85;
+    height: 5rem !important;
+    opacity: 0.7;
   }
 
   /* Fixed nav must never bleed past the screen edge, and should
