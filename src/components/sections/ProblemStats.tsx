@@ -4,6 +4,7 @@ import { Container } from '../ui/Container'
 import { SpotlightCard } from '../ui/spotlight-card'
 import { SectionAura } from '../ui/SectionAura'
 import { SectionLabel } from '../ui/SectionLabel'
+import { ContainerScroll } from '../ui/container-scroll-animation'
 import { TrendingDown, PhoneOff, DollarSign } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -107,6 +108,26 @@ export function ProblemStats() {
               </SpotlightCard>
             </motion.div>
           ))}
+        </div>
+
+        {/* Scroll-driven RezFlo tablet reveal — tucks right under the
+            three cards with a small gap, scales up + drifts upward as
+            the user scrolls into view. The PNG was exported with a
+            checkered transparency-preview pattern baked into the
+            outer pixels, so the inner wrapper uses overflow-hidden +
+            a slight scale to crop those edge pixels off-screen. */}
+        <div className="mt-6 md:mt-8">
+          <ContainerScroll>
+            <div className="relative mx-auto w-full overflow-hidden">
+              <img
+                src="/images/rezflo-tablet.png"
+                alt="RezFlo AI Host answering a phone order on a tablet"
+                draggable={false}
+                className="mx-auto block w-full select-none"
+                style={{ transform: 'scale(1.04)', transformOrigin: 'center' }}
+              />
+            </div>
+          </ContainerScroll>
         </div>
       </Container>
     </section>
