@@ -4,6 +4,7 @@ import { Container } from '../ui/Container'
 import { SpotlightCard } from '../ui/spotlight-card'
 import { SectionAura } from '../ui/SectionAura'
 import { SectionLabel } from '../ui/SectionLabel'
+import { ContainerScroll } from '../ui/container-scroll-animation'
 import { TrendingDown, PhoneOff, DollarSign } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -109,6 +110,33 @@ export function ProblemStats() {
           ))}
         </div>
       </Container>
+
+      {/* Scroll-driven RezFlo tablet reveal — sits directly under the
+          three cards. The ContainerScroll runway is tall on purpose so
+          the rotateX/scale animation has room to play without causing
+          layout shift in adjacent sections. Image lives at
+          /public/images/rezflo-tablet.png — replace that file to swap
+          what's shown inside the tablet. */}
+      <ContainerScroll
+        titleComponent={
+          <div className="px-6">
+            <p className="text-[0.75rem] font-semibold uppercase tracking-[0.22em] text-violet-300/85">
+              Meet the fix
+            </p>
+            <h3 className="font-display mt-4 text-[1.85rem] font-medium leading-[1.05] tracking-[-0.018em] text-white sm:text-[2.5rem] md:text-[3.5rem]">
+              An <span className="gradient-text">AI Host</span> that answers
+              every call.
+            </h3>
+          </div>
+        }
+      >
+        <img
+          src="/images/rezflo-tablet.png"
+          alt="RezFlo AI Host answering a phone order on a tablet"
+          draggable={false}
+          className="mx-auto block h-full w-full select-none object-contain"
+        />
+      </ContainerScroll>
     </section>
   )
 }
