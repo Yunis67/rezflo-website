@@ -1,262 +1,293 @@
-import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Sparkles, PhoneCall, CheckCircle2 } from 'lucide-react'
 import { Container } from '../ui/Container'
 import { site } from '../../data/site'
-import { AnthonyVoiceCard } from '../ui/AnthonyVoiceCard'
-import { subscribeVoiceMode, isVoiceModeActive } from '../../lib/voiceMode'
+import { triggerAnthonyWidget } from '../ui/anthonyAgent'
 
 /**
- * Hero — full-bleed cinematic video background, left-aligned
- * editorial composition. The bottom of the hero fades through deep
- * violet into the animated shader background of the next section so
- * the boundary is invisible.
- *
- * Layout:
- *   1. Top row (just below nav): two-column intro paragraphs
- *      (left: capability summary, right: stat tagline right-aligned).
- *   2. Center: eyebrow + headline + CTA + tagline — ALL LEFT-ALIGNED
- *      and constrained to ~max-w-3xl so the brand sits to the left.
- *
- * Title:
- *   Line 1 — "RezFlo" (white, large, font-medium)
- *   Line 2 — "We'll Handle the Calls" (animated shiny gradient)
+ * Hero V2 — light, editorial, centered composition inspired by
+ * bookedworks.com's structure but on RezFlo's violet accent (not
+ * amber) and Geist typography. Replaces the previous dark cinematic
+ * hero. Self-contained light section; fades into the darker sections
+ * below via a soft gradient at its base.
  */
 export function Hero() {
-  const heroVideoRef = useRef<HTMLVideoElement | null>(null)
-
-  // iOS Safari sometimes ignores autoPlay even with muted+playsInline,
-  // showing a tap-to-play overlay. Force it on mount and on the first
-  // user interaction. Without this, mobile users see a play-button
-  // ghost over the hero on a cold load.
-  useEffect(() => {
-    const v = heroVideoRef.current
-    if (!v) return
-    v.muted = true
-    v.setAttribute('webkit-playsinline', 'true')
-    const tryPlay = () => {
-      v.play().catch(() => {
-        /* will retry on first user gesture */
-      })
-    }
-    tryPlay()
-    const onFirstTouch = () => {
-      tryPlay()
-      window.removeEventListener('touchstart', onFirstTouch)
-      window.removeEventListener('click', onFirstTouch)
-    }
-    window.addEventListener('touchstart', onFirstTouch, { once: true, passive: true })
-    window.addEventListener('click', onFirstTouch, { once: true })
-    return () => {
-      window.removeEventListener('touchstart', onFirstTouch)
-      window.removeEventListener('click', onFirstTouch)
-    }
-  }, [])
-
-  // Pause the hero video any time it scrolls out of view OR the
-  // Anthony voice agent is active. The first frees the mobile H.264
-  // decoder for other videos further down; the second frees CPU/GPU
-  // and network bandwidth for the WebRTC voice stream so the call
-  // doesn't come through choppy.
-  useEffect(() => {
-    const v = heroVideoRef.current
-    if (!v) return
-    if (typeof IntersectionObserver === 'undefined') return
-    let inView = false
-    const sync = () => {
-      if (inView && !isVoiceModeActive()) {
-        v.play().catch(() => {})
-      } else {
-        v.pause()
-      }
-    }
-    const io = new IntersectionObserver(
-      entries => {
-        for (const entry of entries) {
-          inView = entry.isIntersecting
-        }
-        sync()
-      },
-      { threshold: 0.01 },
-    )
-    io.observe(v)
-    const offVoice = subscribeVoiceMode(sync)
-    return () => {
-      io.disconnect()
-      offVoice()
-    }
-  }, [])
+  const reveal = {
+    initial: { opacity: 0, y: 18 },
+    animate: { opacity: 1, y: 0 },
+  }
 
   return (
     <section
       id="top"
-      className="relative isolate flex flex-col overflow-hidden bg-black min-h-[88vh]"
+      className="relative isolate overflow-hidden"
+      style={{ background: '#FBFAF8' }}
     >
-      {/* Looping video background */}
-      <video
-        ref={heroVideoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="auto"
-        controls={false}
-        disablePictureInPicture
-        disableRemotePlayback
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
-        aria-hidden
-      >
-        <source
-          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_105406_16f4600d-7a92-4292-b96e-b19156c7830a.mp4"
-          type="video/mp4"
-        />
-      </video>
-
-      {/* Dark overlay for readability */}
-      <div aria-hidden className="absolute inset-0 bg-black/55" />
-
-      {/*
-        Bottom blend — fades video → deep violet → continues into the
-        shader background. Long gradient (h-96) so there is no visible
-        seam between sections.
-      */}
+      {/* Soft violet glow at the top + faint grid texture */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-96"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[70%]"
         style={{
           background:
-            'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.35) 30%, rgba(28,9,53,0.7) 60%, rgba(46,16,101,0.85) 85%, #1A0F2E 100%)',
+            'radial-gradient(60% 55% at 50% 0%, rgba(124,58,237,0.16) 0%, rgba(124,58,237,0.05) 35%, transparent 70%)',
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.5]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(20,10,40,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(20,10,40,0.04) 1px, transparent 1px)',
+          backgroundSize: '64px 64px',
+          maskImage:
+            'radial-gradient(80% 60% at 50% 0%, black 0%, transparent 75%)',
         }}
       />
 
-      {/* === Content =================================================== */}
-      <Container className="relative z-10 flex flex-1 flex-col">
-        {/*
-          Top intro paragraphs (just below nav).
-          Mobile: more vertical breathing room (gap-9), relaxed line
-          height, and an editorial divider rule between the two
-          paragraphs so they read as two distinct beats — the
-          description + the proof point — instead of one wall of text.
-          Desktop (lg+): unchanged 2-column side-by-side layout.
-        */}
-        {/*
-          On mobile/tablet (sub-lg) we keep the wrapping div for its
-          top-padding (preserves the headline's vertical position
-          below the nav) but hide both paragraphs — the user found
-          them congested at small widths. Desktop (lg+) still renders
-          the full two-column intro with the editorial divider rule
-          on the right paragraph.
-        */}
-        <div className="grid grid-cols-1 gap-9 pt-28 md:pt-32 lg:grid-cols-2 lg:gap-10">
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.18 }}
-            className="hidden max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 lg:block lg:text-base lg:leading-relaxed"
+      <Container className="relative z-10">
+        <div className="mx-auto flex max-w-4xl flex-col items-center pt-32 pb-20 text-center md:pt-40 md:pb-28">
+          {/* Eyebrow */}
+          <motion.span
+            {...reveal}
+            transition={{ duration: 0.5 }}
+            className="font-geist-mono inline-flex items-center gap-2 rounded-full border border-violet-200 bg-white/70 px-3.5 py-1.5 text-[0.7rem] font-medium uppercase tracking-[0.18em] text-violet-700 shadow-sm backdrop-blur"
           >
-            RezFlo answers calls, takes orders, books reservations, filters spam,
-            and captures every detail so your restaurant team can stay focused
-            on guests.
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.26 }}
-            className="relative ml-auto hidden max-w-md text-[0.95rem] font-normal leading-relaxed text-white/85 before:mb-5 before:block before:h-px before:w-10 before:bg-gradient-to-l before:from-violet-300/70 before:to-transparent before:ml-auto lg:block lg:text-right lg:text-base lg:leading-relaxed"
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            </span>
+            AI Phone Agents for Restaurants
+          </motion.span>
+
+          {/* Headline */}
+          <motion.h1
+            {...reveal}
+            transition={{ duration: 0.7, delay: 0.06 }}
+            className="font-geist mt-7 font-extrabold tracking-[-0.03em] text-neutral-950"
+            style={{
+              fontSize: 'clamp(2.5rem, 7.5vw, 5rem)',
+              lineHeight: 1.02,
+            }}
           >
-            0 missed calls. 24/7 restaurant coverage.
+            Every call answered.
+            <br />
+            <span
+              style={{
+                background:
+                  'linear-gradient(100deg, #7c3aed 0%, #a855f7 45%, #6d28d9 100%)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                color: 'transparent',
+              }}
+            >
+              Every order captured.
+            </span>
+          </motion.h1>
+
+          {/* Pain line */}
+          <motion.p
+            {...reveal}
+            transition={{ duration: 0.6, delay: 0.14 }}
+            className="font-geist mt-6 text-[1.05rem] font-medium text-neutral-500 md:text-[1.15rem]"
+          >
+            Missed calls. Busy signals. Lost reservations — revenue walking
+            out the door.
           </motion.p>
-        </div>
 
-        {/* Center hero — LEFT-aligned editorial composition + voice card right */}
-        <div className="grid flex-1 grid-cols-1 items-center gap-12 pt-14 pb-32 md:pt-16 md:pb-36 lg:grid-cols-[minmax(0,1fr)_clamp(360px,32vw,440px)] lg:gap-16">
-          <div className="max-w-4xl">
-            <motion.span
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.32 }}
-              className="text-xs font-medium uppercase tracking-[0.18em] text-white/75 md:text-sm"
+          {/* Subhead */}
+          <motion.p
+            {...reveal}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="font-geist mt-4 max-w-2xl text-[1.0625rem] leading-relaxed text-neutral-600"
+          >
+            RezFlo picks up every call, takes the order, books the table, and
+            filters spam — 24/7, in your customer&rsquo;s language.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.6, delay: 0.28 }}
+            className="mt-9 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row"
+          >
+            <a
+              href={site.cta.bookDemo}
+              className="font-geist group inline-flex w-full items-center justify-center gap-2 rounded-full px-7 py-3.5 text-[0.95rem] font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 sm:w-auto"
+              style={{
+                background: 'linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%)',
+                boxShadow:
+                  '0 14px 30px -10px rgba(124,58,237,0.55), inset 0 1px 0 rgba(255,255,255,0.25)',
+              }}
             >
-              AI Phone Agents for Restaurants
-            </motion.span>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-6 text-left font-medium tracking-tighter text-white"
-              style={{ lineHeight: 0.88 }}
+              Book a Free Demo
+              <ArrowRight
+                aria-hidden
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </a>
+            <button
+              type="button"
+              onClick={triggerAnthonyWidget}
+              className="font-geist group inline-flex w-full items-center justify-center gap-2 rounded-full border border-neutral-300 bg-white px-7 py-3.5 text-[0.95rem] font-semibold text-neutral-900 transition-all duration-300 hover:-translate-y-0.5 hover:border-violet-300 hover:shadow-[0_14px_30px_-14px_rgba(124,58,237,0.4)] sm:w-auto"
+              aria-label="Talk to Flo — open the live voice demo"
             >
-              <span className="block text-[3.5rem] sm:text-7xl md:text-8xl lg:text-[8.5rem] xl:text-[9rem]">
-                RezFlo
-              </span>
-              <ShinyText className="mt-2 block text-[2.1rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.25rem] tracking-tight">
-                We&rsquo;ll Handle the Calls
-              </ShinyText>
-            </motion.h1>
+              <Sparkles className="h-4 w-4 text-violet-600" aria-hidden />
+              Talk to Flo
+            </button>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6"
-            >
-              <a
-                href={site.cta.bookDemo}
-                className="group inline-flex items-center gap-2 rounded-full bg-black px-7 py-3.5 text-sm font-medium text-white transition-all duration-300 hover:bg-neutral-900 md:px-8 md:py-4 md:text-base"
-                style={{
-                  border: '1px solid rgba(255,255,255,0.16)',
-                  boxShadow:
-                    '0 10px 30px -10px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)',
-                }}
-              >
-                Book Free Demo
-                <ArrowRight
-                  aria-hidden
-                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-                />
-              </a>
-              <p className="max-w-sm text-xs text-white/70 md:text-sm">
-                Built for restaurants, cafés, bakeries, and appointment-based businesses.
-              </p>
-            </motion.div>
-          </div>
+          {/* Trust row */}
+          <motion.div
+            {...reveal}
+            transition={{ duration: 0.6, delay: 0.36 }}
+            className="font-geist mt-7 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.82rem] font-medium text-neutral-500"
+          >
+            <TrustItem>Live in days, not months</TrustItem>
+            <span aria-hidden className="text-neutral-300">·</span>
+            <TrustItem>Works with your POS</TrustItem>
+            <span aria-hidden className="text-neutral-300">·</span>
+            <TrustItem>0 missed calls, 24/7</TrustItem>
+          </motion.div>
 
-          {/* Right column — Anthony voice agent card */}
-          <div className="w-full">
-            <AnthonyVoiceCard />
-          </div>
+          {/* Hero visual — light "incoming call → Flo answers" card */}
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
+            className="relative mt-16 w-full max-w-2xl"
+          >
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-6 rounded-[40px] opacity-70 blur-3xl"
+              style={{
+                background:
+                  'radial-gradient(60% 60% at 50% 20%, rgba(124,58,237,0.28), transparent 70%)',
+              }}
+            />
+            <CallDemoCard />
+          </motion.div>
         </div>
       </Container>
+
+      {/* Fade from the light hero into the darker sections below */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(251,250,248,0) 0%, rgba(251,250,248,0.6) 40%, #FBFAF8 100%)',
+        }}
+      />
     </section>
   )
 }
 
-/* ===================================================================
-   ShinyText — Inline animated gradient sweep.
-   Base color: #8B5CF6, Shine color: #FFFFFF. 100° gradient spread,
-   3s loop. Uses backgroundClip: text + transparent fill.
-   ================================================================= */
-function ShinyText({
+function TrustItem({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      <CheckCircle2 className="h-3.5 w-3.5 text-violet-500" aria-hidden />
+      {children}
+    </span>
+  )
+}
+
+/* Light call-demo card echoing bookedworks' PhoneDemoSection preview. */
+function CallDemoCard() {
+  return (
+    <div
+      className="relative overflow-hidden rounded-[28px] border border-neutral-200 bg-white p-5 text-left md:p-7"
+      style={{ boxShadow: '0 40px 80px -32px rgba(46,16,101,0.35)' }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <span className="inline-flex items-center gap-2.5">
+          <span
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white"
+            style={{
+              background: 'linear-gradient(160deg, #a855f7, #6d28d9)',
+            }}
+            aria-hidden
+          >
+            <PhoneCall className="h-4 w-4" />
+          </span>
+          <span className="font-geist">
+            <span className="block text-[0.9rem] font-semibold text-neutral-900">
+              RezFlo · Flo
+            </span>
+            <span className="block text-[0.72rem] text-neutral-400">
+              Answering now
+            </span>
+          </span>
+        </span>
+        <span className="font-geist-mono inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[0.62rem] font-medium uppercase tracking-wide text-emerald-600 ring-1 ring-emerald-200">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          Live
+        </span>
+      </div>
+
+      {/* Transcript */}
+      <div className="font-geist mt-5 space-y-2.5 text-[0.92rem]">
+        <Bubble side="ai">
+          &ldquo;Thanks for calling Bella Pasta — how can I help?&rdquo;
+        </Bubble>
+        <Bubble side="caller">
+          &ldquo;Hi, I&rsquo;d like a table for 4 at 7pm.&rdquo;
+        </Bubble>
+        <Bubble side="ai">
+          &ldquo;Booked for 7pm. Anything else I can grab for you?&rdquo;
+        </Bubble>
+      </div>
+
+      {/* Footer status chips */}
+      <div className="font-geist mt-5 flex flex-wrap items-center gap-2 border-t border-neutral-100 pt-4">
+        <Chip tint="emerald">
+          <CheckCircle2 className="h-3.5 w-3.5" /> Reservation booked
+        </Chip>
+        <Chip tint="violet">Sent to POS</Chip>
+        <Chip tint="neutral">Caller details captured</Chip>
+      </div>
+    </div>
+  )
+}
+
+function Bubble({
+  side,
   children,
-  className = '',
 }: {
+  side: 'ai' | 'caller'
   children: React.ReactNode
-  className?: string
 }) {
+  const ai = side === 'ai'
+  return (
+    <div className={ai ? 'flex' : 'flex justify-end'}>
+      <p
+        className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 leading-snug ${
+          ai
+            ? 'rounded-tl-sm bg-violet-50 text-neutral-800 ring-1 ring-violet-100'
+            : 'rounded-tr-sm bg-neutral-100 text-neutral-700'
+        }`}
+      >
+        {children}
+      </p>
+    </div>
+  )
+}
+
+function Chip({
+  tint,
+  children,
+}: {
+  tint: 'emerald' | 'violet' | 'neutral'
+  children: React.ReactNode
+}) {
+  const map = {
+    emerald: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+    violet: 'bg-violet-50 text-violet-700 ring-violet-200',
+    neutral: 'bg-neutral-50 text-neutral-600 ring-neutral-200',
+  } as const
   return (
     <span
-      className={className}
-      style={{
-        background:
-          'linear-gradient(100deg, #8B5CF6 0%, #FFFFFF 50%, #8B5CF6 100%)',
-        backgroundSize: '200% 100%',
-        backgroundClip: 'text',
-        WebkitBackgroundClip: 'text',
-        color: 'transparent',
-        WebkitTextFillColor: 'transparent',
-        animation: 'shineSweep 3s linear infinite',
-      }}
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.72rem] font-medium ring-1 ${map[tint]}`}
     >
       {children}
     </span>

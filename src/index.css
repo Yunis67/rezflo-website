@@ -386,6 +386,10 @@ html[data-anthony-active="true"] elevenlabs-convai * {
   --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
   --font-stack-sans: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
   --font-open-sans: "Open Sans", system-ui, sans-serif;
+  /* Geist — used by the redesigned (bookedworks-style) light sections.
+     Geist for display/body, Geist Mono for eyebrow labels. */
+  --font-geist: "Geist", "Inter", system-ui, -apple-system, sans-serif;
+  --font-geist-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
 /* ===== Base ============================================================ */
