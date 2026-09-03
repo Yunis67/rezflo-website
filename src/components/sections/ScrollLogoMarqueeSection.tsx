@@ -32,13 +32,13 @@ interface LogoCard {
 }
 
 const LOGOS: LogoCard[] = [
-  { name: 'Clover',          src: '/logos/yay/clover.png' },
-  { name: 'Square',          src: '/logos/yay/square.png' },
-  { name: 'Toast',           src: '/logos/yay/toast.png' },
-  { name: 'Olo',             src: '/logos/yay/olo.png' },
-  { name: 'Cal.com',         src: '/logos/yay/calcom.png' },
-  { name: 'Google Calendar', src: '/logos/yay/gcal.png' },
-  { name: 'Resy',            src: '/logos/yay/resy.png' },
+  { name: 'Clover',          src: '/logos/stack/clover.png' },
+  { name: 'Square',          src: '/logos/stack/square.png' },
+  { name: 'Toast',           src: '/logos/stack/toast.png' },
+  { name: 'Olo',             src: '/logos/stack/olo.png' },
+  { name: 'OpenTable',       src: '/logos/stack/opentable.png' },
+  { name: 'Google Calendar', src: '/logos/stack/gcal.png' },
+  { name: 'Otter',           src: '/logos/stack/otter.png' },
 ]
 
 // Two visually distinct orderings so the rows don't look symmetrical.
@@ -64,31 +64,31 @@ export function ScrollLogoMarqueeSection() {
       ref={sectionRef}
       className="relative w-full overflow-hidden py-24 md:py-32"
     >
-      {/* Branded purple gradient + glow. Top and bottom fade to pure black
-          so the section blends seamlessly into the hero above and the
-          shader background below — no visible horizontal seam. */}
+      {/* Warm-white base with a soft violet glow in the middle — matches
+          the light hero above so there's no visible seam. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-black"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: '#F8F7FC' }}
       />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse 85% 55% at 50% 50%, rgba(124,58,237,0.32) 0%, rgba(76,29,149,0.18) 35%, rgba(15,8,35,0) 75%), linear-gradient(180deg, #1A0F2E 0%, #140A2C 22%, #110827 50%, #160B30 78%, #1A0F2E 100%)',
+            'radial-gradient(ellipse 72% 58% at 50% 46%, rgba(91,65,218,0.16) 0%, rgba(169,147,255,0.11) 32%, rgba(248,247,252,0) 70%)',
         }}
       />
 
       <div className="relative mx-auto max-w-5xl px-6 md:px-10">
         <h2 className="font-display text-left text-[2rem] font-semibold leading-[1.08] tracking-[-0.02em] sm:text-[2.6rem] md:text-[3.25rem] lg:text-[3.75rem]">
-          <span className="text-white">Plays nicely with your</span>{' '}
+          <span className="text-[#201B33]">Plays nicely with your</span>{' '}
           <AnimatedTextCycle
             words={HEADLINE_WORDS}
             interval={2500}
-            className="bg-gradient-to-r from-violet-300 via-violet-200 to-fuchsia-200 bg-clip-text text-transparent"
+            className="bg-gradient-to-r from-[#5B41DA] via-[#7358F0] to-[#A993FF] bg-clip-text text-transparent"
           />
-          <span className="bg-gradient-to-r from-violet-300 via-violet-200 to-fuchsia-200 bg-clip-text text-transparent sm:block">
+          <span className="bg-gradient-to-r from-[#5B41DA] via-[#7358F0] to-[#A993FF] bg-clip-text text-transparent sm:block">
             {' '}stack.
           </span>
         </h2>
@@ -138,10 +138,10 @@ function Row({ cards, x, offsetClass = '' }: RowProps) {
 function Card({ card }: { card: LogoCard }) {
   return (
     <div
-      className="relative flex h-[100px] w-[125px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm sm:h-[164px] sm:w-[204px] md:h-[208px] md:w-[258px] lg:h-[220px] lg:w-[275px]"
+      className="relative flex h-[100px] w-[125px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] bg-white ring-1 ring-[#201B33]/[0.06] sm:h-[164px] sm:w-[204px] md:h-[208px] md:w-[258px] lg:h-[220px] lg:w-[275px]"
       style={{
         boxShadow:
-          '0 24px 60px -28px rgba(124,58,237,0.55), 0 8px 22px -10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)',
+          '0 24px 50px -28px rgba(91,65,218,0.32), 0 8px 22px -12px rgba(32,27,51,0.14)',
       }}
     >
       <img
@@ -150,8 +150,7 @@ function Card({ card }: { card: LogoCard }) {
         loading="lazy"
         decoding="async"
         draggable={false}
-        className="h-full w-full select-none object-cover"
-        style={{ transform: 'scale(1.06)' }}
+        className="h-full w-full select-none object-contain p-6 sm:p-9 md:p-12"
       />
     </div>
   )

@@ -27,10 +27,23 @@ export default function App() {
         {/* Scroll-driven logo marquee — light section directly under hero. */}
         <ScrollLogoMarqueeSection />
 
-        {/* Non-hero sections share the animated mesh-gradient bg. */}
-        <RezFloShaderBackground>
+        {/* Light white + violet sections that continue the hero palette. */}
+        <div className="relative" style={{ background: '#F8F7FC' }}>
           <ProblemStats />
           <HowItWorks />
+        </div>
+
+        {/* Smooth handoff from the light sections into the dark shader. */}
+        <div
+          aria-hidden
+          style={{
+            height: '160px',
+            background: 'linear-gradient(180deg, #F8F7FC 0%, #1A0F2E 100%)',
+          }}
+        />
+
+        {/* Non-hero sections share the animated mesh-gradient bg. */}
+        <RezFloShaderBackground>
           <Features />
           <ScrollExpandShowcase />
           <Testimonials />
