@@ -125,13 +125,13 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
         'group relative isolate overflow-hidden rounded-3xl text-left transition-[border-color,box-shadow,transform] duration-500',
         'border',
         active
-          ? 'border-violet-300/45'
-          : 'border-violet-400/25 hover:border-violet-300/45',
+          ? 'border-[#A993FF]/55'
+          : 'border-[#A993FF]/35 hover:border-[#A993FF]/55',
       )}
       style={{
         boxShadow: active
-          ? '0 30px 80px -20px rgba(0,0,0,0.7), 0 0 70px -10px rgba(124,58,237,0.45), inset 0 1px 0 rgba(255,255,255,0.06)'
-          : '0 18px 40px -16px rgba(0,0,0,0.6), 0 0 30px -10px rgba(124,58,237,0.3), inset 0 1px 0 rgba(255,255,255,0.05)',
+          ? '0 34px 70px -28px rgba(91,65,218,0.40), 0 10px 26px -14px rgba(32,27,51,0.18)'
+          : '0 16px 34px -20px rgba(91,65,218,0.28), 0 8px 20px -14px rgba(32,27,51,0.12)',
       }}
     >
       {/* === Background image ============================================
@@ -154,7 +154,7 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
           'absolute inset-0 h-full w-full select-none object-cover transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)] md:transition-[transform,filter] md:duration-[900ms]',
           active
             ? 'scale-100 md:brightness-105 md:contrast-[1.08] md:saturate-[1.18]'
-            : 'scale-110 brightness-[0.4] md:blur-[6px] md:saturate-[0.85]',
+            : 'scale-110 md:blur-[6px] md:saturate-[0.9]',
         )}
         style={{
           imageRendering: 'auto',
@@ -172,8 +172,8 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
           background: active
             ? // Active: light at top, deep at bottom for text readability
               'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.55) 60%, rgba(7,5,26,0.95) 100%)'
-            : // Inactive: violet-tinted frosted glass
-              'linear-gradient(180deg, rgba(46,16,101,0.55) 0%, rgba(18,0,31,0.78) 100%)',
+            : // Inactive: light lavender frosted wash on the warm-white section
+              'linear-gradient(180deg, rgba(169,147,255,0.30) 0%, rgba(248,247,252,0.74) 100%)',
         }}
       />
 
@@ -186,7 +186,7 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
           className="absolute inset-0 backdrop-blur-md"
           style={{
             background:
-              'linear-gradient(180deg, rgba(124,58,237,0.10) 0%, rgba(15,8,35,0.25) 100%)',
+              'linear-gradient(180deg, rgba(255,255,255,0.60) 0%, rgba(233,228,255,0.58) 100%)',
           }}
         />
       )}
@@ -208,10 +208,10 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
         <div className="absolute inset-0 flex items-center justify-center">
           <div
             aria-hidden
-            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.08] text-violet-100 ring-1 ring-violet-300/30 backdrop-blur-md"
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#5B41DA] ring-1 ring-[#5B41DA]/20 backdrop-blur-md"
             style={{
               boxShadow:
-                '0 8px 20px -8px rgba(124,58,237,0.55), inset 0 1px 0 rgba(255,255,255,0.12)',
+                '0 10px 22px -10px rgba(91,65,218,0.45), inset 0 1px 0 rgba(255,255,255,0.6)',
             }}
           >
             {item.icon}

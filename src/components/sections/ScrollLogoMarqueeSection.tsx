@@ -32,13 +32,13 @@ interface LogoCard {
 }
 
 const LOGOS: LogoCard[] = [
-  { name: 'Clover',          src: '/logos/stack/clover.png' },
-  { name: 'Square',          src: '/logos/stack/square.png' },
-  { name: 'Toast',           src: '/logos/stack/toast.png' },
-  { name: 'Olo',             src: '/logos/stack/olo.png' },
-  { name: 'OpenTable',       src: '/logos/stack/opentable.png' },
-  { name: 'Google Calendar', src: '/logos/stack/gcal.png' },
-  { name: 'Otter',           src: '/logos/stack/otter.png' },
+  { name: 'Clover',          src: '/logos/yay/clover.png' },
+  { name: 'Square',          src: '/logos/yay/square.png' },
+  { name: 'Toast',           src: '/logos/yay/toast.png' },
+  { name: 'Olo',             src: '/logos/yay/olo.png' },
+  { name: 'Cal.com',         src: '/logos/yay/calcom.png' },
+  { name: 'Google Calendar', src: '/logos/yay/gcal.png' },
+  { name: 'Resy',            src: '/logos/yay/resy.png' },
 ]
 
 // Two visually distinct orderings so the rows don't look symmetrical.
@@ -150,7 +150,8 @@ function Card({ card }: { card: LogoCard }) {
         loading="lazy"
         decoding="async"
         draggable={false}
-        className="h-full w-full select-none object-contain p-6 sm:p-9 md:p-12"
+        className="h-full w-full select-none object-cover"
+        style={{ transform: 'scale(1.06)' }}
       />
     </div>
   )

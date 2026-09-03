@@ -8,7 +8,6 @@ import { Hero } from './components/sections/Hero'
 import { ProblemStats } from './components/sections/ProblemStats'
 import { HowItWorks } from './components/sections/HowItWorks'
 import { Features } from './components/sections/Features'
-import { ScrollExpandShowcase } from './components/sections/ScrollExpandShowcase'
 import { Testimonials } from './components/sections/Testimonials'
 import { Pricing } from './components/sections/Pricing'
 import { ROICalculator } from './components/sections/ROICalculator'
@@ -31,6 +30,7 @@ export default function App() {
         <div className="relative" style={{ background: '#F8F7FC' }}>
           <ProblemStats />
           <HowItWorks />
+          <Features />
         </div>
 
         {/* Smooth handoff from the light sections into the dark shader. */}
@@ -44,8 +44,6 @@ export default function App() {
 
         {/* Non-hero sections share the animated mesh-gradient bg. */}
         <RezFloShaderBackground>
-          <Features />
-          <ScrollExpandShowcase />
           <Testimonials />
           <ROICalculator />
           <Pricing />

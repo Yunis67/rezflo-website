@@ -9,7 +9,6 @@ import {
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Container } from '../ui/Container'
-import { SectionLabel } from '../ui/SectionLabel'
 import { SectionAura } from '../ui/SectionAura'
 import { ExpandingCards, type CardItem } from '../ui/ExpandingCards'
 
@@ -105,18 +104,30 @@ const rezfloFeatures: CardItem[] = [
 export function Features() {
   return (
     <section id="features" className="relative overflow-hidden py-28 md:py-36">
-      <div aria-hidden className="divider-violet absolute inset-x-0 top-0 h-px" />
-      <SectionAura position="top-center" color="rgba(168, 85, 247, 0.5)" size={75} opacity={0.4} />
-      <SectionAura position="bottom-right" color="rgba(124, 58, 237, 0.5)" size={55} opacity={0.5} blur={90} />
+      <SectionAura position="top-center" color="rgba(169, 147, 255, 0.40)" size={75} opacity={0.45} />
+      <SectionAura position="bottom-right" color="rgba(91, 65, 218, 0.22)" size={55} opacity={0.5} blur={90} />
 
       <Container>
         <div className="mx-auto max-w-3xl text-center">
-          <SectionLabel>Features</SectionLabel>
-          <h2 className="font-display mt-7 pb-2 text-[2.25rem] font-medium leading-[1.1] tracking-[-0.018em] text-white sm:text-[2.85rem] lg:text-[3.5rem]">
+          <span className="inline-flex items-center rounded-full border border-[#A993FF]/45 bg-[#5B41DA]/[0.06] px-4 py-1.5 text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-[#5B41DA]">
+            Features
+          </span>
+          <h2 className="font-display mt-7 pb-2 text-[2.25rem] font-medium leading-[1.1] tracking-[-0.018em] text-[#201B33] sm:text-[2.85rem] lg:text-[3.5rem]">
             A full-time employee that{' '}
-            <span className="gradient-text italic">never sleeps.</span>
+            <span
+              className="italic"
+              style={{
+                background: 'linear-gradient(180deg, #6E52E8 0%, #A993FF 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              never sleeps.
+            </span>
           </h2>
-          <p className="font-open-sans mt-6 text-[1.0625rem] leading-relaxed text-white/75">
+          <p className="font-open-sans mt-6 text-[1.0625rem] leading-relaxed text-[#201B33]/60">
             Built specifically for restaurants. Tuned for orders, reservations, and
             the questions guests actually ask.
           </p>
