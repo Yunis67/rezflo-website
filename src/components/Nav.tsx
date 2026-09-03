@@ -60,10 +60,10 @@ export function Nav() {
         // into a square."
         'fixed inset-x-0 z-50 mx-auto duration-500 ease-out',
         open
-          ? 'transition-none top-0 max-w-none rounded-none border-b border-white/10 bg-black/90 backdrop-blur-xl'
+          ? 'transition-none top-0 max-w-none rounded-none border-b border-[#A993FF]/30 bg-white/95 backdrop-blur-xl'
           : scrolled
-          ? 'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter] top-3 max-w-5xl rounded-full border border-white/10 bg-black/55 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] backdrop-blur-xl'
-          : 'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter] top-0 max-w-none rounded-none border-b border-transparent bg-transparent backdrop-blur-0',
+          ? 'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter] top-3 max-w-5xl rounded-full border border-[#A993FF]/40 bg-white/85 shadow-[0_20px_50px_-24px_rgba(91,65,218,0.45)] backdrop-blur-xl'
+          : 'transition-[max-width,top,background-color,border-color,box-shadow,backdrop-filter] top-3 max-w-5xl rounded-full border border-[#A993FF]/35 bg-white/70 shadow-[0_18px_44px_-26px_rgba(91,65,218,0.4)] backdrop-blur-md',
       )}
     >
       <Container className={cn('transition-all', scrolled ? 'lg:!px-4' : '')}>
@@ -78,12 +78,12 @@ export function Nav() {
           </a>
 
           {/* Desktop links */}
-          <nav className="hidden lg:flex items-center gap-1 rounded-full border border-neutral-700/80 bg-white/[0.04] px-2 py-1.5 backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-1 rounded-full border border-[#A993FF]/30 bg-[#A993FF]/[0.06] px-2 py-1.5 backdrop-blur-md">
             {links.map(l => (
               <a
                 key={l.href}
                 href={l.href}
-                className="rounded-full px-3 py-1.5 text-sm text-white/80 transition-colors hover:bg-white/[0.08] hover:text-white"
+                className="rounded-full px-3 py-1.5 text-sm text-[#201B33]/75 transition-colors hover:bg-[#5B41DA]/[0.10] hover:text-[#5B41DA]"
               >
                 {l.label}
               </a>
@@ -103,7 +103,7 @@ export function Nav() {
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen(o => !o)}
-            className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/80 backdrop-blur-md hover:text-white"
+            className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#A993FF]/40 bg-white/70 text-[#201B33]/80 backdrop-blur-md hover:text-[#5B41DA]"
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -124,7 +124,7 @@ export function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="rounded-2xl px-4 py-3 text-base text-white/85 hover:bg-white/[0.05] hover:text-white"
+                className="rounded-2xl px-4 py-3 text-base text-[#201B33]/85 hover:bg-[#5B41DA]/[0.08] hover:text-[#5B41DA]"
               >
                 {l.label}
               </a>

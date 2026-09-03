@@ -62,22 +62,23 @@ export function AnthonyVoiceCard() {
         ref={cardRef}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative overflow-hidden rounded-[28px] border border-white/[0.10] px-7 pt-6 pb-8 transition-transform duration-150 ease-out will-change-transform md:backdrop-blur-2xl"
+        className="relative overflow-hidden rounded-[28px] border px-7 pt-6 pb-8 transition-transform duration-150 ease-out will-change-transform"
         style={{
           background:
-            'linear-gradient(180deg, rgba(20,10,42,0.96) 0%, rgba(8,4,22,0.98) 100%)',
+            'linear-gradient(180deg, #FFFFFF 0%, #FCFBFF 100%)',
+          borderColor: 'rgba(169,147,255,0.45)',
           boxShadow:
-            '0 30px 80px -30px rgba(124,58,237,0.55), 0 0 0 1px rgba(167,139,250,0.18) inset',
+            '0 30px 80px -32px rgba(91,65,218,0.45), 0 6px 20px -12px rgba(91,65,218,0.25), 0 0 0 1px rgba(169,147,255,0.20) inset',
           transformStyle: 'preserve-3d',
         }}
       >
         {/* Header row */}
         <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-2 text-[0.66rem] font-semibold uppercase tracking-[0.20em] text-white/85">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_2px_rgba(16,185,129,0.6)]" />
+          <span className="inline-flex items-center gap-2 text-[0.66rem] font-semibold uppercase tracking-[0.20em] text-[#201B33]/75">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_2px_rgba(16,185,129,0.5)]" />
             Live Voice Demo
           </span>
-          <span className="text-[0.68rem] tracking-wide text-mist-400">
+          <span className="text-[0.68rem] tracking-wide text-[#201B33]/50">
             Powered by RezFlo
           </span>
         </div>
@@ -85,10 +86,10 @@ export function AnthonyVoiceCard() {
         {/* Glowing warm orb avatar */}
         <div className="mt-8 flex flex-col items-center text-center">
           <WarmOrb size={108} />
-          <h3 className="font-display mt-7 text-[1.55rem] font-medium leading-tight tracking-[-0.01em] text-white">
+          <h3 className="font-display mt-7 text-[1.55rem] font-medium leading-tight tracking-[-0.01em] text-[#201B33]">
             Meet Flo
           </h3>
-          <p className="mt-2 max-w-[300px] text-[0.92rem] leading-relaxed text-mist-300">
+          <p className="mt-2 max-w-[300px] text-[0.92rem] leading-relaxed text-[#201B33]/65">
             Ask Flo anything — hours, menu, reservations, and more.
           </p>
         </div>
@@ -98,35 +99,30 @@ export function AnthonyVoiceCard() {
           <button
             type="button"
             onClick={triggerAnthonyWidget}
-            className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-[0.95rem] font-semibold tracking-tight text-neutral-900 shadow-[0_14px_30px_-10px_rgba(124,58,237,0.55),0_0_0_1px_rgba(255,255,255,0.7)_inset] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_20px_50px_-12px_rgba(124,58,237,0.85),0_0_0_1px_rgba(255,255,255,0.85)_inset]"
+            className="group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[0.95rem] font-semibold tracking-tight text-white transition-all duration-300 hover:scale-[1.03]"
+            style={{
+              background: 'linear-gradient(180deg, #6E52E8 0%, #5B41DA 100%)',
+              boxShadow:
+                '0 14px 30px -10px rgba(91,65,218,0.55), inset 0 1px 0 rgba(255,255,255,0.28)',
+            }}
             aria-label="Talk to Flo — open live voice agent"
           >
             <SparkleIcon />
             Talk to Flo
           </button>
-          <p className="text-[0.7rem] tracking-wide text-mist-400">
+          <p className="text-[0.7rem] tracking-wide text-[#201B33]/50">
             Mic access required • English
           </p>
         </div>
 
-        {/* Holographic cursor-tracking radial glow */}
+        {/* Cursor-tracking purple sheen — subtle on the white card */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-[5] mix-blend-screen transition-opacity duration-200"
+          className="pointer-events-none absolute inset-0 z-[5] transition-opacity duration-200"
           style={{
             opacity: 'var(--holo-opacity, 0)',
             background:
-              'radial-gradient(circle 220px at var(--holo-x, 50%) var(--holo-y, 50%), rgba(196,181,253,0.55) 0%, rgba(124,58,237,0.25) 35%, transparent 70%)',
-          }}
-        />
-        {/* Holographic conic shimmer */}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-[4] mix-blend-overlay transition-opacity duration-200"
-          style={{
-            opacity: 'var(--holo-opacity, 0)',
-            background:
-              'conic-gradient(from 180deg at var(--holo-x, 50%) var(--holo-y, 50%), rgba(167,139,250,0) 0deg, rgba(232,121,249,0.35) 90deg, rgba(125,211,252,0.25) 180deg, rgba(167,139,250,0.35) 270deg, rgba(167,139,250,0) 360deg)',
+              'radial-gradient(circle 240px at var(--holo-x, 50%) var(--holo-y, 50%), rgba(169,147,255,0.28) 0%, rgba(91,65,218,0.10) 38%, transparent 70%)',
           }}
         />
       </div>
