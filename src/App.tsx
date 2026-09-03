@@ -8,6 +8,7 @@ import { Hero } from './components/sections/Hero'
 import { ProblemStats } from './components/sections/ProblemStats'
 import { HowItWorks } from './components/sections/HowItWorks'
 import { Features } from './components/sections/Features'
+import { BentoShowcase } from './components/sections/BentoShowcase'
 import { Testimonials } from './components/sections/Testimonials'
 import { Pricing } from './components/sections/Pricing'
 import { ROICalculator } from './components/sections/ROICalculator'
@@ -30,6 +31,7 @@ export default function App() {
         <div className="relative" style={{ background: '#F8F7FC' }}>
           <ProblemStats />
           <HowItWorks />
+          <BentoShowcase />
           <Features />
         </div>
 
