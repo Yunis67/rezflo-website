@@ -626,10 +626,15 @@ function CallFlowMockup() {
             </div>
           </div>
 
-          {/* Phase 3: RezFlo logo + captured pills */}
+          {/* Phase 3: RezFlo logo + captured pills.
+              Notifications are hidden in this phase, so the block is
+              pulled up into that empty top space (top:-96 relative to
+              this slot) to sit centered in the whole card rather than
+              low in the lower slot. */}
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-6 transition-opacity duration-500"
+            className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-center gap-6 transition-opacity duration-500"
             style={{
+              top: -96,
               opacity: phase === 3 ? 1 : 0,
               pointerEvents: phase === 3 ? 'auto' : 'none',
               willChange: 'opacity',

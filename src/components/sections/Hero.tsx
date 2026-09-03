@@ -146,6 +146,18 @@ export function Hero() {
         }}
       />
 
+      {/* Bottom blend — melt the wavy hero into the flat #F8F7FC of the
+          section below so the seam between them is invisible. A long,
+          gentle fade (h-72) keeps the transition from reading as a line. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-72"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(248,247,252,0) 0%, rgba(248,247,252,0.35) 35%, rgba(248,247,252,0.72) 62%, rgba(248,247,252,0.93) 82%, #F8F7FC 100%)',
+        }}
+      />
+
       {/* === Content =================================================== */}
       <Container className="relative z-10 flex flex-1 flex-col">
         {/*
