@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { motion, useScroll, useTransform, useSpring, type MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { AnimatedTextCycle } from '../ui/animated-text-cycle'
 
 const HEADLINE_WORDS = [
@@ -55,19 +55,11 @@ export function ScrollLogoMarqueeSection() {
     offset: ['start end', 'end start'],
   })
 
-  // Smooth the raw scroll value with a spring so the marquee glides
-  // instead of tracking every jittery scroll delta 1:1 (fixes the
-  // "rough/laggy" feel). Stiff + well-damped so it stays responsive.
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 320,
-    damping: 44,
-    mass: 0.35,
-    restDelta: 0.001,
-  })
-
-  // Larger travel range = the logos move faster for the same scroll.
-  const xRow1 = useTransform(smooth, [0, 1], [0, -1500])
-  const xRow2 = useTransform(smooth, [0, 1], [-1500, 0])
+  // Map the raw scroll value straight to the translation so the logos
+  // track the scrollbar 1:1 with no spring easing/lag — instantaneous.
+  // (Eager-loaded images + GPU layers keep it smooth without a spring.)
+  const xRow1 = useTransform(scrollYProgress, [0, 1], [0, -1500])
+  const xRow2 = useTransform(scrollYProgress, [0, 1], [-1500, 0])
 
   return (
     <section
@@ -147,7 +139,7 @@ function Row({ cards, x, offsetClass = '' }: RowProps) {
 function Card({ card }: { card: LogoCard }) {
   return (
     <div
-      className="relative flex aspect-square h-[96px] w-[96px] shrink-0 items-center justify-center overflow-hidden rounded-[22px] bg-white ring-1 ring-[#201B33]/[0.06] sm:h-[128px] sm:w-[128px] md:h-[156px] md:w-[156px] lg:h-[176px] lg:w-[176px]"
+      className="relative flex aspect-square h-[120px] w-[120px] shrink-0 items-center justify-center overflow-hidden rounded-[26px] bg-white ring-1 ring-[#201B33]/[0.06] sm:h-[160px] sm:w-[160px] md:h-[196px] md:w-[196px] lg:h-[224px] lg:w-[224px]"
       style={{
         boxShadow:
           '0 20px 44px -28px rgba(91,65,218,0.30), 0 6px 18px -12px rgba(32,27,51,0.14)',
