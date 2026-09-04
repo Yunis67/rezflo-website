@@ -205,13 +205,13 @@ const styles = `
 .pp { color:#5B41DA; }
 
 /* ── Card 1 ─────────────────────────── */
-.c1 { display:flex; flex-direction:column; padding: 32px 32px 28px; min-height: 430px; }
-.c1 .lead { font-size: clamp(1.05rem, 1.26vw, 1.3rem); }
-.c1-diagram { margin-top:auto; padding-top: 22px; display:flex; align-items:center; justify-content:center; }
-.c1-diagram img { width:100%; max-width:560px; height:auto; object-fit:contain; }
+.c1 { display:flex; flex-direction:column; padding: 26px 28px 22px; min-height: 330px; }
+.c1 .lead { font-size: clamp(1.02rem, 1.2vw, 1.24rem); }
+.c1-diagram { margin-top:auto; padding-top: 14px; display:flex; align-items:center; justify-content:center; }
+.c1-diagram img { width:100%; max-width:400px; height:auto; object-fit:contain; }
 
 /* ── Card 2 — full-bleed darkened photo background ─────── */
-.c2 { min-height: 430px; }
+.c2 { min-height: 330px; }
 .c2-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 32% center;
   filter: brightness(0.72) saturate(0.95) contrast(1.02); opacity: 0.94; }
 .c2-fade { position:absolute; inset:0; background:
@@ -225,7 +225,7 @@ const styles = `
 }
 
 /* ── Card 3 ─────────────────────────── */
-.c3 { display:flex; flex-direction:column; justify-content:space-between; padding: 28px 26px; min-height:430px; }
+.c3 { display:flex; flex-direction:column; justify-content:space-between; padding: 24px 24px; min-height:330px; }
 .c3-head {
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
   font-weight: 800; letter-spacing:-0.022em; color:#fff;
@@ -275,13 +275,13 @@ const styles = `
   .bento-head { grid-template-columns: 1fr; gap: 18px; margin-bottom: 34px; }
   .bento-grid { grid-template-columns: 1fr; }
   .c1,.c2,.c3,.c4,.c5 { grid-column: 1 / -1; grid-row: auto; }
-  .c1,.c2,.c3 { min-height: 420px; }
+  .c1,.c2,.c3 { min-height: 300px; }
   .c4 { min-height: 0; }
 }
 @media (max-width: 560px) {
   .c4 { flex-direction: column; align-items: stretch; text-align: left; }
   .c4-media img { max-width: 300px; margin: 6px auto 0; }
-  .c1,.c2,.c3 { min-height: 380px; }
+  .c1,.c2,.c3 { min-height: 300px; }
   .bento-card { border-radius: 20px; }
   .c1 { padding: 26px; }
 }
