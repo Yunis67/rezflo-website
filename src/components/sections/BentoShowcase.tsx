@@ -232,8 +232,8 @@ const styles = `
 .c3-chat { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
 .c3 .q {
   align-self:flex-start; background: rgba(255,255,255,0.16); color:#fff;
-  padding: 12px 18px; border-radius: 16px; font-weight:600; font-size:0.95rem;
-  backdrop-filter: blur(4px);
+  padding: 11px 17px; border-radius: 16px; font-weight:600; font-size:0.92rem;
+  white-space: nowrap; backdrop-filter: blur(4px);
 }
 .c3 .a {
   align-self:flex-start; display:inline-flex; align-items:center; gap:10px;
