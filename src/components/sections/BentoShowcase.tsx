@@ -165,7 +165,8 @@ const styles = `
 
 /* ── Card 2 ─────────────────────────── */
 .c2 { min-height: 470px; }
-.c2-photo { position:absolute; inset:0 0 auto 0; width:100%; height:60%; object-fit:cover; object-position: center 30%; }
+.c2-photo { position:absolute; inset:0 0 auto 0; width:100%; height:60%; object-fit:cover; object-position: center 30%;
+  filter: brightness(0.82) saturate(0.96); opacity: 0.9; }
 .c2-fade { position:absolute; inset:0; background:
   linear-gradient(180deg, rgba(27,21,51,0) 34%, rgba(27,21,51,0.75) 52%, #1B1533 66%); }
 .c2-text {
