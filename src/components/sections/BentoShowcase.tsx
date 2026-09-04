@@ -1,5 +1,6 @@
-import { Calendar, Users, Clock } from 'lucide-react'
+import { Calendar, Users, Clock, ArrowRight } from 'lucide-react'
 import { Container } from '../ui/Container'
+import { site } from '../../data/site'
 
 /**
  * BentoShowcase — a five-card bento grid that tells the RezFlo story:
@@ -20,6 +21,18 @@ export function BentoShowcase() {
       <div aria-hidden className="bento-grid-tex" />
 
       <Container className="relative">
+        {/* Left-aligned title header with a CTA pill */}
+        <div className="bento-head">
+          <a className="bento-pill" href={site.cta.bookDemo}>
+            Get your demo now
+            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+          </a>
+          <h2 className="bento-title">
+            Everything your restaurant phone should do—{' '}
+            <span className="pp">handled for you.</span>
+          </h2>
+        </div>
+
         <div className="bento-grid">
           {/* ── Card 1 ───────────────────────────────── */}
           <article className="bento-card card-white c1">
@@ -42,7 +55,7 @@ export function BentoShowcase() {
           <article className="bento-card card-dark c2">
             <img
               className="c2-photo"
-              src="/images/bento-calls.png"
+              src="/images/bento-staff.jpg"
               alt="Restaurant staff greeting guests"
               loading="lazy"
               decoding="async"
@@ -116,6 +129,23 @@ export function BentoShowcase() {
 
 const styles = `
 .bento { background: #F8F7FC; }
+
+/* Left-aligned section header + CTA pill */
+.bento-head { position: relative; max-width: 760px; margin-bottom: 30px; }
+.bento-pill {
+  display:inline-flex; align-items:center; gap:8px;
+  border-radius:999px; border:1px solid rgba(169,147,255,0.5);
+  background: rgba(91,65,218,0.07); color:#5B41DA;
+  padding: 7px 16px; font-size:0.76rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.1em; text-decoration:none;
+  transition: background-color .25s ease, transform .25s ease;
+}
+.bento-pill:hover { background: rgba(91,65,218,0.14); transform: translateY(-1px); }
+.bento-title {
+  font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-weight:800; letter-spacing:-0.022em; color:#0F1020;
+  font-size: clamp(1.7rem, 3vw, 2.5rem); line-height:1.12; margin-top:16px;
+}
 .bento-grid-tex {
   position: absolute; inset: 0; pointer-events: none;
   background-image:
@@ -160,6 +190,7 @@ const styles = `
 
 /* ── Card 1 ─────────────────────────── */
 .c1 { display:flex; flex-direction:column; padding: 34px 34px 30px; min-height: 470px; }
+.c1 .lead { font-size: clamp(1.1rem, 1.32vw, 1.36rem); }
 .c1-diagram { margin-top:auto; padding-top: 22px; display:flex; align-items:center; justify-content:center; }
 .c1-diagram img { width:100%; max-width:560px; height:auto; object-fit:contain; }
 
@@ -173,7 +204,7 @@ const styles = `
   position:absolute; left:0; right:0; bottom:0; padding: 26px 26px 28px;
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
   font-weight: 800; letter-spacing:-0.022em; color:#fff;
-  font-size: clamp(1.15rem, 1.4vw, 1.44rem); line-height:1.16;
+  font-size: clamp(1.0rem, 1.2vw, 1.24rem); line-height:1.16;
 }
 
 /* ── Card 3 ─────────────────────────── */
@@ -181,7 +212,7 @@ const styles = `
 .c3-head {
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
   font-weight: 800; letter-spacing:-0.022em; color:#fff;
-  font-size: clamp(1.2rem, 1.5vw, 1.5rem); line-height:1.16;
+  font-size: clamp(1.05rem, 1.28vw, 1.3rem); line-height:1.16;
 }
 .c3-head .dim { color: rgba(255,255,255,0.5); }
 .c3-chat { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
