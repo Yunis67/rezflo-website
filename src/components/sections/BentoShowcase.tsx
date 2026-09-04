@@ -17,20 +17,28 @@ export function BentoShowcase() {
   return (
     <section id="bento" className="bento relative overflow-hidden py-24 md:py-28">
       <style>{styles}</style>
-      {/* faint graph-paper grid, matches the reference */}
-      <div aria-hidden className="bento-grid-tex" />
+      {/* Warm-white ground with a soft violet glow (no grid). */}
+      <div aria-hidden className="bento-glow" />
 
       <Container className="relative">
-        {/* Left-aligned title header with a CTA pill */}
+        {/* Two-column title header — big title left, blurb + CTA right */}
         <div className="bento-head">
-          <a className="bento-pill" href={site.cta.bookDemo}>
-            Get your demo now
-            <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-          </a>
           <h2 className="bento-title">
-            Everything your restaurant phone should do—{' '}
-            <span className="pp">handled for you.</span>
+            <span className="muted">The AI phone answering platform</span>{' '}
+            for all of your restaurant&rsquo;s needs
           </h2>
+          <div className="bento-head-right">
+            <p className="bento-sub">
+              RezFlo is 24/7 voice AI phone answering for restaurants. It takes
+              orders and reservations, answers FAQs, and syncs tickets and
+              payments to your POS &amp; booking systems. Built for single,
+              multi-unit, and enterprise brands.
+            </p>
+            <a className="bento-cta" href={site.cta.bookDemo}>
+              Get your demo now
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </a>
+          </div>
         </div>
 
         <div className="bento-grid">
@@ -55,7 +63,7 @@ export function BentoShowcase() {
           <article className="bento-card card-dark c2">
             <img
               className="c2-photo"
-              src="/images/bento-staff.jpg"
+              src="/images/bento-calls.png"
               alt="Restaurant staff greeting guests"
               loading="lazy"
               decoding="async"
@@ -130,31 +138,39 @@ export function BentoShowcase() {
 const styles = `
 .bento { background: #F8F7FC; }
 
-/* Left-aligned section header + CTA pill */
-.bento-head { position: relative; max-width: 760px; margin-bottom: 30px; }
-.bento-pill {
-  display:inline-flex; align-items:center; gap:8px;
-  border-radius:999px; border:1px solid rgba(169,147,255,0.5);
-  background: rgba(91,65,218,0.07); color:#5B41DA;
-  padding: 7px 16px; font-size:0.76rem; font-weight:700;
-  text-transform:uppercase; letter-spacing:0.1em; text-decoration:none;
-  transition: background-color .25s ease, transform .25s ease;
+/* Warm-white ground + soft violet glow (slightly more purple, no grid) */
+.bento-glow {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(70% 55% at 50% 24%, rgba(91,65,218,0.18) 0%, rgba(139,112,246,0.12) 32%, rgba(248,247,252,0) 70%),
+    radial-gradient(60% 60% at 88% 78%, rgba(169,147,255,0.16) 0%, rgba(248,247,252,0) 60%);
 }
-.bento-pill:hover { background: rgba(91,65,218,0.14); transform: translateY(-1px); }
+
+/* Two-column title header — big title left, blurb + CTA right */
+.bento-head {
+  position: relative;
+  display: grid; grid-template-columns: 1.12fr 0.88fr; gap: 44px;
+  align-items: start; margin-bottom: 44px;
+}
 .bento-title {
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
-  font-weight:800; letter-spacing:-0.022em; color:#0F1020;
-  font-size: clamp(1.7rem, 3vw, 2.5rem); line-height:1.12; margin-top:16px;
+  font-weight: 800; letter-spacing:-0.026em; color:#0F1020;
+  font-size: clamp(2rem, 3.9vw, 3.4rem); line-height: 1.03;
 }
-.bento-grid-tex {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    linear-gradient(rgba(32,27,51,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(32,27,51,0.045) 1px, transparent 1px);
-  background-size: 46px 46px;
-  mask-image: radial-gradient(120% 90% at 50% 40%, #000 55%, transparent 100%);
-  -webkit-mask-image: radial-gradient(120% 90% at 50% 40%, #000 55%, transparent 100%);
+.bento-title .muted { color:#A19BB8; }
+.bento-head-right { padding-top: 6px; }
+.bento-sub {
+  color:#4b465e; font-size: clamp(1rem, 1.05vw, 1.1rem); line-height: 1.55;
 }
+.bento-cta {
+  display:inline-flex; align-items:center; gap:8px; margin-top: 22px;
+  background: linear-gradient(180deg,#6E52E8 0%, #5B41DA 100%); color:#fff;
+  font-weight: 700; font-size: 0.95rem; padding: 13px 26px; border-radius: 999px;
+  text-decoration:none;
+  box-shadow: 0 16px 34px -12px rgba(91,65,218,0.6), inset 0 1px 0 rgba(255,255,255,0.28);
+  transition: transform .25s ease;
+}
+.bento-cta:hover { transform: translateY(-2px); }
 
 .bento-grid {
   display: grid;
@@ -189,26 +205,27 @@ const styles = `
 .pp { color:#5B41DA; }
 
 /* ── Card 1 ─────────────────────────── */
-.c1 { display:flex; flex-direction:column; padding: 34px 34px 30px; min-height: 470px; }
-.c1 .lead { font-size: clamp(1.1rem, 1.32vw, 1.36rem); }
+.c1 { display:flex; flex-direction:column; padding: 32px 32px 28px; min-height: 430px; }
+.c1 .lead { font-size: clamp(1.05rem, 1.26vw, 1.3rem); }
 .c1-diagram { margin-top:auto; padding-top: 22px; display:flex; align-items:center; justify-content:center; }
 .c1-diagram img { width:100%; max-width:560px; height:auto; object-fit:contain; }
 
-/* ── Card 2 ─────────────────────────── */
-.c2 { min-height: 470px; }
-.c2-photo { position:absolute; inset:0 0 auto 0; width:100%; height:60%; object-fit:cover; object-position: center 30%;
-  filter: brightness(0.82) saturate(0.96); opacity: 0.9; }
+/* ── Card 2 — full-bleed darkened photo background ─────── */
+.c2 { min-height: 430px; }
+.c2-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position: 32% center;
+  filter: brightness(0.72) saturate(0.95) contrast(1.02); opacity: 0.94; }
 .c2-fade { position:absolute; inset:0; background:
-  linear-gradient(180deg, rgba(27,21,51,0) 34%, rgba(27,21,51,0.75) 52%, #1B1533 66%); }
+  linear-gradient(180deg, rgba(20,15,40,0.28) 0%, rgba(20,15,40,0.35) 42%, rgba(18,12,36,0.78) 74%, rgba(15,10,32,0.94) 100%); }
 .c2-text {
   position:absolute; left:0; right:0; bottom:0; padding: 26px 26px 28px;
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
   font-weight: 800; letter-spacing:-0.022em; color:#fff;
   font-size: clamp(1.0rem, 1.2vw, 1.24rem); line-height:1.16;
+  text-shadow: 0 2px 18px rgba(0,0,0,0.5);
 }
 
 /* ── Card 3 ─────────────────────────── */
-.c3 { display:flex; flex-direction:column; justify-content:space-between; padding: 30px 28px; min-height:470px; }
+.c3 { display:flex; flex-direction:column; justify-content:space-between; padding: 28px 26px; min-height:430px; }
 .c3-head {
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
   font-weight: 800; letter-spacing:-0.022em; color:#fff;
@@ -255,6 +272,7 @@ const styles = `
 /* ── Responsive ───────────────────────
    Below 1024px every card becomes full width and stacks in order. */
 @media (max-width: 1023px) {
+  .bento-head { grid-template-columns: 1fr; gap: 18px; margin-bottom: 34px; }
   .bento-grid { grid-template-columns: 1fr; }
   .c1,.c2,.c3,.c4,.c5 { grid-column: 1 / -1; grid-row: auto; }
   .c1,.c2,.c3 { min-height: 420px; }
