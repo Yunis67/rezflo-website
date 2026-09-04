@@ -181,8 +181,8 @@ const styles = `
 /* shared typography */
 .lead {
   font-family: var(--font-display, "Plus Jakarta Sans", system-ui, sans-serif);
-  font-weight: 800; letter-spacing: -0.01em; color:#201B33;
-  font-size: clamp(1.25rem, 1.55vw, 1.6rem); line-height: 1.22;
+  font-weight: 800; letter-spacing: -0.022em; color:#0F1020;
+  font-size: clamp(1.3rem, 1.6vw, 1.62rem); line-height: 1.16;
 }
 .pp { color:#5B41DA; }
 
@@ -219,14 +219,16 @@ const styles = `
 .c2-text {
   position:absolute; left:0; right:0; bottom:0; padding: 26px 26px 28px;
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
-  font-weight: 800; color:#fff; font-size: clamp(1.15rem, 1.4vw, 1.42rem); line-height:1.2;
+  font-weight: 800; letter-spacing:-0.022em; color:#fff;
+  font-size: clamp(1.15rem, 1.4vw, 1.44rem); line-height:1.16;
 }
 
 /* ── Card 3 ─────────────────────────── */
 .c3 { display:flex; flex-direction:column; justify-content:space-between; padding: 30px 28px; min-height:470px; }
 .c3-head {
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
-  font-weight: 800; color:#fff; font-size: clamp(1.2rem, 1.5vw, 1.5rem); line-height:1.22;
+  font-weight: 800; letter-spacing:-0.022em; color:#fff;
+  font-size: clamp(1.2rem, 1.5vw, 1.5rem); line-height:1.16;
 }
 .c3-head .dim { color: rgba(255,255,255,0.5); }
 .c3-chat { display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
