@@ -154,6 +154,7 @@ const styles = `
 }
 .bento-title {
   font-family: var(--font-display, "Plus Jakarta Sans", sans-serif);
+  font-feature-settings: "ss01" 0, "ss02" 0;
   font-weight: 500; letter-spacing:-0.018em; color:#201B33;
   font-size: clamp(2rem, 3.9vw, 3.4rem); line-height: 1.08;
 }
