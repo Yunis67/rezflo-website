@@ -13,7 +13,7 @@ import { ROICalculator } from './components/sections/ROICalculator'
 
 export default function App() {
   return (
-    <div className="relative min-h-screen bg-black text-white antialiased">
+    <div className="relative min-h-screen bg-[#F8F7FC] text-[#201B33] antialiased">
       <Nav />
       {/* Bottom padding reserves space for the floating "Talk to Anthony"
           CTA so it never covers section content on mobile. Desktop has
@@ -34,14 +34,6 @@ export default function App() {
           <Pricing />
         </div>
 
-        {/* Smooth handoff from the light sections into the dark footer. */}
-        <div
-          aria-hidden
-          style={{
-            height: '140px',
-            background: 'linear-gradient(180deg, #F8F7FC 0%, #050208 100%)',
-          }}
-        />
       </main>
       <Footer />
       <AnthonyFloatingButton />
