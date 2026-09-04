@@ -1,4 +1,4 @@
-import { PhoneCall, Calendar, Users, Clock } from 'lucide-react'
+import { Calendar, Users, Clock } from 'lucide-react'
 import { Container } from '../ui/Container'
 
 /**
@@ -28,41 +28,13 @@ export function BentoShowcase() {
               <span className="pp">so your staff can stay focused on guests.</span>
             </p>
 
-            <div className="flow" aria-hidden>
-              <span className="node phone">
-                <PhoneCall className="h-6 w-6" />
-              </span>
-              <span className="dash" />
-              <span className="ring">
-                <img src="/logos/rezflo-logo.png" alt="" className="ring-logo" />
-              </span>
-              <span className="dash" />
-              <span className="tiles">
-                <span className="tile">
-                  {/* Square */}
-                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
-                    <rect x="3" y="3" width="18" height="18" rx="4.5" stroke="#111" strokeWidth="2.4" />
-                    <rect x="8.5" y="8.5" width="7" height="7" rx="1.6" fill="#111" />
-                  </svg>
-                </span>
-                <span className="tile">
-                  {/* Toast (bread) */}
-                  <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#E8502E" strokeWidth="2" strokeLinejoin="round">
-                    <path d="M6 10.5C4.5 10.5 3.7 8.7 4.6 7.5 5.8 5.9 8.4 5 12 5s6.2.9 7.4 2.5c.9 1.2.1 3-1.4 3v7.2c0 .7-.6 1.3-1.3 1.3H7.3C6.6 19 6 18.4 6 17.7z" />
-                  </svg>
-                </span>
-                <span className="tile">
-                  {/* Clover */}
-                  <svg viewBox="0 0 24 24" width="22" height="22">
-                    <g fill="#4AA23F">
-                      <circle cx="9" cy="9" r="3.7" />
-                      <circle cx="15" cy="9" r="3.7" />
-                      <circle cx="9" cy="15" r="3.7" />
-                      <circle cx="15" cy="15" r="3.7" />
-                    </g>
-                  </svg>
-                </span>
-              </span>
+            <div className="c1-diagram">
+              <img
+                src="/images/bento-diagram.png"
+                alt="A phone call flowing through RezFlo into Square, Toast and Clover POS systems"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </article>
 
@@ -70,7 +42,7 @@ export function BentoShowcase() {
           <article className="bento-card card-dark c2">
             <img
               className="c2-photo"
-              src="/images/bento-calls.jpg"
+              src="/images/bento-calls.png"
               alt="Restaurant staff greeting guests"
               loading="lazy"
               decoding="async"
@@ -188,28 +160,8 @@ const styles = `
 
 /* ── Card 1 ─────────────────────────── */
 .c1 { display:flex; flex-direction:column; padding: 34px 34px 30px; min-height: 470px; }
-.c1 .flow { margin-top:auto; display:flex; align-items:center; gap:12px; padding-top: 26px; }
-.node.phone {
-  flex:none; width:66px; height:66px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background:#EAE3FF; color:#5B41DA;
-}
-.flow .dash {
-  flex:1 1 auto; height:0; border-top:2px dashed #A78BF5; min-width: 18px;
-}
-.ring {
-  flex:none; width:132px; height:132px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  background:#fff; border:2px solid rgba(169,147,255,0.6);
-  box-shadow: 0 0 0 9px rgba(169,147,255,0.14), 0 12px 30px -16px rgba(91,65,218,0.4);
-}
-.ring-logo { width: 78px; height:auto; display:block; }
-.tiles { flex:none; display:flex; flex-direction:column; gap:12px; }
-.tile {
-  width:54px; height:54px; border-radius:15px; background:#fff;
-  display:flex; align-items:center; justify-content:center;
-  box-shadow: 0 8px 20px -10px rgba(32,27,51,0.28), 0 0 0 1px rgba(32,27,51,0.05);
-}
+.c1-diagram { margin-top:auto; padding-top: 22px; display:flex; align-items:center; justify-content:center; }
+.c1-diagram img { width:100%; max-width:560px; height:auto; object-fit:contain; }
 
 /* ── Card 2 ─────────────────────────── */
 .c2 { min-height: 470px; }
