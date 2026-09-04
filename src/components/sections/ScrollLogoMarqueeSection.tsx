@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, type MotionValue } from 'framer-motion'
 import { AnimatedTextCycle } from '../ui/animated-text-cycle'
 
 const HEADLINE_WORDS = [
@@ -55,9 +55,19 @@ export function ScrollLogoMarqueeSection() {
     offset: ['start end', 'end start'],
   })
 
-  // Faster, more dynamic horizontal travel — bumped from ±300 to ±900.
-  const xRow1 = useTransform(scrollYProgress, [0, 1], [0, -900])
-  const xRow2 = useTransform(scrollYProgress, [0, 1], [-900, 0])
+  // Smooth the raw scroll value with a spring so the marquee glides
+  // instead of tracking every jittery scroll delta 1:1 (fixes the
+  // "rough/laggy" feel). Stiff + well-damped so it stays responsive.
+  const smooth = useSpring(scrollYProgress, {
+    stiffness: 320,
+    damping: 44,
+    mass: 0.35,
+    restDelta: 0.001,
+  })
+
+  // Larger travel range = the logos move faster for the same scroll.
+  const xRow1 = useTransform(smooth, [0, 1], [0, -1500])
+  const xRow2 = useTransform(smooth, [0, 1], [-1500, 0])
 
   return (
     <section
@@ -103,8 +113,8 @@ export function ScrollLogoMarqueeSection() {
             'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
         }}
       >
-        <Row x={xRow1} cards={ROW_1} offsetClass="-ml-12 md:-ml-16" />
-        <div className="h-4 md:h-6" />
+        <Row x={xRow1} cards={ROW_1} offsetClass="-ml-10 md:-ml-14" />
+        <div className="h-3 md:h-4" />
         <Row x={xRow2} cards={ROW_2} offsetClass="-ml-4 md:-ml-6" />
       </div>
     </section>
@@ -118,17 +128,16 @@ interface RowProps {
 }
 
 function Row({ cards, x, offsetClass = '' }: RowProps) {
-  // Render the set twice so the row extends past the viewport on both
-  // ends. Combined with the edge mask + clamped translate range this
-  // keeps the rails visually full at every scroll position.
-  const doubled = [...cards, ...cards, ...cards]
+  // Render the set several times so the rail stays full across the whole
+  // (now larger) translate range with the smaller square tiles.
+  const repeated = [...cards, ...cards, ...cards, ...cards]
 
   return (
     <motion.div
-      style={{ x, willChange: 'transform' }}
-      className={`flex w-max gap-4 px-6 md:gap-8 md:px-10 ${offsetClass}`}
+      style={{ x, willChange: 'transform', transform: 'translateZ(0)', backfaceVisibility: 'hidden' }}
+      className={`flex w-max gap-3 px-6 md:gap-4 md:px-10 ${offsetClass}`}
     >
-      {doubled.map((card, i) => (
+      {repeated.map((card, i) => (
         <Card key={`${card.name}-${i}`} card={card} />
       ))}
     </motion.div>
@@ -138,20 +147,20 @@ function Row({ cards, x, offsetClass = '' }: RowProps) {
 function Card({ card }: { card: LogoCard }) {
   return (
     <div
-      className="relative flex h-[100px] w-[125px] shrink-0 items-center justify-center overflow-hidden rounded-[18px] bg-white ring-1 ring-[#201B33]/[0.06] sm:h-[164px] sm:w-[204px] md:h-[208px] md:w-[258px] lg:h-[220px] lg:w-[275px]"
+      className="relative flex aspect-square h-[96px] w-[96px] shrink-0 items-center justify-center overflow-hidden rounded-[22px] bg-white ring-1 ring-[#201B33]/[0.06] sm:h-[128px] sm:w-[128px] md:h-[156px] md:w-[156px] lg:h-[176px] lg:w-[176px]"
       style={{
         boxShadow:
-          '0 24px 50px -28px rgba(91,65,218,0.32), 0 8px 22px -12px rgba(32,27,51,0.14)',
+          '0 20px 44px -28px rgba(91,65,218,0.30), 0 6px 18px -12px rgba(32,27,51,0.14)',
       }}
     >
       <img
         src={card.src}
         alt={card.name}
-        loading="lazy"
+        loading="eager"
         decoding="async"
         draggable={false}
         className="h-full w-full select-none object-cover"
-        style={{ transform: 'scale(1.06)' }}
+        style={{ transform: 'scale(1.06) translateZ(0)', backfaceVisibility: 'hidden' }}
       />
     </div>
   )
