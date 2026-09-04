@@ -270,8 +270,8 @@ html[data-anthony-active="true"] elevenlabs-convai * {
     to right,
     var(--slider-color, #7c3aed) 0%,
     var(--slider-color, #7c3aed) var(--slider-pct, 50%),
-    rgba(255, 255, 255, 0.10) var(--slider-pct, 50%),
-    rgba(255, 255, 255, 0.10) 100%
+    rgba(32, 27, 51, 0.12) var(--slider-pct, 50%),
+    rgba(32, 27, 51, 0.12) 100%
   );
   cursor: pointer;
 }
@@ -284,8 +284,8 @@ html[data-anthony-active="true"] elevenlabs-convai * {
   background: #ffffff;
   border: 2px solid var(--slider-color, #c4b5fd);
   box-shadow:
-    0 0 0 4px rgba(0, 0, 0, 0.35),
-    0 6px 14px rgba(0, 0, 0, 0.45);
+    0 0 0 4px rgba(91, 65, 218, 0.12),
+    0 4px 10px rgba(32, 27, 51, 0.25);
   cursor: grab;
   transition: transform 120ms ease;
 }
@@ -300,8 +300,8 @@ html[data-anthony-active="true"] elevenlabs-convai * {
   background: #ffffff;
   border: 2px solid var(--slider-color, #c4b5fd);
   box-shadow:
-    0 0 0 4px rgba(0, 0, 0, 0.35),
-    0 6px 14px rgba(0, 0, 0, 0.45);
+    0 0 0 4px rgba(91, 65, 218, 0.12),
+    0 4px 10px rgba(32, 27, 51, 0.25);
   cursor: grab;
 }
 .roi-slider::-moz-range-track {

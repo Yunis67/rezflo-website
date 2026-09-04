@@ -10,10 +10,8 @@ const links = [
   { label: 'Home', href: '#top' },
   { label: 'Features', href: '#features' },
   { label: 'How It Works', href: '#how' },
-  { label: 'Results', href: '#stories' },
   { label: 'ROI Calculator', href: '#roi' },
   { label: 'Pricing', href: '#pricing' },
-  { label: 'FAQ', href: '#faq' },
 ]
 
 /**

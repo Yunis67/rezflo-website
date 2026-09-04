@@ -8,7 +8,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calculator, Phone, TrendingUp, Users } from 'lucide-react'
 import { Container } from '../ui/Container'
-import { SectionLabel } from '../ui/SectionLabel'
 import { Logo } from '../Logo'
 
 /**
@@ -38,28 +37,28 @@ interface Theme {
 const THEMES: Record<TabKey, Theme> = {
   calls: {
     pillActiveBg:
-      'linear-gradient(180deg, #3b82f6 0%, #2563eb 100%)',
-    pillIdleText: 'text-blue-300',
-    pillIdleBorder: 'border-blue-400/40',
+      'linear-gradient(180deg, #6E52E8 0%, #5B41DA 100%)',
+    pillIdleText: 'text-[#5B41DA]',
+    pillIdleBorder: 'border-[#A993FF]/50',
     resultBg:
-      'linear-gradient(160deg, #2563eb 0%, #1d4ed8 55%, #1e3a8a 100%)',
-    resultRing: 'ring-1 ring-blue-300/30',
-    ctaText: 'text-blue-700',
-    sliderTrack: '#3b82f6',
-    numberAccent: 'text-blue-300',
-    bookBtnTextClass: 'text-blue-700',
+      'linear-gradient(160deg, #6E52E8 0%, #5B41DA 55%, #4A34BE 100%)',
+    resultRing: 'ring-1 ring-white/15',
+    ctaText: 'text-[#5B41DA]',
+    sliderTrack: '#5B41DA',
+    numberAccent: 'text-[#5B41DA]',
+    bookBtnTextClass: 'text-[#5B41DA]',
   },
   labour: {
     pillActiveBg:
       'linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%)',
-    pillIdleText: 'text-violet-300',
-    pillIdleBorder: 'border-violet-400/40',
+    pillIdleText: 'text-[#5B41DA]',
+    pillIdleBorder: 'border-[#A993FF]/50',
     resultBg:
       'linear-gradient(160deg, #8b5cf6 0%, #6d28d9 55%, #4c1d95 100%)',
-    resultRing: 'ring-1 ring-violet-300/30',
+    resultRing: 'ring-1 ring-white/15',
     ctaText: 'text-violet-700',
     sliderTrack: '#8b5cf6',
-    numberAccent: 'text-violet-300',
+    numberAccent: 'text-violet-700',
     bookBtnTextClass: 'text-violet-700',
   },
 }
@@ -72,17 +71,26 @@ export function ROICalculator() {
     <section id="roi" className="relative py-24 md:py-32">
       <Container>
         <div className="mx-auto max-w-3xl text-center">
-          <SectionLabel icon={<Calculator className="h-3 w-3" />}>
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#A993FF]/45 bg-[#5B41DA]/[0.06] px-4 py-1.5 text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-[#5B41DA]">
+            <Calculator className="h-3 w-3" />
             ROI Calculator
-          </SectionLabel>
-          <h2 className="font-display mt-6 text-[2.1rem] font-semibold leading-[1.06] tracking-[-0.02em] text-white sm:text-[2.6rem] md:text-[3.25rem] lg:text-[3.75rem]">
+          </span>
+          <h2 className="font-display mt-6 text-[2.1rem] font-medium leading-[1.06] tracking-[-0.02em] text-[#201B33] sm:text-[2.6rem] md:text-[3.25rem] lg:text-[3.75rem]">
             Calculate your potential
             <br />
-            <span className="bg-gradient-to-r from-violet-300 via-violet-200 to-fuchsia-200 bg-clip-text text-transparent">
+            <span
+              style={{
+                background: 'linear-gradient(180deg, #6E52E8 0%, #A993FF 100%)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                color: 'transparent',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
               ROI with RezFlo
             </span>
           </h2>
-          <p className="mx-auto mt-5 max-w-2xl text-balance text-[1rem] leading-relaxed text-white/70 md:text-[1.05rem]">
+          <p className="mx-auto mt-5 max-w-2xl text-balance text-[1rem] leading-relaxed text-[#201B33]/60 md:text-[1.05rem]">
             Use this quick calculator to estimate how much revenue your
             restaurant loses to missed calls — and how much RezFlo could
             recover or save, automatically.
@@ -152,7 +160,7 @@ export function ROICalculator() {
           <div className="opacity-90 transition-opacity hover:opacity-100">
             <Logo />
           </div>
-          <p className="font-display mt-3 text-[0.78rem] font-medium uppercase tracking-[0.28em] text-violet-200/70">
+          <p className="font-display mt-3 text-[0.78rem] font-medium uppercase tracking-[0.28em] text-[#5B41DA]/70">
             Built for restaurants
           </p>
         </div>
@@ -372,17 +380,17 @@ function TabPill({
       onClick={onClick}
       className={`group relative inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.95rem] font-semibold tracking-tight transition-all duration-300 ${
         active
-          ? 'text-white shadow-[0_18px_40px_-14px_rgba(0,0,0,0.55)]'
-          : `border bg-white/[0.03] ${theme.pillIdleText} ${theme.pillIdleBorder} hover:bg-white/[0.06]`
+          ? 'text-white shadow-[0_18px_40px_-16px_rgba(91,65,218,0.5)]'
+          : `border bg-white ${theme.pillIdleText} ${theme.pillIdleBorder} hover:bg-[#5B41DA]/[0.06]`
       }`}
       style={
         active
           ? {
               background: theme.pillActiveBg,
               boxShadow:
-                '0 18px 40px -14px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.18)',
+                '0 18px 40px -16px rgba(91,65,218,0.5), inset 0 1px 0 rgba(255,255,255,0.22)',
             }
-          : undefined
+          : { boxShadow: '0 6px 16px -12px rgba(32,27,51,0.2)' }
       }
     >
       {icon}
@@ -420,12 +428,11 @@ function InputCard({ children }: { children: ReactNode }) {
       ref={cardRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
-      className="relative overflow-hidden rounded-[28px] border border-white/[0.10] p-7 transition-transform duration-150 ease-out will-change-transform md:p-9"
+      className="relative overflow-hidden rounded-[28px] border border-[#A993FF]/35 p-7 transition-transform duration-150 ease-out will-change-transform md:p-9"
       style={{
-        background:
-          'linear-gradient(180deg, rgba(30,16,60,0.55) 0%, rgba(12,8,28,0.82) 100%)',
+        background: 'linear-gradient(180deg, #FFFFFF 0%, #FCFBFF 100%)',
         boxShadow:
-          '0 30px 80px -30px rgba(124,58,237,0.45), 0 0 0 1px rgba(167,139,250,0.14) inset',
+          '0 30px 70px -34px rgba(91,65,218,0.35), 0 6px 18px -14px rgba(32,27,51,0.12)',
         transformStyle: 'preserve-3d',
       }}
     >
@@ -433,11 +440,11 @@ function InputCard({ children }: { children: ReactNode }) {
 
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[5] mix-blend-screen transition-opacity duration-200"
+        className="pointer-events-none absolute inset-0 z-[5] transition-opacity duration-200"
         style={{
           opacity: 'var(--holo-opacity, 0)',
           background:
-            'radial-gradient(circle 240px at var(--holo-x, 50%) var(--holo-y, 50%), rgba(196,181,253,0.45) 0%, rgba(124,58,237,0.18) 40%, transparent 70%)',
+            'radial-gradient(circle 240px at var(--holo-x, 50%) var(--holo-y, 50%), rgba(169,147,255,0.22) 0%, rgba(91,65,218,0.08) 40%, transparent 70%)',
         }}
       />
     </div>
@@ -589,7 +596,7 @@ function Slider({
   return (
     <div>
       <div className="flex items-center justify-between gap-3">
-        <span className="text-[0.9rem] font-medium tracking-tight text-white/85">
+        <span className="text-[0.9rem] font-medium tracking-tight text-[#201B33]/85">
           {label}
         </span>
         <span
@@ -613,7 +620,7 @@ function Slider({
           } as React.CSSProperties
         }
       />
-      <div className="mt-1 flex justify-between text-[0.7rem] text-white/45">
+      <div className="mt-1 flex justify-between text-[0.7rem] text-[#201B33]/40">
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -638,12 +645,12 @@ function NumberField({
 }) {
   return (
     <div>
-      <label className="text-[0.85rem] font-medium tracking-tight text-white/85">
+      <label className="text-[0.85rem] font-medium tracking-tight text-[#201B33]/85">
         {label}
       </label>
-      <div className="mt-2 flex items-center rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2.5 transition-colors focus-within:border-violet-300/50 focus-within:bg-white/[0.07]">
+      <div className="mt-2 flex items-center rounded-xl border border-[#201B33]/12 bg-[#F6F4FF] px-3 py-2.5 transition-colors focus-within:border-[#5B41DA]/50 focus-within:bg-white">
         {prefix && (
-          <span className="mr-1.5 text-[0.95rem] text-white/65">{prefix}</span>
+          <span className="mr-1.5 text-[0.95rem] text-[#201B33]/55">{prefix}</span>
         )}
         <input
           type="number"
@@ -654,7 +661,7 @@ function NumberField({
             const n = parseFloat(e.target.value)
             if (!Number.isNaN(n)) onChange(n)
           }}
-          className="font-display w-full bg-transparent text-[1rem] font-semibold tabular-nums text-white outline-none"
+          className="font-display w-full bg-transparent text-[1rem] font-semibold tabular-nums text-[#201B33] outline-none"
         />
       </div>
     </div>
