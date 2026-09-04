@@ -158,7 +158,7 @@ const styles = `
   font-weight: 500; letter-spacing:-0.018em; color:#201B33;
   font-size: clamp(2rem, 3.9vw, 3.4rem); line-height: 1.08;
 }
-.bento-title .muted { color:#A19BB8; }
+.bento-title .muted { color:#5B41DA; }
 .bento-head-right { padding-top: 6px; }
 .bento-sub {
   color:#4b465e; font-size: clamp(1rem, 1.05vw, 1.1rem); line-height: 1.55;
