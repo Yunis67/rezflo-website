@@ -180,14 +180,19 @@ function MissedCallsCalculator({ theme }: { theme: Theme }) {
   const [daysOpen, setDaysOpen] = useState(30)
   const [locations, setLocations] = useState(3)
 
+  // A call can't be missed if it was never received, so the effective
+  // missed calls are capped by the calls received per day. This makes
+  // the "Calls Received Per Day" slider actually drive the numbers.
+  const effectiveMissed = Math.min(missedPerDay, callsPerDay)
+
   const stats = useMemo(() => {
     // Of missed calls, fraction that would have ordered
-    const lostOrdersPerDay = missedPerDay * (orderPct / 100)
+    const lostOrdersPerDay = effectiveMissed * (orderPct / 100)
     const monthlyLoss = lostOrdersPerDay * daysOpen * avgOrderValue
     const yearlyLoss = monthlyLoss * 12
     const locationsMonthly = monthlyLoss * locations
     return { monthlyLoss, yearlyLoss, locationsMonthly }
-  }, [orderPct, missedPerDay, avgOrderValue, daysOpen, locations])
+  }, [effectiveMissed, orderPct, avgOrderValue, daysOpen, locations])
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-7">
@@ -215,9 +220,9 @@ function MissedCallsCalculator({ theme }: { theme: Theme }) {
         />
         <Slider
           label="Missed Calls Per Day"
-          value={missedPerDay}
+          value={effectiveMissed}
           min={0}
-          max={100}
+          max={Math.max(callsPerDay, 1)}
           step={1}
           onChange={setMissedPerDay}
           accent={theme.numberAccent}
