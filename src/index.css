@@ -320,14 +320,16 @@ html[data-anthony-active="true"] elevenlabs-convai * {
    purple gradient (no hard cut-off between the image and the card).
    Desktop keeps its own darker overlay via the inline style. */
 @media (max-width: 767px) {
+  /* One purple hue at rising opacity — the photo dissolves straight into
+     the card's purple with no grey band and no visible horizon line. */
   .exp-active-overlay {
     background: linear-gradient(
       180deg,
-      rgba(28, 14, 54, 0) 0%,
-      rgba(32, 16, 72, 0.22) 40%,
-      rgba(40, 19, 96, 0.6) 60%,
-      rgba(42, 18, 96, 0.9) 78%,
-      rgba(38, 16, 88, 0.98) 100%
+      rgba(56, 26, 118, 0) 0%,
+      rgba(56, 26, 118, 0.22) 22%,
+      rgba(56, 26, 118, 0.64) 40%,
+      rgba(54, 25, 116, 0.92) 60%,
+      rgba(50, 22, 112, 1) 100%
     ) !important;
   }
 }

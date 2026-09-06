@@ -652,7 +652,7 @@ function CallFlowMockup() {
               <img
                 src="/logos/rezflo-logo.png"
                 alt="RezFlo"
-                className="relative h-6 w-auto object-contain md:h-28"
+                className="relative h-4 w-auto object-contain md:h-28"
                 style={{
                   filter: 'drop-shadow(0 6px 20px rgba(91,65,218,0.4))',
                 }}
