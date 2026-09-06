@@ -204,10 +204,10 @@ export function Hero() {
               className="mt-6 text-left font-medium tracking-tighter"
               style={{ lineHeight: 0.88, color: '#201B33' }}
             >
-              <span className="block text-[3.5rem] sm:text-7xl md:text-8xl lg:text-[8.5rem] xl:text-[9rem]">
+              <span className="block text-[3rem] sm:text-6xl md:text-7xl lg:text-[7rem] xl:text-[7.5rem]">
                 RezFlo
               </span>
-              <ShinyText className="mt-2 block text-[2.1rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.25rem] tracking-tight">
+              <ShinyText className="mt-2 block text-[1.8rem] sm:text-4xl md:text-5xl lg:text-[3.6rem] xl:text-[4rem] tracking-tight">
                 We&rsquo;ll Handle the Calls
               </ShinyText>
             </motion.h1>
