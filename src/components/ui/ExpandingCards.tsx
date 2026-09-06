@@ -167,7 +167,10 @@ function ExpandingCard({ item, active, onActivate }: ExpandingCardProps) {
       {/* === Dark / violet overlay ====================================== */}
       <div
         aria-hidden
-        className="absolute inset-0 transition-opacity duration-500"
+        className={cn(
+          'absolute inset-0 transition-opacity duration-500',
+          active && 'exp-active-overlay',
+        )}
         style={{
           background: active
             ? // Active: light at top, deep at bottom for text readability
