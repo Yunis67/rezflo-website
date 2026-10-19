@@ -25,3 +25,10 @@ dist-ssr
 
 # Large media hosted externally (Cloudflare R2)
 public/qamaria-demo.mp4
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
