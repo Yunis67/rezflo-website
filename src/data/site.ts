@@ -10,7 +10,7 @@ export const site = {
     phone: '(519) 835-4672',
   },
   cta: {
-    bookDemo: 'https://cal.com/rez-flo-7vgkz1/15min',
+    bookDemo: 'https://cal.com/rez-flo-7vgkz1/30min?overlayCalendar=true',
     bookDemoLabel: 'Book a Demo',
     tryItLabel: "Try RezFlo's AI",
   },
